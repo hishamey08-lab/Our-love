@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Little World 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --rose: #e8687a;
+      --blush: #f4b8c1;
+      --cream: #fdf6f0;
+      --dusty: #c2848f;
+      --deep: #7a3d4a;
+      --petal: #fce4ec;
+      --gold: #c9a96e;
+      --text: #3d2229;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── PASSWORD GATE ── */
+    #gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(135deg, #fce4ec 0%, #fff0f3 50%, #fde8d0 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 24px;
+    }
+    #gate .lock-icon { font-size: 56px; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    #gate h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: var(--deep);
+      text-align: center;
+    }
+    #gate p { color: var(--dusty); font-size: 0.9rem; }
+    #gate input {
+      padding: 14px 24px; border: 2px solid var(--blush);
+      border-radius: 50px; font-size: 1rem;
+      background: white; color: var(--text);
+      outline: none; text-align: center;
+      transition: border-color .3s;
+      width: 260px;
+    }
+    #gate input:focus { border-color: var(--rose); }
+    #gate button {
+      padding: 14px 40px; background: var(--rose);
+      color: white; border: none; border-radius: 50px;
+      font-size: 1rem; cursor: pointer;
+      transition: background .3s, transform .2s;
+    }
+    #gate button:hover { background: var(--deep); transform: scale(1.04); }
+    #gate .err { color: var(--rose); font-size: 0.85rem; min-height: 20px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(253,246,240,0.85);
+      border-bottom: 1px solid rgba(232,104,122,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--deep);
+      font-style: italic;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--dusty);
+      font-size: 0.85rem; letter-spacing: 0.08em;
+      text-transform: uppercase; transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--rose); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, #fce4ec 0%, #fdf6f0 70%);
+    }
+    .floating-hearts {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .fh {
+      position: absolute;
+      font-size: var(--s);
+      opacity: 0.18;
+      animation: floatUp var(--d) ease-in-out infinite;
+      animation-delay: var(--delay);
+      left: var(--x);
+      bottom: -10%;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.18; }
+      50% { opacity: 0.25; }
+      100% { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+    }
+    .hero-tag {
+      position: relative;
+      font-size: 0.75rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--rose);
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      position: relative;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 8vw, 6rem);
+      line-height: 1.1; color: var(--deep);
+      margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: italic; color: var(--rose); }
+    .hero-sub {
+      position: relative;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--dusty); font-style: italic;
+      max-width: 500px; line-height: 1.7;
+    }
+    .hero-date {
+      position: relative;
+      margin-top: 36px;
+      display: inline-flex; align-items: center; gap: 10px;
+      background: white;
+      border: 1px solid var(--blush);
+      padding: 12px 28px; border-radius: 50px;
+      font-size: 0.9rem; color: var(--deep);
+      box-shadow: 0 4px 20px rgba(232,104,122,0.12);
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 24px; }
+    .section-label {
+      font-size: 0.72rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--rose);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      color: var(--deep); margin-bottom: 48px;
+      line-height: 1.2;
+    }
+    .section-title em { font-style: italic; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* ── COUNTDOWN ── */
+    .countdown-section {
+      background: linear-gradient(135deg, var(--deep) 0%, #5c2d38 100%);
+      color: white; text-align: center;
+    }
+    .countdown-section .section-label { color: var(--blush); }
+    .countdown-section .section-title { color: white; margin-bottom: 60px; }
+    .countdown-grid {
+      display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+    }
+    .count-box {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px; padding: 28px 36px;
+      min-width: 110px; backdrop-filter: blur(8px);
+      transition: transform .3s;
+    }
+    .count-box:hover { transform: translateY(-6px); }
+    .count-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem; color: var(--blush);
+      line-height: 1;
+    }
+    .count-label { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 6px; }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 50%; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--blush) 10%, var(--blush) 90%, transparent);
+      transform: translateX(-50%);
+    }
+    .tl-item {
+      display: flex; align-items: flex-start; gap: 40px;
+      margin-bottom: 64px; position: relative;
+    }
+    .tl-item:nth-child(odd) { flex-direction: row-reverse; }
+    .tl-item:nth-child(odd) .tl-content { text-align: right; }
+    .tl-content { flex: 1; max-width: calc(50% - 60px); }
+    .tl-dot {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: white; border: 3px solid var(--rose);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+      box-shadow: 0 0 0 6px rgba(232,104,122,0.12);
+      z-index: 1;
+    }
+    .tl-date {
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--rose);
+      margin-bottom: 8px;
+    }
+    .tl-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--deep);
+      margin-bottom: 8px;
+    }
+    .tl-desc { font-size: 0.9rem; color: var(--dusty); line-height: 1.7; }
+
+    /* ── PHOTO GALLERY ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 16px;
+    }
+    .photo-card {
+      border-radius: 16px; overflow: hidden;
+      position: relative; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(122,61,74,0.1);
+      transition: transform .4s, box-shadow .4s;
+    }
+    .photo-card:hover { transform: scale(1.03); box-shadow: 0 12px 40px rgba(122,61,74,0.2); }
+    .photo-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .photo-card:nth-child(5) { grid-column: span 2; }
+    .photo-placeholder {
+      width: 100%; height: 100%; min-height: 200px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, var(--petal), #fff5f8);
+      color: var(--dusty);
+    }
+    .photo-placeholder .icon { font-size: 2.5rem; opacity: 0.5; }
+    .photo-placeholder span { font-size: 0.8rem; opacity: 0.6; }
+    .photo-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(122,61,74,0.7) 0%, transparent 60%);
+      opacity: 0; transition: opacity .3s;
+      display: flex; align-items: flex-end; padding: 16px;
+    }
+    .photo-card:hover .photo-overlay { opacity: 1; }
+    .photo-caption { color: white; font-size: 0.85rem; font-style: italic; }
+
+    /* ── MEMORIES / NOTES ── */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .note-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(122,61,74,0.07);
+      border: 1px solid rgba(232,104,122,0.1);
+      position: relative; overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .note-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(122,61,74,0.13); }
+    .note-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--rose), var(--blush));
+    }
+    .note-emoji { font-size: 2rem; margin-bottom: 16px; }
+    .note-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--deep);
+      margin-bottom: 10px;
+    }
+    .note-text { font-size: 0.875rem; color: var(--dusty); line-height: 1.75; }
+    .note-date {
+      margin-top: 16px; font-size: 0.75rem;
+      color: var(--blush); letter-spacing: 0.1em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 60px 24px;
+      background: var(--deep); color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+    }
+    footer .heart { color: var(--blush); animation: pulse 1.5s infinite; display: inline-block; }
+    footer p { margin-top: 8px; font-style: italic; color: var(--blush); font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 700px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 16px; }
+      .timeline::before { left: 24px; }
+      .tl-item, .tl-item:nth-child(odd) { flex-direction: column; }
+      .tl-item:nth-child(odd) .tl-content { text-align: left; }
+      .tl-content { max-width: 100%; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .photo-card:nth-child(1), .photo-card:nth-child(5) { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="lock-icon">🔒</div>
+  <h2>This is our little world 💕</h2>
+  <p>Enter the password to step inside</p>
+  <input type="password" id="pwInput" placeholder="password…" onkeydown="if(event.key==='Enter')checkPw()"/>
+  <button onclick="checkPw()">Enter ✨</button>
+  <span class="err" id="errMsg"></span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Us, Always 💕</div>
+  <ul class="nav-links">
+    <li><a href="#countdown">Together</a></li>
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#gallery">Photos</a></li>
+    <li><a href="#memories">Memories</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="floating-hearts" id="hearts"></div>
+  <p class="hero-tag">✦ A private little corner of the internet ✦</p>
+  <h1>You & Me,<br/><em>Always.</em></h1>
+  <p class="hero-sub">"Every moment with you becomes a memory I want to keep forever."</p>
+  <div class="hero-date">
+    💗 Together since <strong id="sinceDate">&nbsp;loading…&nbsp;</strong>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="countdown-section" id="countdown">
+  <div class="container reveal">
+    <p class="section-label">✦ Counting Every Second ✦</p>
+    <h2 class="section-title">Days We've Been <em>Us</em></h2>
+    <div class="countdown-grid" id="countGrid">
+      <div class="count-box"><div class="count-num" id="cDays">—</div><div class="count-label">Days</div></div>
+      <div class="count-box"><div class="count-num" id="cHours">—</div><div class="count-label">Hours</div></div>
+      <div class="count-box"><div class="count-num" id="cMins">—</div><div class="count-label">Minutes</div></div>
+      <div class="count-box"><div class="count-num" id="cSecs">—</div><div class="count-label">Seconds</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="story" style="background:#fff;">
+  <div class="container">
+    <p class="section-label reveal">✦ How It All Began ✦</p>
+    <h2 class="section-title reveal">Our <em>Story</em></h2>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-content">
+          <p class="tl-date">The Very First Day — 8th Grade 🌸</p>
+          <h3 class="tl-title">A Pen That Changed Everything 🖊️</h3>
+          <p class="tl-desc">A new school year, new faces in class. Laila ma'am had just finished taking names when Rishal asked Hisham for a pen. No one had one — until Rasla did. The moment Hisham saw her, something stirred in his heart. He gave his own pen to Rishal and kept hers. That little pen became his most treasured thing.</p>
+        </div>
+        <div class="tl-dot">🖊️</div>
+        <div style="flex:1"></div>
+      </div>
+      <div class="tl-item reveal">
+        <div style="flex:1"></div>
+        <div class="tl-dot">💬</div>
+        <div class="tl-content">
+          <p class="tl-date">A Few Days Later</p>
+          <h3 class="tl-title">The First Proposal 💬</h3>
+          <p class="tl-desc">Hisham's friends teased him, but he didn't deny it — he pressed that pen to his chest and said "Yes, I love her." Then he went and told her. She said no. Her heart belonged to someone else. But Hisham didn't walk away — he stayed, he supported her, he cared for her quietly, without asking for anything in return.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-content">
+          <p class="tl-date">9th Grade — Three Months In 💗</p>
+          <h3 class="tl-title">She Liked Him Back 💗</h3>
+          <p class="tl-desc">A whole year had passed. They were in 9th grade now. Then one day, her friends came to Hisham with a secret — Rasla liked him. He smiled and said he still felt the same. They met, they talked, they sorted everything out — and just like that, a beautiful love story officially began.</p>
+        </div>
+        <div class="tl-dot">💗</div>
+        <div style="flex:1"></div>
+      </div>
+      <div class="tl-item reveal">
+        <div style="flex:1"></div>
+        <div class="tl-dot">💑</div>
+        <div class="tl-content">
+          <p class="tl-date">July 22, 2024 — Forever 💑</p>
+          <h3 class="tl-title">Us, Always 💑</h3>
+          <p class="tl-desc">From that moment forward, Hisham loved Rasla and Rasla loved Hisham. What started with a borrowed pen grew into something deep, real, and unshakeable. They would do anything for each other — and that love only keeps growing stronger every single day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" style="background:var(--cream);">
+  <div class="container">
+    <p class="section-label reveal">✦ Captured Moments ✦</p>
+    <h2 class="section-title reveal">Our <em>Photos</em></h2>
+    <div class="gallery-grid reveal">
+      <div class="photo-card"><img src="RAAHII1.png" alt="Our best shot" style="width:100%;height:100%;min-height:360px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our best shot 💕</span></div></div>
+      <div class="photo-card"><img src="RAAHII2.png" alt="Golden hour" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Golden hour 🌅</span></div></div>
+      <div class="photo-card"><img src="RAAHII3.png" alt="Food and love" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Food & love 🍕</span></div></div>
+      <div class="photo-card"><img src="RAAHII4.png" alt="Celebrations" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Celebrations 🎉</span></div></div>
+      <div class="photo-card"><img src="RAAHII5.png" alt="Ocean vibes" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Ocean vibes 🌊</span></div></div>
+      <div class="photo-card"><img src="RAAHII6.png" alt="Exploring together" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Exploring together 🌿</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MEMORIES / NOTES -->
+<section id="memories" style="background:white;">
+  <div class="container">
+    <p class="section-label reveal">✦ Little Notes to Keep ✦</p>
+    <h2 class="section-title reveal">Favourite <em>Memories</em></h2>
+    <div class="notes-grid">
+      <div class="note-card reveal"><div class="note-emoji">🖊️</div><h3 class="note-title">The Pen That Started It All</h3><p class="note-text">It was just a pen. But to Hisham, it was everything — the first connection, the first smile, the first flutter. He kept it close to his chest and knew right then that she was special.</p><p class="note-date">Day One ✦</p></div>
+      <div class="note-card reveal"><div class="note-emoji">🌙</div><h3 class="note-title">Late Night Calls</h3><p class="note-text">Those nights when neither of us could sleep and we'd just talk about everything and nothing. Hours passed like minutes and the world felt so small and perfect.</p><p class="note-date">Every night ✦</p></div>
+      <div class="note-card reveal"><div class="note-emoji">🤍</div><h3 class="note-title">He Waited Without Giving Up</h3><p class="note-text">She said no, and yet he stayed. Not with pressure, but with patience and genuine care. He supported her quietly, proved his heart was real — and love found its way back to him.</p><p class="note-date">A whole year ✦</p></div>
+      <div class="note-card reveal"><div class="note-emoji">🌺</div><h3 class="note-title">The Little Things</h3><p class="note-text">The way you laugh at my jokes even when they're bad. The way you remember small things I mentioned once. The way you make ordinary days feel special.</p><p class="note-date">Every single day ✦</p></div>
+      <div class="note-card reveal"><div class="note-emoji">🎂</div><h3 class="note-title">First Birthday Together</h3><p class="note-text">You made it the most special birthday. From the surprise to the tiny details — it was all so perfectly, wonderfully you.</p><p class="note-date">A day to remember ✦</p></div>
+      <div class="note-card reveal"><div class="note-emoji">💌</div><h3 class="note-title">Your Letters</h3><p class="note-text">Even in the digital age, you still write. Those words mean more than you know. I read them on hard days and they always, always help.</p><p class="note-date">Kept forever ✦</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="heart">💗</span> Made with love, just for us
+  <p>"You are my today and all of my tomorrows."</p>
+</footer>
+
+<script>
+  // ─── PASSWORD ───
+  const PASSWORD = "RAAHII";
+  function checkPw() {
+    const val = document.getElementById('pwInput').value;
+    if (val === PASSWORD) {
+      document.getElementById('gate').style.display = 'none';
+      startCountdown(); generateHearts();
+    } else {
+      const e = document.getElementById('errMsg');
+      e.textContent = "Hmm, that's not right 🙈 Try again!";
+      document.getElementById('pwInput').value = '';
+      setTimeout(() => e.textContent = '', 2500);
+    }
+  }
+
+  // ─── ANNIVERSARY DATE — change this! ───
+  const ANNIVERSARY = new Date("2024-07-22T00:00:00");
+
+  function startCountdown() {
+    const opts = { year:'numeric', month:'long', day:'numeric' };
+    document.getElementById('sinceDate').textContent = ANNIVERSARY.toLocaleDateString('en-US', opts);
+    function tick() {
+      const diff = Date.now() - ANNIVERSARY.getTime();
+      const s = Math.floor(diff/1000);
+      document.getElementById('cDays').textContent  = Math.floor(s/86400);
+      document.getElementById('cHours').textContent = Math.floor((s%86400)/3600);
+      document.getElementById('cMins').textContent  = Math.floor((s%3600)/60);
+      document.getElementById('cSecs').textContent  = s%60;
+    }
+    tick(); setInterval(tick, 1000);
+  }
+
+  // ─── FLOATING HEARTS ───
+  function generateHearts() {
+    const c = document.getElementById('hearts');
+    const emojis = ['💕','💗','🌸','💓','✨','🌺','💖'];
+    for (let i=0; i<18; i++) {
+      const h = document.createElement('div');
+      h.className='fh';
+      h.textContent = emojis[i%emojis.length];
+      h.style.setProperty('--s', (14+Math.random()*24)+'px');
+      h.style.setProperty('--d', (8+Math.random()*14)+'s');
+      h.style.setProperty('--delay', (Math.random()*10)+'s');
+      h.style.setProperty('--x', (Math.random()*95)+'%');
+      c.appendChild(h);
+    }
+  }
+
+  // ─── SCROLL REVEAL ───
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
