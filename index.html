@@ -287,6 +287,43 @@
       color: var(--blush); letter-spacing: 0.1em;
     }
 
+    /* ── VIDEOS ── */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .video-card {
+      border-radius: 16px; overflow: hidden;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .video-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+    .video-card video {
+      width: 100%; display: block;
+      aspect-ratio: 9/16;
+      object-fit: cover;
+      background: #1a0a0f;
+    }
+    .video-caption {
+      padding: 12px 16px;
+      color: var(--blush);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    @media (max-width: 700px) {
+      .videos-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .videos-grid { grid-template-columns: 1fr; }
+    }
+
     /* ── FOOTER ── */
     footer {
       text-align: center; padding: 60px 24px;
@@ -331,6 +368,7 @@
     <li><a href="#countdown">Together</a></li>
     <li><a href="#story">Our Story</a></li>
     <li><a href="#gallery">Photos</a></li>
+    <li><a href="#videos">Videos</a></li>
     <li><a href="#memories">Memories</a></li>
   </ul>
 </nav>
@@ -413,12 +451,58 @@
     <p class="section-label reveal">✦ Captured Moments ✦</p>
     <h2 class="section-title reveal">Our <em>Photos</em></h2>
     <div class="gallery-grid reveal">
-      <div class="photo-card"><img src="RAAHII1.png" alt="Our best shot" style="width:100%;height:100%;min-height:360px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our best shot 💕</span></div></div>
-      <div class="photo-card"><img src="RAAHII2.png" alt="Golden hour" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Golden hour 🌅</span></div></div>
-      <div class="photo-card"><img src="RAAHII3.png" alt="Food and love" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Food & love 🍕</span></div></div>
-      <div class="photo-card"><img src="RAAHII4.png" alt="Celebrations" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Celebrations 🎉</span></div></div>
-      <div class="photo-card"><img src="RAAHII5.png" alt="Ocean vibes" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Ocean vibes 🌊</span></div></div>
-      <div class="photo-card"><img src="RAAHII6.png" alt="Exploring together" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Exploring together 🌿</span></div></div>
+      <div class="photo-card"><img src="RAAHII1.png" alt="Us together" style="width:100%;height:100%;min-height:360px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Just us 🖤💕</span></div></div>
+      <div class="photo-card"><img src="RAAHII2.png" alt="Sweet selfie" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Us & our hearts 💗</span></div></div>
+      <div class="photo-card"><img src="RAAHII3.png" alt="Together always" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Always together 🩷</span></div></div>
+      <div class="photo-card"><img src="RAAHII4.png" alt="Our adventure" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our adventure ✌️</span></div></div>
+      <div class="photo-card"><img src="RAAHII5.png" alt="Side by side" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Side by side 🌸</span></div></div>
+      <div class="photo-card"><img src="RAAHII6.png" alt="Sunny day together" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Sunny days with you ☀️</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos" style="background:var(--deep);">
+  <div class="container">
+    <p class="section-label reveal" style="color:var(--blush);">✦ Moving Memories ✦</p>
+    <h2 class="section-title reveal" style="color:white;">Our <em>Videos</em></h2>
+    <div class="videos-grid reveal">
+      <div class="video-card">
+        <video controls preload="metadata" poster="">
+          <source src="Video1.mp4" type="video/mp4"/>
+        </video>
+        <div class="video-caption">Memory 1 💕</div>
+      </div>
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="Video2.mp4" type="video/mp4"/>
+        </video>
+        <div class="video-caption">Memory 2 🌸</div>
+      </div>
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="Video3.mp4" type="video/mp4"/>
+        </video>
+        <div class="video-caption">Memory 3 💗</div>
+      </div>
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="Video4.mp4" type="video/mp4"/>
+        </video>
+        <div class="video-caption">Memory 4 ✨</div>
+      </div>
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="Video5.mp4" type="video/mp4"/>
+        </video>
+        <div class="video-caption">Memory 5 🌺</div>
+      </div>
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="Video6.mp4" type="video/mp4"/>
+        </video>
+        <div class="video-caption">Memory 6 💖</div>
+      </div>
     </div>
   </div>
 </section>
