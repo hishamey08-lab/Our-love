@@ -333,6 +333,44 @@
     footer .heart { color: var(--blush); animation: pulse 1.5s infinite; display: inline-block; }
     footer p { margin-top: 8px; font-style: italic; color: var(--blush); font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
 
+    /* ── MUSIC PLAYER ── */
+    .music-player {
+      position: fixed; bottom: 28px; right: 28px; z-index: 999;
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(122,61,74,0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50px;
+      padding: 10px 20px 10px 10px;
+      box-shadow: 0 8px 32px rgba(122,61,74,0.4);
+      transition: transform .3s;
+    }
+    .music-player:hover { transform: translateY(-3px); }
+    .music-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--blush); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+      transition: background .2s, transform .2s;
+    }
+    .music-btn:hover { background: white; transform: scale(1.1); }
+    .music-info { display: flex; flex-direction: column; }
+    .music-title { color: white; font-size: 0.8rem; font-weight: 500; }
+    .music-sub { color: var(--blush); font-size: 0.7rem; }
+    .music-bars {
+      display: flex; align-items: flex-end; gap: 3px; height: 20px;
+    }
+    .bar {
+      width: 3px; background: var(--blush); border-radius: 2px;
+      animation: barDance var(--s) ease-in-out infinite alternate;
+    }
+    @keyframes barDance {
+      from { height: 4px; } to { height: 18px; }
+    }
+    .bar:nth-child(1){--s:0.4s} .bar:nth-child(2){--s:0.6s}
+    .bar:nth-child(3){--s:0.5s} .bar:nth-child(4){--s:0.7s}
+    .bar.paused { animation-play-state: paused; height: 4px; }
+
     /* ── SCROLL REVEAL ── */
     .reveal { opacity: 0; transform: translateY(32px); transition: opacity .8s ease, transform .8s ease; }
     .reveal.visible { opacity: 1; transform: none; }
@@ -523,6 +561,21 @@
   </div>
 </section>
 
+<!-- MUSIC PLAYER -->
+<div class="music-player" id="musicPlayer">
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶️</button>
+  <div class="music-info">
+    <span class="music-title">Our Melody 💕</span>
+    <span class="music-sub">Playing for us</span>
+  </div>
+  <div class="music-bars" id="musicBars">
+    <div class="bar paused"></div>
+    <div class="bar paused"></div>
+    <div class="bar paused"></div>
+    <div class="bar paused"></div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <span class="heart">💗</span> Made with love, just for us
@@ -578,7 +631,37 @@
     }
   }
 
-  // ─── SCROLL REVEAL ───
+  // ─── MP3 MUSIC PLAYER ───
+  const audio = new Audio('indila-love-story.mp3');
+  audio.loop = true;
+  audio.volume = 0.7;
+  let isMusicPlaying = false;
+
+  function toggleMusic() {
+    if (isMusicPlaying) {
+      audio.pause();
+      isMusicPlaying = false;
+      document.getElementById('musicBtn').textContent = '▶️';
+      document.querySelectorAll('.bar').forEach(b => b.classList.add('paused'));
+    } else {
+      audio.play();
+      isMusicPlaying = true;
+      document.getElementById('musicBtn').textContent = '⏸️';
+      document.querySelectorAll('.bar').forEach(b => b.classList.remove('paused'));
+    }
+  }
+
+  // patch startCountdown to autoplay music after password
+  const _origStartCountdown = startCountdown;
+  window.startCountdown = function() {
+    _origStartCountdown();
+    setTimeout(() => { audio.play(); isMusicPlaying = true;
+      document.getElementById('musicBtn').textContent = '⏸️';
+      document.querySelectorAll('.bar').forEach(b => b.classList.remove('paused'));
+    }, 400);
+  }
+
+
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.12 });
