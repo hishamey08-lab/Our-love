@@ -334,62 +334,88 @@
     footer .heart { color: var(--blush); animation: pulse 1.5s infinite; display: inline-block; }
     footer p { margin-top: 8px; font-style: italic; color: var(--blush); font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
 
-    /* ── LIVE CHAT ── */
-    .chat-name-picker {
-      text-align: center; padding: 40px 20px;
+    /* ── FLOATING CHAT BUBBLE ── */
+    #chatBubble {
+      position: fixed; bottom: 28px; left: 28px; z-index: 999;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--deep));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(122,61,74,0.4);
+      transition: transform .4s ease, box-shadow .3s, opacity .4s ease;
+      animation: bubblePulse 2.5s ease-in-out infinite;
+      opacity: 1;
+    }
+    #chatBubble:hover { transform: scale(1.12); box-shadow: 0 10px 32px rgba(122,61,74,0.5); }
+    @keyframes bubblePulse {
+      0%,100%{box-shadow:0 6px 24px rgba(122,61,74,0.4), 0 0 0 0 rgba(232,104,122,0.4)}
+      50%{box-shadow:0 6px 24px rgba(122,61,74,0.4), 0 0 0 10px rgba(232,104,122,0)}
+    }
+    .chat-notif {
+      position: absolute; top: -4px; right: -4px;
+      background: #ff4757; color: white;
+      width: 20px; height: 20px; border-radius: 50%;
+      font-size: 0.7rem; display: flex; align-items: center; justify-content: center;
+      font-family: sans-serif; font-weight: bold;
+    }
+
+    /* ── FLOATING CHAT WINDOW ── */
+    #floatingChat {
+      position: fixed; bottom: 96px; left: 28px; z-index: 998;
+      width: 320px; height: 480px;
       background: white; border-radius: 24px;
-      box-shadow: 0 4px 24px rgba(122,61,74,0.08);
-      max-width: 480px; margin: 0 auto;
+      box-shadow: 0 16px 48px rgba(122,61,74,0.22);
+      overflow: hidden; display: flex; flex-direction: column;
+      animation: chatSlideIn .3s ease;
     }
-    .chat-name-picker p {
+    @keyframes chatSlideIn {
+      from { opacity:0; transform: translateY(20px) scale(0.95); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+    #namePicker { display: flex; flex-direction: column; height: 100%; }
+    .fc-header {
+      background: linear-gradient(135deg, var(--deep), #5c2d38);
+      padding: 14px 16px; display: flex;
+      align-items: center; justify-content: space-between;
+      color: white; font-size: 0.9rem; font-weight: 500; flex-shrink: 0;
+    }
+    .fc-close {
+      background: rgba(255,255,255,0.15); border: none; color: white;
+      width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+      font-size: 0.8rem; transition: background .2s;
+    }
+    .fc-close:hover { background: rgba(255,255,255,0.3); }
+    .fc-pick-body {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px;
+      padding: 24px; background: #fdf6f0;
+    }
+    .fc-pick-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.4rem; color: var(--deep); margin-bottom: 24px;
+      font-size: 1.2rem; color: var(--deep); text-align: center;
     }
-    .name-btns { display: flex; gap: 16px; justify-content: center; }
+    .name-btns { display: flex; gap: 12px; justify-content: center; }
     .name-btn {
-      padding: 14px 32px; border-radius: 50px; border: 2px solid var(--blush);
-      background: white; color: var(--deep); font-size: 1rem; cursor: pointer;
+      padding: 12px 20px; border-radius: 50px; border: 2px solid var(--blush);
+      background: white; color: var(--deep); font-size: 0.9rem; cursor: pointer;
       transition: all .3s; font-family: 'DM Sans', sans-serif;
     }
     .name-btn:hover { background: var(--rose); color: white; border-color: var(--rose); transform: scale(1.05); }
-
-    .chat-box {
-      max-width: 600px; margin: 0 auto;
-      background: white; border-radius: 24px;
-      box-shadow: 0 4px 32px rgba(122,61,74,0.1);
-      overflow: hidden;
-    }
-    .chat-header {
-      background: linear-gradient(135deg, var(--deep), #5c2d38);
-      padding: 16px 20px; display: flex;
-      align-items: center; justify-content: space-between;
-      color: white;
-    }
-    #chatUserLabel { font-size: 0.95rem; font-weight: 500; }
-    .switch-btn {
-      background: rgba(255,255,255,0.15); border: none;
-      color: white; padding: 6px 14px; border-radius: 20px;
-      font-size: 0.8rem; cursor: pointer; transition: background .2s;
-    }
-    .switch-btn:hover { background: rgba(255,255,255,0.25); }
-
+    #chatBox { display: flex; flex-direction: column; height: 100%; }
     .chat-messages {
-      height: 320px; overflow-y: auto; padding: 20px;
-      display: flex; flex-direction: column; gap: 12px;
+      flex: 1; overflow-y: auto; padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
       background: #fdf6f0;
     }
-    .chat-messages::-webkit-scrollbar { width: 4px; }
-    .chat-messages::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 4px; }
-
-    .msg {
-      display: flex; flex-direction: column; max-width: 75%;
-    }
+    .chat-messages::-webkit-scrollbar { width: 3px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 3px; }
+    .msg { display: flex; flex-direction: column; max-width: 78%; }
     .msg.me { align-self: flex-end; align-items: flex-end; }
     .msg.them { align-self: flex-start; align-items: flex-start; }
-    .msg-sender { font-size: 0.7rem; color: var(--dusty); margin-bottom: 3px; }
+    .msg-sender { font-size: 0.65rem; color: var(--dusty); margin-bottom: 2px; }
     .msg-bubble {
-      padding: 10px 16px; border-radius: 20px;
-      font-size: 0.9rem; line-height: 1.5; word-break: break-word;
+      padding: 8px 14px; border-radius: 18px;
+      font-size: 0.85rem; line-height: 1.5; word-break: break-word;
     }
     .msg.me .msg-bubble {
       background: linear-gradient(135deg, var(--rose), var(--dusty));
@@ -398,37 +424,43 @@
     .msg.them .msg-bubble {
       background: white; color: var(--text);
       border: 1px solid var(--blush); border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 8px rgba(122,61,74,0.06);
+      box-shadow: 0 2px 6px rgba(122,61,74,0.06);
     }
-    .msg-time { font-size: 0.65rem; color: var(--blush); margin-top: 3px; }
-
+    .msg-time { font-size: 0.6rem; color: var(--blush); margin-top: 2px; }
     .emoji-bar {
-      padding: 10px 16px; background: var(--petal);
-      display: flex; gap: 12px; font-size: 1.4rem;
-      border-top: 1px solid rgba(232,104,122,0.1);
+      padding: 8px 12px; background: var(--petal);
+      display: flex; gap: 8px; font-size: 1.2rem; flex-shrink: 0;
+      border-top: 1px solid rgba(232,104,122,0.1); overflow-x: auto;
     }
-    .emoji-bar span { cursor: pointer; transition: transform .2s; }
+    .emoji-bar span { cursor: pointer; transition: transform .2s; flex-shrink: 0; }
     .emoji-bar span:hover { transform: scale(1.3); }
-
     .chat-input-row {
-      display: flex; gap: 10px; padding: 14px 16px;
-      border-top: 1px solid rgba(232,104,122,0.12);
-      background: white;
+      display: flex; gap: 8px; padding: 10px 12px; flex-shrink: 0;
+      border-top: 1px solid rgba(232,104,122,0.12); background: white;
     }
     #chatInput {
-      flex: 1; padding: 12px 18px; border: 1.5px solid var(--blush);
-      border-radius: 50px; font-size: 0.9rem; outline: none;
+      flex: 1; padding: 10px 14px; border: 1.5px solid var(--blush);
+      border-radius: 50px; font-size: 0.85rem; outline: none;
       font-family: 'DM Sans', sans-serif; color: var(--text);
       transition: border-color .3s;
     }
     #chatInput:focus { border-color: var(--rose); }
     .send-btn {
-      padding: 12px 22px; background: var(--rose); color: white;
+      padding: 10px 16px; background: var(--rose); color: white;
       border: none; border-radius: 50px; cursor: pointer;
-      font-size: 0.85rem; transition: background .2s, transform .2s;
-      white-space: nowrap;
+      font-size: 1rem; transition: background .2s, transform .2s;
     }
     .send-btn:hover { background: var(--deep); transform: scale(1.05); }
+    .switch-btn {
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; padding: 4px 10px; border-radius: 20px;
+      font-size: 0.75rem; cursor: pointer; transition: background .2s;
+    }
+    .switch-btn:hover { background: rgba(255,255,255,0.25); }
+    #chatUserLabel { font-size: 0.85rem; }
+    @media (max-width: 400px) {
+      #floatingChat { width: calc(100vw - 32px); left: 16px; bottom: 88px; }
+    }
 
     /* ── MUSIC PLAYER ── */
     .music-player {
@@ -440,7 +472,8 @@
       border-radius: 50px;
       padding: 10px 20px 10px 10px;
       box-shadow: 0 8px 32px rgba(122,61,74,0.4);
-      transition: transform .3s;
+      transition: transform .4s ease, opacity .4s ease;
+      opacity: 1;
     }
     .music-player:hover { transform: translateY(-3px); }
     .music-btn {
@@ -505,7 +538,6 @@
     <li><a href="#gallery">Photos</a></li>
     <li><a href="#videos">Videos</a></li>
     <li><a href="#memories">Memories</a></li>
-    <li><a href="#chat">Chat 💬</a></li>
   </ul>
 </nav>
 
@@ -668,49 +700,54 @@
   </div>
 </section>
 
-<!-- LIVE CHAT -->
-<section id="chat" style="background:var(--cream);">
-  <div class="container">
-    <p class="section-label reveal">✦ Just The Two Of Us ✦</p>
-    <h2 class="section-title reveal">Our <em>Chat</em> 💬</h2>
+<!-- FLOATING CHAT BUBBLE -->
+<div id="chatBubble" onclick="toggleChat()" title="Chat with us 💕">
+  💬
+  <span class="chat-notif" id="chatNotif" style="display:none;">1</span>
+</div>
 
-    <!-- Name picker -->
-    <div id="namePicker" class="chat-name-picker reveal">
-      <p>Who are you? 💕</p>
-      <div class="name-btns">
-        <button onclick="setUser('Hisham 💙')" class="name-btn">Hisham 💙</button>
-        <button onclick="setUser('Rasla 💗')" class="name-btn">Rasla 💗</button>
-      </div>
+<!-- FLOATING CHAT WINDOW -->
+<div id="floatingChat" style="display:none;">
+  <!-- Name Picker -->
+  <div id="namePicker">
+    <div class="fc-header">
+      <span>💕 Our Private Chat</span>
+      <button onclick="toggleChat()" class="fc-close">✕</button>
     </div>
-
-    <!-- Chat box -->
-    <div id="chatBox" class="chat-box" style="display:none;">
-      <div class="chat-header">
-        <span id="chatUserLabel"></span>
-        <button onclick="switchUser()" class="switch-btn">Switch 🔄</button>
-      </div>
-      <div class="chat-messages" id="chatMessages"></div>
-
-      <!-- Emoji reactions bar -->
-      <div class="emoji-bar">
-        <span onclick="sendEmoji('❤️')">❤️</span>
-        <span onclick="sendEmoji('😘')">😘</span>
-        <span onclick="sendEmoji('🥺')">🥺</span>
-        <span onclick="sendEmoji('💕')">💕</span>
-        <span onclick="sendEmoji('🌸')">🌸</span>
-        <span onclick="sendEmoji('😍')">😍</span>
-        <span onclick="sendEmoji('🤍')">🤍</span>
-        <span onclick="sendEmoji('✨')">✨</span>
-      </div>
-
-      <div class="chat-input-row">
-        <input type="text" id="chatInput" placeholder="Say something sweet… 💌"
-          onkeydown="if(event.key==='Enter') sendMessage()"/>
-        <button onclick="sendMessage()" class="send-btn">Send 💌</button>
-      </div>
+    <div class="fc-pick-body">
+      <p class="fc-pick-title">Who are you? 🥺</p>
+      <button onclick="setUser('Hisham 💙')" class="name-btn">Hisham 💙</button>
+      <button onclick="setUser('Rasla 💗')" class="name-btn">Rasla 💗</button>
     </div>
   </div>
-</section>
+
+  <!-- Chat Window -->
+  <div id="chatBox" style="display:none; flex-direction:column; height:100%;">
+    <div class="fc-header">
+      <span id="chatUserLabel"></span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button onclick="switchUser()" class="switch-btn">🔄</button>
+        <button onclick="toggleChat()" class="fc-close">✕</button>
+      </div>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="emoji-bar">
+      <span onclick="sendEmoji('❤️')">❤️</span>
+      <span onclick="sendEmoji('😘')">😘</span>
+      <span onclick="sendEmoji('🥺')">🥺</span>
+      <span onclick="sendEmoji('💕')">💕</span>
+      <span onclick="sendEmoji('🌸')">🌸</span>
+      <span onclick="sendEmoji('😍')">😍</span>
+      <span onclick="sendEmoji('🤍')">🤍</span>
+      <span onclick="sendEmoji('✨')">✨</span>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Say something sweet… 💌"
+        onkeydown="if(event.key==='Enter') sendMessage()"/>
+      <button onclick="sendMessage()" class="send-btn">💌</button>
+    </div>
+  </div>
+</div>
 
 <!-- MUSIC PLAYER -->
 <div class="music-player" id="musicPlayer">
@@ -818,21 +855,71 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
+  // ─── HIDE MUSIC PLAYER WIDGET WHEN SCROLLED OFF HERO (music keeps playing) ───
+  window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero');
+    const player = document.getElementById('musicPlayer');
+    if (!hero || !player) return;
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    if (heroBottom > 100) {
+      player.style.opacity = '1';
+      player.style.pointerEvents = 'auto';
+      player.style.transform = 'translateY(0) scale(1)';
+    } else {
+      player.style.opacity = '0';
+      player.style.pointerEvents = 'none';
+      player.style.transform = 'translateY(10px) scale(0.9)';
+    }
+  });
+
+  // ─── SHOW MUSIC PLAYER ONLY ON HERO SECTION ───
+  window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero');
+    const player = document.getElementById('musicPlayer');
+    if (!hero || !player) return;
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    if (heroBottom > 100) {
+      player.style.opacity = '1';
+      player.style.pointerEvents = 'auto';
+      player.style.transform = 'translateY(0)';
+    } else {
+      player.style.opacity = '0';
+      player.style.pointerEvents = 'none';
+      player.style.transform = 'translateY(20px)';
+    }
+  });
+
   // ─── FIREBASE LIVE CHAT ───
   let currentUser = null;
+  let chatOpen = false;
+
+  window.toggleChat = function() {
+    chatOpen = !chatOpen;
+    const fc = document.getElementById('floatingChat');
+    if (chatOpen) {
+      fc.style.display = 'flex';
+      fc.style.flexDirection = 'column';
+      document.getElementById('chatNotif').style.display = 'none';
+    } else {
+      fc.style.display = 'none';
+    }
+  }
 
   window.setUser = function(name) {
     currentUser = name;
     document.getElementById('namePicker').style.display = 'none';
-    document.getElementById('chatBox').style.display = 'block';
-    document.getElementById('chatUserLabel').textContent = 'Chatting as ' + name;
+    const cb = document.getElementById('chatBox');
+    cb.style.display = 'flex';
+    cb.style.flexDirection = 'column';
+    cb.style.height = '100%';
+    document.getElementById('chatUserLabel').textContent = '💬 ' + name;
     initFirebaseChat();
   }
 
   window.switchUser = function() {
     currentUser = null;
     document.getElementById('chatBox').style.display = 'none';
-    document.getElementById('namePicker').style.display = 'block';
+    document.getElementById('namePicker').style.display = 'flex';
   }
 
   function initFirebaseChat() {
