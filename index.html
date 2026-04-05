@@ -334,6 +334,102 @@
     footer .heart { color: var(--blush); animation: pulse 1.5s infinite; display: inline-block; }
     footer p { margin-top: 8px; font-style: italic; color: var(--blush); font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
 
+    /* ── LIVE CHAT ── */
+    .chat-name-picker {
+      text-align: center; padding: 40px 20px;
+      background: white; border-radius: 24px;
+      box-shadow: 0 4px 24px rgba(122,61,74,0.08);
+      max-width: 480px; margin: 0 auto;
+    }
+    .chat-name-picker p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--deep); margin-bottom: 24px;
+    }
+    .name-btns { display: flex; gap: 16px; justify-content: center; }
+    .name-btn {
+      padding: 14px 32px; border-radius: 50px; border: 2px solid var(--blush);
+      background: white; color: var(--deep); font-size: 1rem; cursor: pointer;
+      transition: all .3s; font-family: 'DM Sans', sans-serif;
+    }
+    .name-btn:hover { background: var(--rose); color: white; border-color: var(--rose); transform: scale(1.05); }
+
+    .chat-box {
+      max-width: 600px; margin: 0 auto;
+      background: white; border-radius: 24px;
+      box-shadow: 0 4px 32px rgba(122,61,74,0.1);
+      overflow: hidden;
+    }
+    .chat-header {
+      background: linear-gradient(135deg, var(--deep), #5c2d38);
+      padding: 16px 20px; display: flex;
+      align-items: center; justify-content: space-between;
+      color: white;
+    }
+    #chatUserLabel { font-size: 0.95rem; font-weight: 500; }
+    .switch-btn {
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; padding: 6px 14px; border-radius: 20px;
+      font-size: 0.8rem; cursor: pointer; transition: background .2s;
+    }
+    .switch-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .chat-messages {
+      height: 320px; overflow-y: auto; padding: 20px;
+      display: flex; flex-direction: column; gap: 12px;
+      background: #fdf6f0;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 4px; }
+
+    .msg {
+      display: flex; flex-direction: column; max-width: 75%;
+    }
+    .msg.me { align-self: flex-end; align-items: flex-end; }
+    .msg.them { align-self: flex-start; align-items: flex-start; }
+    .msg-sender { font-size: 0.7rem; color: var(--dusty); margin-bottom: 3px; }
+    .msg-bubble {
+      padding: 10px 16px; border-radius: 20px;
+      font-size: 0.9rem; line-height: 1.5; word-break: break-word;
+    }
+    .msg.me .msg-bubble {
+      background: linear-gradient(135deg, var(--rose), var(--dusty));
+      color: white; border-bottom-right-radius: 4px;
+    }
+    .msg.them .msg-bubble {
+      background: white; color: var(--text);
+      border: 1px solid var(--blush); border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(122,61,74,0.06);
+    }
+    .msg-time { font-size: 0.65rem; color: var(--blush); margin-top: 3px; }
+
+    .emoji-bar {
+      padding: 10px 16px; background: var(--petal);
+      display: flex; gap: 12px; font-size: 1.4rem;
+      border-top: 1px solid rgba(232,104,122,0.1);
+    }
+    .emoji-bar span { cursor: pointer; transition: transform .2s; }
+    .emoji-bar span:hover { transform: scale(1.3); }
+
+    .chat-input-row {
+      display: flex; gap: 10px; padding: 14px 16px;
+      border-top: 1px solid rgba(232,104,122,0.12);
+      background: white;
+    }
+    #chatInput {
+      flex: 1; padding: 12px 18px; border: 1.5px solid var(--blush);
+      border-radius: 50px; font-size: 0.9rem; outline: none;
+      font-family: 'DM Sans', sans-serif; color: var(--text);
+      transition: border-color .3s;
+    }
+    #chatInput:focus { border-color: var(--rose); }
+    .send-btn {
+      padding: 12px 22px; background: var(--rose); color: white;
+      border: none; border-radius: 50px; cursor: pointer;
+      font-size: 0.85rem; transition: background .2s, transform .2s;
+      white-space: nowrap;
+    }
+    .send-btn:hover { background: var(--deep); transform: scale(1.05); }
+
     /* ── MUSIC PLAYER ── */
     .music-player {
       position: fixed; bottom: 28px; right: 28px; z-index: 999;
@@ -409,6 +505,7 @@
     <li><a href="#gallery">Photos</a></li>
     <li><a href="#videos">Videos</a></li>
     <li><a href="#memories">Memories</a></li>
+    <li><a href="#chat">Chat 💬</a></li>
   </ul>
 </nav>
 
@@ -571,6 +668,50 @@
   </div>
 </section>
 
+<!-- LIVE CHAT -->
+<section id="chat" style="background:var(--cream);">
+  <div class="container">
+    <p class="section-label reveal">✦ Just The Two Of Us ✦</p>
+    <h2 class="section-title reveal">Our <em>Chat</em> 💬</h2>
+
+    <!-- Name picker -->
+    <div id="namePicker" class="chat-name-picker reveal">
+      <p>Who are you? 💕</p>
+      <div class="name-btns">
+        <button onclick="setUser('Hisham 💙')" class="name-btn">Hisham 💙</button>
+        <button onclick="setUser('Rasla 💗')" class="name-btn">Rasla 💗</button>
+      </div>
+    </div>
+
+    <!-- Chat box -->
+    <div id="chatBox" class="chat-box" style="display:none;">
+      <div class="chat-header">
+        <span id="chatUserLabel"></span>
+        <button onclick="switchUser()" class="switch-btn">Switch 🔄</button>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+
+      <!-- Emoji reactions bar -->
+      <div class="emoji-bar">
+        <span onclick="sendEmoji('❤️')">❤️</span>
+        <span onclick="sendEmoji('😘')">😘</span>
+        <span onclick="sendEmoji('🥺')">🥺</span>
+        <span onclick="sendEmoji('💕')">💕</span>
+        <span onclick="sendEmoji('🌸')">🌸</span>
+        <span onclick="sendEmoji('😍')">😍</span>
+        <span onclick="sendEmoji('🤍')">🤍</span>
+        <span onclick="sendEmoji('✨')">✨</span>
+      </div>
+
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Say something sweet… 💌"
+          onkeydown="if(event.key==='Enter') sendMessage()"/>
+        <button onclick="sendMessage()" class="send-btn">Send 💌</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- MUSIC PLAYER -->
 <div class="music-player" id="musicPlayer">
   <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶️</button>
@@ -592,10 +733,10 @@
   <p>"You are my today and all of my tomorrows."</p>
 </footer>
 
-<script>
+<script type="module">
   // ─── PASSWORD ───
   const PASSWORD = "RAAHII";
-  function checkPw() {
+  window.checkPw = function checkPw() {
     const val = document.getElementById('pwInput').value;
     if (val === PASSWORD) {
       document.getElementById('gate').style.display = 'none';
@@ -647,7 +788,7 @@
   audio.volume = 0.7;
   let isMusicPlaying = false;
 
-  function toggleMusic() {
+  window.toggleMusic = function toggleMusic() {
     if (isMusicPlaying) {
       audio.pause();
       isMusicPlaying = false;
@@ -676,6 +817,79 @@
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // ─── FIREBASE LIVE CHAT ───
+  let currentUser = null;
+
+  window.setUser = function(name) {
+    currentUser = name;
+    document.getElementById('namePicker').style.display = 'none';
+    document.getElementById('chatBox').style.display = 'block';
+    document.getElementById('chatUserLabel').textContent = 'Chatting as ' + name;
+    initFirebaseChat();
+  }
+
+  window.switchUser = function() {
+    currentUser = null;
+    document.getElementById('chatBox').style.display = 'none';
+    document.getElementById('namePicker').style.display = 'block';
+  }
+
+  function initFirebaseChat() {
+    if (window._chatInitialized) return;
+    window._chatInitialized = true;
+
+    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js').then(({ initializeApp }) => {
+      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js').then(({ getDatabase, ref, push, onChildAdded }) => {
+        const app = initializeApp({
+          apiKey: "AIzaSyAjocvTwFnSeZTpLTYHqBZBc-cy0yQ-lXc",
+          authDomain: "love-chat-75255.firebaseapp.com",
+          databaseURL: "https://love-chat-75255-default-rtdb.firebaseio.com",
+          projectId: "love-chat-75255",
+          storageBucket: "love-chat-75255.firebasestorage.app",
+          messagingSenderId: "200144850266",
+          appId: "1:200144850266:web:8cfb8a7628522995627763"
+        });
+
+        const db = getDatabase(app);
+        const msgsRef = ref(db, 'messages');
+
+        window._sendToFirebase = (text) => {
+          push(msgsRef, { sender: currentUser, text: text, time: Date.now() });
+        };
+
+        onChildAdded(msgsRef, (snapshot) => {
+          renderMessage(snapshot.val());
+        });
+      });
+    });
+  }
+
+  function renderMessage(msg) {
+    const box = document.getElementById('chatMessages');
+    const isMe = msg.sender === currentUser;
+    const div = document.createElement('div');
+    div.className = 'msg ' + (isMe ? 'me' : 'them');
+    const time = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    div.innerHTML = `<span class="msg-sender">${msg.sender}</span>
+      <div class="msg-bubble">${msg.text}</div>
+      <span class="msg-time">${time}</span>`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  window.sendMessage = function() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text || !window._sendToFirebase) return;
+    window._sendToFirebase(text);
+    input.value = '';
+  }
+
+  window.sendEmoji = function(emoji) {
+    if (!window._sendToFirebase) return;
+    window._sendToFirebase(emoji);
+  }
 </script>
 </body>
 </html>
