@@ -889,6 +889,35 @@
     }
   });
 
+  // ─── NOTIFICATIONS ───
+  function requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }
+
+  function showNotification(sender, text) {
+    if (!currentUser || sender === currentUser) return; // only notify for OTHER person's messages
+    if (Notification.permission === 'granted') {
+      const n = new Notification(sender + ' sent you a message 💕', {
+        body: text,
+        icon: 'RAAHII4.png',
+        badge: 'RAAHII4.png',
+        vibrate: [200, 100, 200],
+      });
+      n.onclick = () => { window.focus(); n.close(); };
+      setTimeout(() => n.close(), 5000);
+    }
+    // Also flash the chat bubble
+    const bubble = document.getElementById('chatBubble');
+    const notif = document.getElementById('chatNotif');
+    if (!chatOpen && bubble && notif) {
+      notif.style.display = 'flex';
+      bubble.style.animation = 'none';
+      setTimeout(() => bubble.style.animation = 'bubblePulse 2.5s ease-in-out infinite', 100);
+    }
+  }
+
   // ─── FIREBASE LIVE CHAT ───
   let currentUser = null;
   let chatOpen = false;
@@ -913,6 +942,7 @@
     cb.style.flexDirection = 'column';
     cb.style.height = '100%';
     document.getElementById('chatUserLabel').textContent = '💬 ' + name;
+    requestNotificationPermission();
     initFirebaseChat();
   }
 
@@ -963,6 +993,7 @@
       <span class="msg-time">${time}</span>`;
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
+    showNotification(msg.sender, msg.text);
   }
 
   window.sendMessage = function() {
