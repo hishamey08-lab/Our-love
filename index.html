@@ -462,6 +462,49 @@
       #floatingChat { width: calc(100vw - 32px); left: 16px; bottom: 88px; }
     }
 
+    .voice-btn {
+      padding: 10px 12px; background: var(--petal);
+      border: 1.5px solid var(--blush); border-radius: 50%;
+      cursor: pointer; font-size: 1rem;
+      transition: background .2s, transform .2s;
+      width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .voice-btn.recording {
+      background: #ff4757; border-color: #ff4757;
+      animation: recPulse .8s ease-in-out infinite;
+    }
+    @keyframes recPulse {
+      0%,100%{ transform: scale(1); box-shadow: 0 0 0 0 rgba(255,71,87,0.4); }
+      50%{ transform: scale(1.1); box-shadow: 0 0 0 8px rgba(255,71,87,0); }
+    }
+    .voice-msg {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 18px;
+      background: white; border: 1px solid var(--blush);
+      cursor: pointer; min-width: 160px;
+    }
+    .msg.me .voice-msg {
+      background: linear-gradient(135deg, var(--rose), var(--dusty));
+      border: none;
+    }
+    .voice-play { font-size: 1.1rem; flex-shrink: 0; }
+    .voice-wave {
+      flex: 1; height: 24px; display: flex; align-items: center; gap: 2px;
+    }
+    .voice-wave span {
+      display: inline-block; width: 3px; border-radius: 2px;
+      background: var(--blush); animation: waveIdle 1s ease-in-out infinite alternate;
+    }
+    .msg.me .voice-wave span { background: rgba(255,255,255,0.7); }
+    .voice-wave span:nth-child(1){height:6px;--d:0s} .voice-wave span:nth-child(2){height:14px;--d:.1s}
+    .voice-wave span:nth-child(3){height:20px;--d:.2s} .voice-wave span:nth-child(4){height:10px;--d:.15s}
+    .voice-wave span:nth-child(5){height:16px;--d:.05s} .voice-wave span:nth-child(6){height:8px;--d:.25s}
+    .voice-wave span:nth-child(7){height:18px;--d:.1s} .voice-wave span:nth-child(8){height:6px;--d:.2s}
+    @keyframes waveIdle { from{transform:scaleY(.5)} to{transform:scaleY(1)} }
+    .voice-duration { font-size: 0.7rem; color: var(--dusty); flex-shrink: 0; }
+    .msg.me .voice-duration { color: rgba(255,255,255,0.8); }
+
     /* ── MUSIC PLAYER ── */
     .music-player {
       position: fixed; bottom: 28px; right: 28px; z-index: 999;
@@ -744,6 +787,7 @@
     <div class="chat-input-row">
       <input type="text" id="chatInput" placeholder="Say something sweet… 💌"
         onkeydown="if(event.key==='Enter') sendMessage()"/>
+      <button id="voiceBtn" onclick="toggleRecording()" class="voice-btn" title="Hold to record">🎙️</button>
       <button onclick="sendMessage()" class="send-btn">💌</button>
     </div>
   </div>
@@ -889,6 +933,57 @@
     }
   });
 
+  // ─── VOICE MESSAGES ───
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+  let recTimer = null;
+  let recSeconds = 0;
+
+  window.toggleRecording = async function() {
+    if (!isRecording) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        recSeconds = 0;
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+          const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            if (window._sendToFirebase) {
+              window._sendToFirebase(null, { audio: reader.result, duration: recSeconds });
+            }
+          };
+          reader.readAsDataURL(blob);
+          stream.getTracks().forEach(t => t.stop());
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        const btn = document.getElementById('voiceBtn');
+        btn.classList.add('recording');
+        btn.textContent = '⏹️';
+        btn.title = 'Tap to stop';
+        recTimer = setInterval(() => recSeconds++, 1000);
+      } catch(e) {
+        alert('Microphone access denied! Please allow mic in browser settings 🎙️');
+      }
+    } else {
+      mediaRecorder.stop();
+      isRecording = false;
+      clearInterval(recTimer);
+      const btn = document.getElementById('voiceBtn');
+      btn.classList.remove('recording');
+      btn.textContent = '🎙️';
+      btn.title = 'Hold to record';
+    }
+  }
+
+  function formatDuration(s) {
+    return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+  }
+
   // ─── NOTIFICATIONS ───
   function requestNotificationPermission() {
     if ('Notification' in window && Notification.permission === 'default') {
@@ -971,8 +1066,12 @@
         const db = getDatabase(app);
         const msgsRef = ref(db, 'messages');
 
-        window._sendToFirebase = (text) => {
-          push(msgsRef, { sender: currentUser, text: text, time: Date.now() });
+        window._sendToFirebase = (text, voice = null) => {
+          if (voice) {
+            push(msgsRef, { sender: currentUser, voice: voice.audio, duration: voice.duration, time: Date.now() });
+          } else {
+            push(msgsRef, { sender: currentUser, text: text, time: Date.now() });
+          }
         };
 
         onChildAdded(msgsRef, (snapshot) => {
@@ -988,12 +1087,36 @@
     const div = document.createElement('div');
     div.className = 'msg ' + (isMe ? 'me' : 'them');
     const time = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    div.innerHTML = `<span class="msg-sender">${msg.sender}</span>
-      <div class="msg-bubble">${msg.text}</div>
-      <span class="msg-time">${time}</span>`;
-    box.appendChild(div);
+
+    if (msg.voice) {
+      // Voice message
+      const audio = new Audio(msg.voice);
+      const waveSpans = Array(8).fill('<span></span>').join('');
+      div.innerHTML = `
+        <span class="msg-sender">${msg.sender}</span>
+        <div class="voice-msg" id="vm_${msg.time}">
+          <span class="voice-play">▶️</span>
+          <div class="voice-wave">${waveSpans}</div>
+          <span class="voice-duration">${formatDuration(msg.duration || 0)}</span>
+        </div>
+        <span class="msg-time">${time}</span>`;
+      box.appendChild(div);
+      div.querySelector('.voice-msg').onclick = () => {
+        audio.paused ? audio.play() : audio.pause();
+        div.querySelector('.voice-play').textContent = audio.paused ? '▶️' : '⏸️';
+        audio.onended = () => div.querySelector('.voice-play').textContent = '▶️';
+      };
+    } else {
+      // Text message
+      div.innerHTML = `
+        <span class="msg-sender">${msg.sender}</span>
+        <div class="msg-bubble">${msg.text}</div>
+        <span class="msg-time">${time}</span>`;
+      box.appendChild(div);
+    }
+
     box.scrollTop = box.scrollHeight;
-    showNotification(msg.sender, msg.text);
+    showNotification(msg.sender, msg.voice ? '🎙️ Voice message' : msg.text);
   }
 
   window.sendMessage = function() {
