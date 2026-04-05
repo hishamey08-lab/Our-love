@@ -524,6 +524,34 @@
     .voice-duration { font-size: 0.7rem; color: var(--dusty); flex-shrink: 0; }
     .msg.me .voice-duration { color: rgba(255,255,255,0.8); }
 
+    .call-btn {
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; width: 28px; height: 28px;
+      border-radius: 50%; cursor: pointer; font-size: 0.85rem;
+      transition: background .2s, transform .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .call-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+
+    /* ── CALL OVERLAY ── */
+    #callOverlay {
+      position: fixed; inset: 0; z-index: 9998;
+      background: #0a0a0a; flex-direction: column;
+    }
+    .call-overlay-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      background: rgba(122,61,74,0.9);
+      color: white; font-size: 1rem; font-weight: 500;
+    }
+    .end-call-btn {
+      padding: 8px 18px; background: #ff4757;
+      color: white; border: none; border-radius: 50px;
+      cursor: pointer; font-size: 0.85rem;
+      transition: background .2s, transform .2s;
+    }
+    .end-call-btn:hover { background: #ff2030; transform: scale(1.05); }
+
     /* ── MUSIC PLAYER ── */
     .music-player {
       position: fixed; bottom: 28px; right: 28px; z-index: 999;
@@ -787,7 +815,9 @@
   <div id="chatBox" style="display:none; flex-direction:column; height:100%;">
     <div class="fc-header">
       <span id="chatUserLabel"></span>
-      <div style="display:flex;gap:8px;align-items:center;">
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button onclick="startCall('voice')" class="call-btn" title="Voice Call">📞</button>
+        <button onclick="startCall('video')" class="call-btn" title="Video Call">📹</button>
         <button onclick="switchUser()" class="switch-btn">🔄</button>
         <button onclick="toggleChat()" class="fc-close">✕</button>
       </div>
@@ -810,6 +840,15 @@
       <button onclick="sendMessage()" class="send-btn">💌</button>
     </div>
   </div>
+</div>
+
+<!-- CALL OVERLAY -->
+<div id="callOverlay" style="display:none;">
+  <div class="call-overlay-header">
+    <span id="callTitle">📞 Voice Call</span>
+    <button onclick="endCall()" class="end-call-btn">🔴 End Call</button>
+  </div>
+  <div id="callContainer" style="width:100%;height:100%;"></div>
 </div>
 
 <!-- MUSIC PLAYER -->
@@ -951,6 +990,56 @@
       player.style.transform = 'translateY(20px)';
     }
   });
+
+  // ─── VOICE & VIDEO CALL (Zegocloud) ───
+  const ZEGO_APP_ID = 1702113861;
+  const ZEGO_SERVER_SECRET = '9546a3a077bf87cc5c4cee58a1de90fc';
+  const CALL_ROOM = 'hisham-rasla-room';
+  let zegoInstance = null;
+
+  function generateToken(userId) {
+    // Simple token for testing — works with Zegocloud test mode
+    return null; // Zegocloud handles token internally with appID + secret
+  }
+
+  window.startCall = async function(type) {
+    if (!currentUser) return;
+    const overlay = document.getElementById('callOverlay');
+    const title = document.getElementById('callTitle');
+    title.textContent = type === 'video' ? '📹 Video Call with ' + (currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙') : '📞 Voice Call with ' + (currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙');
+    overlay.style.display = 'flex';
+    overlay.style.flexDirection = 'column';
+
+    const userId = currentUser.includes('Hisham') ? 'hisham' : 'rasla';
+    const userName = currentUser;
+
+    try {
+      const { ZegoUIKitPrebuilt } = await import('https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js');
+      const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
+        ZEGO_APP_ID, ZEGO_SERVER_SECRET, CALL_ROOM, userId, userName
+      );
+      zegoInstance = ZegoUIKitPrebuilt.create(kitToken);
+      zegoInstance.joinRoom({
+        container: document.getElementById('callContainer'),
+        scenario: {
+          mode: ZegoUIKitPrebuilt.OneONoneCall,
+        },
+        turnOnCameraWhenJoining: type === 'video',
+        turnOnMicrophoneWhenJoining: true,
+        showPreJoinView: false,
+        onLeaveRoom: () => endCall(),
+      });
+    } catch(e) {
+      alert('Call failed to start. Make sure both devices are on the site! 💕');
+      overlay.style.display = 'none';
+    }
+  }
+
+  window.endCall = function() {
+    if (zegoInstance) { try { zegoInstance.destroy(); } catch(e){} zegoInstance = null; }
+    document.getElementById('callOverlay').style.display = 'none';
+    document.getElementById('callContainer').innerHTML = '';
+  }
 
   // ─── VOICE MESSAGES ───
   let mediaRecorder = null;
