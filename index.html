@@ -462,6 +462,25 @@
       #floatingChat { width: calc(100vw - 32px); left: 16px; bottom: 88px; }
     }
 
+    .msg-actions {
+      display: flex; gap: 4px; margin-top: 4px;
+      opacity: 0; transition: opacity .2s;
+    }
+    .msg:hover .msg-actions { opacity: 1; }
+    .action-btn {
+      background: white; border: 1px solid var(--blush);
+      border-radius: 20px; padding: 2px 8px;
+      font-size: 0.75rem; cursor: pointer;
+      transition: background .2s, transform .2s;
+      line-height: 1.6;
+    }
+    .action-btn:hover { background: var(--petal); transform: scale(1.1); }
+    .edited-tag {
+      font-size: 0.6rem; color: rgba(255,255,255,0.6);
+      font-style: italic; margin-left: 4px;
+    }
+    .msg.them .edited-tag { color: var(--dusty); }
+
     .voice-btn {
       padding: 10px 12px; background: var(--petal);
       border: 1.5px solid var(--blush); border-radius: 50%;
@@ -1052,7 +1071,7 @@
     window._chatInitialized = true;
 
     import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js').then(({ initializeApp }) => {
-      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js').then(({ getDatabase, ref, push, onChildAdded }) => {
+      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js').then(({ getDatabase, ref, push, onChildAdded, remove, update }) => {
         const app = initializeApp({
           apiKey: "AIzaSyAjocvTwFnSeZTpLTYHqBZBc-cy0yQ-lXc",
           authDomain: "love-chat-75255.firebaseapp.com",
@@ -1074,22 +1093,45 @@
           }
         };
 
+        window._deleteMsg = (key) => {
+          if (confirm('Delete this message? 🗑️')) {
+            remove(ref(db, 'messages/' + key));
+            const el = document.getElementById('msg_' + key);
+            if (el) el.remove();
+          }
+        };
+
+        window._editMsg = (key, oldText) => {
+          const newText = prompt('Edit your message ✏️', oldText);
+          if (newText && newText.trim() && newText !== oldText) {
+            update(ref(db, 'messages/' + key), { text: newText.trim(), edited: true });
+            const bubble = document.querySelector(`#msg_${key} .msg-bubble`);
+            if (bubble) bubble.innerHTML = newText.trim() + ' <span class="edited-tag">edited</span>';
+          }
+        };
+
         onChildAdded(msgsRef, (snapshot) => {
-          renderMessage(snapshot.val());
+          renderMessage(snapshot.val(), snapshot.key);
         });
       });
     });
   }
 
-  function renderMessage(msg) {
+  function renderMessage(msg, key) {
     const box = document.getElementById('chatMessages');
     const isMe = msg.sender === currentUser;
     const div = document.createElement('div');
     div.className = 'msg ' + (isMe ? 'me' : 'them');
+    if (key) div.id = 'msg_' + key;
     const time = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
+    const actions = isMe && key ? `
+      <div class="msg-actions">
+        <button onclick="window._editMsg('${key}', this.closest('.msg').querySelector('.msg-bubble')?.textContent || '')" class="action-btn" title="Edit">✏️</button>
+        <button onclick="window._deleteMsg('${key}')" class="action-btn" title="Delete">🗑️</button>
+      </div>` : '';
+
     if (msg.voice) {
-      // Voice message
       const audio = new Audio(msg.voice);
       const waveSpans = Array(8).fill('<span></span>').join('');
       div.innerHTML = `
@@ -1099,19 +1141,21 @@
           <div class="voice-wave">${waveSpans}</div>
           <span class="voice-duration">${formatDuration(msg.duration || 0)}</span>
         </div>
-        <span class="msg-time">${time}</span>`;
+        <span class="msg-time">${time}</span>
+        ${isMe && key ? `<div class="msg-actions"><button onclick="window._deleteMsg('${key}')" class="action-btn" title="Delete">🗑️</button></div>` : ''}`;
       box.appendChild(div);
-      div.querySelector('.voice-msg').onclick = () => {
+      div.querySelector('.voice-msg').onclick = (e) => {
+        if (e.target.closest('.action-btn')) return;
         audio.paused ? audio.play() : audio.pause();
         div.querySelector('.voice-play').textContent = audio.paused ? '▶️' : '⏸️';
         audio.onended = () => div.querySelector('.voice-play').textContent = '▶️';
       };
     } else {
-      // Text message
       div.innerHTML = `
         <span class="msg-sender">${msg.sender}</span>
-        <div class="msg-bubble">${msg.text}</div>
-        <span class="msg-time">${time}</span>`;
+        <div class="msg-bubble">${msg.text}${msg.edited ? ' <span class="edited-tag">edited</span>' : ''}</div>
+        <span class="msg-time">${time}</span>
+        ${actions}`;
       box.appendChild(div);
     }
 
