@@ -995,48 +995,55 @@
   const ZEGO_APP_ID = 1702113861;
   const ZEGO_SERVER_SECRET = '9546a3a077bf87cc5c4cee58a1de90fc';
   const CALL_ROOM = 'hisham-rasla-room';
-  let zegoInstance = null;
 
-  function generateToken(userId) {
-    // Simple token for testing — works with Zegocloud test mode
-    return null; // Zegocloud handles token internally with appID + secret
+  function loadZegoScript() {
+    return new Promise((resolve, reject) => {
+      if (window.ZegoUIKitPrebuilt) { resolve(); return; }
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/@zegocloud/zego-uikit-prebuilt@1.13.4/zego-uikit-prebuilt.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
   }
 
   window.startCall = async function(type) {
     if (!currentUser) return;
     const overlay = document.getElementById('callOverlay');
     const title = document.getElementById('callTitle');
-    title.textContent = type === 'video' ? '📹 Video Call with ' + (currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙') : '📞 Voice Call with ' + (currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙');
+    const other = currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙';
+    title.textContent = (type === 'video' ? '📹 Video Call with ' : '📞 Voice Call with ') + other;
     overlay.style.display = 'flex';
     overlay.style.flexDirection = 'column';
 
-    const userId = currentUser.includes('Hisham') ? 'hisham' : 'rasla';
-    const userName = currentUser;
-
     try {
-      const { ZegoUIKitPrebuilt } = await import('https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js');
+      await loadZegoScript();
+      const userId = currentUser.includes('Hisham') ? 'hisham001' : 'rasla001';
+      const userName = currentUser;
       const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
         ZEGO_APP_ID, ZEGO_SERVER_SECRET, CALL_ROOM, userId, userName
       );
-      zegoInstance = ZegoUIKitPrebuilt.create(kitToken);
-      zegoInstance.joinRoom({
+      const zp = ZegoUIKitPrebuilt.create(kitToken);
+      zp.joinRoom({
         container: document.getElementById('callContainer'),
-        scenario: {
-          mode: ZegoUIKitPrebuilt.OneONoneCall,
-        },
+        scenario: { mode: ZegoUIKitPrebuilt.OneONoneCall },
         turnOnCameraWhenJoining: type === 'video',
+        showMyCameraToggleButton: type === 'video',
         turnOnMicrophoneWhenJoining: true,
         showPreJoinView: false,
         onLeaveRoom: () => endCall(),
       });
+      window._zegoInstance = zp;
     } catch(e) {
-      alert('Call failed to start. Make sure both devices are on the site! 💕');
+      console.error(e);
+      alert('Call failed 😢 Please make sure you are using Chrome browser and the site is HTTPS!');
       overlay.style.display = 'none';
     }
   }
 
   window.endCall = function() {
-    if (zegoInstance) { try { zegoInstance.destroy(); } catch(e){} zegoInstance = null; }
+    try { if (window._zegoInstance) window._zegoInstance.destroy(); } catch(e){}
+    window._zegoInstance = null;
     document.getElementById('callOverlay').style.display = 'none';
     document.getElementById('callContainer').innerHTML = '';
   }
