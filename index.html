@@ -524,6 +524,37 @@
     .voice-duration { font-size: 0.7rem; color: var(--dusty); flex-shrink: 0; }
     .msg.me .voice-duration { color: rgba(255,255,255,0.8); }
 
+    .media-uploading {
+      font-size: 0.75rem; color: var(--dusty);
+      font-style: italic; padding: 4px 8px;
+    }
+    .msg-img {
+      max-width: 100%; max-height: 180px;
+      border-radius: 12px; display: block;
+      cursor: pointer; object-fit: cover;
+      transition: transform .2s;
+    }
+    .msg-img:hover { transform: scale(1.03); }
+    .msg-video {
+      max-width: 100%; max-height: 180px;
+      border-radius: 12px; display: block;
+    }
+    .media-lightbox {
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .media-lightbox img, .media-lightbox video {
+      max-width: 95vw; max-height: 90vh;
+      border-radius: 12px; object-fit: contain;
+    }
+    .media-lightbox-close {
+      position: absolute; top: 20px; right: 20px;
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; width: 40px; height: 40px;
+      border-radius: 50%; font-size: 1.2rem; cursor: pointer;
+    }
+
     .call-btn {
       background: rgba(255,255,255,0.15); border: none;
       color: white; width: 28px; height: 28px;
@@ -834,9 +865,11 @@
       <span onclick="sendEmoji('✨')">✨</span>
     </div>
     <div class="chat-input-row">
+      <input type="file" id="mediaInput" accept="image/*,video/*" style="display:none;" onchange="sendMedia(this)"/>
+      <button onclick="document.getElementById('mediaInput').click()" class="voice-btn" title="Send Photo/Video">📎</button>
       <input type="text" id="chatInput" placeholder="Say something sweet… 💌"
         onkeydown="if(event.key==='Enter') sendMessage()"/>
-      <button id="voiceBtn" onclick="toggleRecording()" class="voice-btn" title="Hold to record">🎙️</button>
+      <button id="voiceBtn" onclick="toggleRecording()" class="voice-btn" title="Record voice">🎙️</button>
       <button onclick="sendMessage()" class="send-btn">💌</button>
     </div>
   </div>
@@ -990,6 +1023,45 @@
       player.style.transform = 'translateY(20px)';
     }
   });
+
+  // ─── MEDIA SENDING (Photos & Videos) ───
+  window.sendMedia = function(input) {
+    const file = input.files[0];
+    if (!file || !window._sendToFirebase) return;
+
+    // Show uploading indicator
+    const box = document.getElementById('chatMessages');
+    const uploading = document.createElement('div');
+    uploading.className = 'media-uploading';
+    uploading.textContent = file.type.startsWith('video') ? '📹 Sending video…' : '🖼️ Sending photo…';
+    box.appendChild(uploading);
+    box.scrollTop = box.scrollHeight;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      uploading.remove();
+      window._sendToFirebase(null, null, {
+        data: reader.result,
+        type: file.type.startsWith('video') ? 'video' : 'image',
+        name: file.name
+      });
+    };
+    reader.readAsDataURL(file);
+    input.value = ''; // reset
+  }
+
+  window.openLightbox = function(src, type) {
+    const lb = document.createElement('div');
+    lb.className = 'media-lightbox';
+    lb.innerHTML = `
+      <button class="media-lightbox-close" onclick="this.parentElement.remove()">✕</button>
+      ${type === 'video'
+        ? `<video src="${src}" controls autoplay style="max-width:95vw;max-height:90vh;border-radius:12px;"></video>`
+        : `<img src="${src}" style="max-width:95vw;max-height:90vh;border-radius:12px;"/>`
+      }`;
+    lb.onclick = (e) => { if (e.target === lb) lb.remove(); };
+    document.body.appendChild(lb);
+  }
 
   // ─── VOICE & VIDEO CALL (Zegocloud) ───
   const ZEGO_APP_ID = 1702113861;
@@ -1181,8 +1253,10 @@
         const db = getDatabase(app);
         const msgsRef = ref(db, 'messages');
 
-        window._sendToFirebase = (text, voice = null) => {
-          if (voice) {
+        window._sendToFirebase = (text, voice = null, media = null) => {
+          if (media) {
+            push(msgsRef, { sender: currentUser, media: media.data, mediaType: media.type, time: Date.now() });
+          } else if (voice) {
             push(msgsRef, { sender: currentUser, voice: voice.audio, duration: voice.duration, time: Date.now() });
           } else {
             push(msgsRef, { sender: currentUser, text: text, time: Date.now() });
@@ -1220,14 +1294,23 @@
     div.className = 'msg ' + (isMe ? 'me' : 'them');
     if (key) div.id = 'msg_' + key;
     const time = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    const delBtn = isMe && key ? `<div class="msg-actions"><button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button></div>` : '';
 
-    const actions = isMe && key ? `
-      <div class="msg-actions">
-        <button onclick="window._editMsg('${key}', this.closest('.msg').querySelector('.msg-bubble')?.textContent || '')" class="action-btn" title="Edit">✏️</button>
-        <button onclick="window._deleteMsg('${key}')" class="action-btn" title="Delete">🗑️</button>
-      </div>` : '';
-
-    if (msg.voice) {
+    if (msg.media) {
+      // Photo or Video message
+      if (msg.mediaType === 'image') {
+        div.innerHTML = `
+          <span class="msg-sender">${msg.sender}</span>
+          <img src="${msg.media}" class="msg-img" onclick="openLightbox('${msg.media}', 'image')" />
+          <span class="msg-time">${time}</span>${delBtn}`;
+      } else {
+        div.innerHTML = `
+          <span class="msg-sender">${msg.sender}</span>
+          <video src="${msg.media}" class="msg-video" controls onclick="openLightbox('${msg.media}', 'video')"></video>
+          <span class="msg-time">${time}</span>${delBtn}`;
+      }
+      box.appendChild(div);
+    } else if (msg.voice) {
       const audio = new Audio(msg.voice);
       const waveSpans = Array(8).fill('<span></span>').join('');
       div.innerHTML = `
@@ -1238,7 +1321,7 @@
           <span class="voice-duration">${formatDuration(msg.duration || 0)}</span>
         </div>
         <span class="msg-time">${time}</span>
-        ${isMe && key ? `<div class="msg-actions"><button onclick="window._deleteMsg('${key}')" class="action-btn" title="Delete">🗑️</button></div>` : ''}`;
+        ${isMe && key ? `<div class="msg-actions"><button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button></div>` : ''}`;
       box.appendChild(div);
       div.querySelector('.voice-msg').onclick = (e) => {
         if (e.target.closest('.action-btn')) return;
@@ -1247,16 +1330,20 @@
         audio.onended = () => div.querySelector('.voice-play').textContent = '▶️';
       };
     } else {
+      const actions = isMe && key ? `
+        <div class="msg-actions">
+          <button onclick="window._editMsg('${key}', this.closest('.msg').querySelector('.msg-bubble')?.textContent || '')" class="action-btn">✏️</button>
+          <button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button>
+        </div>` : '';
       div.innerHTML = `
         <span class="msg-sender">${msg.sender}</span>
         <div class="msg-bubble">${msg.text}${msg.edited ? ' <span class="edited-tag">edited</span>' : ''}</div>
-        <span class="msg-time">${time}</span>
-        ${actions}`;
+        <span class="msg-time">${time}</span>${actions}`;
       box.appendChild(div);
     }
 
     box.scrollTop = box.scrollHeight;
-    showNotification(msg.sender, msg.voice ? '🎙️ Voice message' : msg.text);
+    showNotification(msg.sender, msg.media ? (msg.mediaType === 'video' ? '📹 Sent a video' : '🖼️ Sent a photo') : msg.voice ? '🎙️ Voice message' : msg.text);
   }
 
   window.sendMessage = function() {
