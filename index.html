@@ -470,6 +470,143 @@
       #floatingChat { left: 28px; right: auto; width: 360px; }
     }
 
+    /* ── SNAPCHAT CAMERA ── */
+    #cameraOverlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      flex-direction: column;
+      display: flex;
+    }
+    .cam-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      background: rgba(0,0,0,0.6);
+      position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+    }
+    .cam-close, .cam-flip {
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer; font-size: 1rem;
+      transition: background .2s;
+    }
+    .cam-close:hover, .cam-flip:hover { background: rgba(255,255,255,0.3); }
+    .cam-title { color: white; font-size: 1rem; font-weight: 500; }
+
+    .cam-viewfinder {
+      flex: 1; position: relative; overflow: hidden;
+    }
+    #camVideo {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .filter-label {
+      position: absolute; top: 60px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.45); color: white;
+      padding: 4px 14px; border-radius: 20px;
+      font-size: 0.75rem; pointer-events: none;
+    }
+    #stickerLayer {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .cam-sticker {
+      position: absolute; font-size: 2.5rem;
+      cursor: move; pointer-events: all;
+      user-select: none; touch-action: none;
+      animation: stickerPop .3s ease;
+    }
+    @keyframes stickerPop {
+      from { transform: scale(0); } to { transform: scale(1); }
+    }
+
+    /* Filters applied via CSS on video */
+    #camVideo.filter-rose { filter: saturate(1.4) hue-rotate(320deg) brightness(1.05); }
+    #camVideo.filter-bw   { filter: grayscale(1) contrast(1.1); }
+    #camVideo.filter-warm { filter: sepia(0.4) saturate(1.3) brightness(1.05); }
+    #camVideo.filter-cool { filter: hue-rotate(190deg) saturate(1.2) brightness(1.05); }
+    #camVideo.filter-vintage { filter: sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8); }
+
+    .filters-bar {
+      display: flex; gap: 10px; padding: 10px 16px;
+      background: rgba(0,0,0,0.7); overflow-x: auto;
+      align-items: center;
+    }
+    .filter-thumb {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 3px solid transparent; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+      transition: transform .2s, border-color .2s;
+    }
+    .filter-thumb.active { border-color: white; transform: scale(1.15); }
+    .filter-thumb:hover { transform: scale(1.1); }
+
+    .stickers-bar {
+      display: flex; gap: 12px; padding: 8px 16px;
+      background: rgba(0,0,0,0.6); overflow-x: auto;
+    }
+    .stickers-bar span {
+      font-size: 1.6rem; cursor: pointer;
+      transition: transform .2s; flex-shrink: 0;
+    }
+    .stickers-bar span:hover { transform: scale(1.3); }
+
+    .cam-controls {
+      display: flex; justify-content: center; align-items: center;
+      padding: 16px; background: rgba(0,0,0,0.7);
+    }
+    .cam-capture {
+      width: 68px; height: 68px; border-radius: 50%;
+      background: white; border: 5px solid rgba(255,255,255,0.4);
+      cursor: pointer; transition: transform .15s, background .15s;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+    }
+    .cam-capture:hover { transform: scale(1.08); background: #f4b8c1; }
+    .cam-capture:active { transform: scale(0.95); }
+
+    /* Preview */
+    #camPreview {
+      position: absolute; inset: 0; z-index: 20;
+      background: #000;
+    }
+    .preview-actions {
+      position: absolute; bottom: 30px; left: 0; right: 0;
+      display: flex; justify-content: center; gap: 20px;
+    }
+    .preview-btn {
+      padding: 12px 28px; border-radius: 50px; border: none;
+      font-size: 0.95rem; cursor: pointer; font-weight: 500;
+      transition: transform .2s;
+    }
+    .preview-btn:hover { transform: scale(1.05); }
+    .retake { background: rgba(255,255,255,0.2); color: white; }
+    .send-cam { background: var(--rose); color: white; }
+
+    /* ── TYPING INDICATOR ── */
+    .typing-indicator {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px; background: #fdf6f0; flex-shrink: 0;
+      border-top: 1px solid rgba(232,104,122,0.08);
+    }
+    .typing-dots { display: flex; gap: 3px; align-items: center; }
+    .typing-dots span {
+      width: 6px; height: 6px; background: var(--rose);
+      border-radius: 50%; display: inline-block;
+      animation: typingBounce 1.2s ease-in-out infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+    .typing-name { font-size: 0.72rem; color: var(--dusty); font-style: italic; }
+
+    /* ── SEEN STATUS ── */
+    .msg-meta { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+    .msg-time { font-size: 0.6rem; color: var(--blush); }
+    .seen-status { font-size: 0.7rem; transition: color .3s; }
+
     .msg-actions {
       display: flex; gap: 4px; margin-top: 4px;
       opacity: 0; transition: opacity .2s;
@@ -862,6 +999,11 @@
       </div>
     </div>
     <div class="chat-messages" id="chatMessages"></div>
+    <!-- Typing Indicator -->
+    <div id="typingIndicator" style="display:none;" class="typing-indicator">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+      <span class="typing-name"></span>
+    </div>
     <div class="emoji-bar">
       <span onclick="sendEmoji('❤️')">❤️</span>
       <span onclick="sendEmoji('😘')">😘</span>
@@ -875,10 +1017,68 @@
     <div class="chat-input-row">
       <input type="file" id="mediaInput" accept="image/*,video/*" style="display:none;" onchange="sendMedia(this)"/>
       <button onclick="document.getElementById('mediaInput').click()" class="voice-btn" title="Send Photo/Video">📎</button>
+      <button onclick="openCamera()" class="voice-btn" title="Snapchat Camera">📸</button>
       <input type="text" id="chatInput" placeholder="Say something sweet… 💌"
         onkeydown="if(event.key==='Enter') sendMessage()"/>
       <button id="voiceBtn" onclick="toggleRecording()" class="voice-btn" title="Record voice">🎙️</button>
       <button onclick="sendMessage()" class="send-btn">💌</button>
+    </div>
+  </div>
+</div>
+
+<!-- SNAPCHAT CAMERA -->
+<div id="cameraOverlay" style="display:none;">
+  <div class="cam-header">
+    <button onclick="closeCamera()" class="cam-close">✕</button>
+    <span class="cam-title">📸 Camera</span>
+    <button onclick="flipCamera()" class="cam-flip">🔄</button>
+  </div>
+
+  <!-- Live viewfinder -->
+  <div class="cam-viewfinder">
+    <video id="camVideo" autoplay playsinline muted></video>
+    <canvas id="camCanvas" style="display:none;"></canvas>
+
+    <!-- Filter overlay label -->
+    <div class="filter-label" id="filterLabel">No Filter</div>
+
+    <!-- Sticker layer -->
+    <div id="stickerLayer"></div>
+  </div>
+
+  <!-- Filters bar -->
+  <div class="filters-bar">
+    <div class="filter-thumb active" onclick="setFilter('none')" style="background:#fff;">🚫</div>
+    <div class="filter-thumb" onclick="setFilter('rose')" style="background:linear-gradient(135deg,#f4b8c1,#e8687a);">🌸</div>
+    <div class="filter-thumb" onclick="setFilter('bw')" style="background:linear-gradient(135deg,#888,#333);">🖤</div>
+    <div class="filter-thumb" onclick="setFilter('warm')" style="background:linear-gradient(135deg,#fde8d0,#c9a96e);">🌅</div>
+    <div class="filter-thumb" onclick="setFilter('cool')" style="background:linear-gradient(135deg,#b3d9f2,#5b9bd5);">❄️</div>
+    <div class="filter-thumb" onclick="setFilter('vintage')" style="background:linear-gradient(135deg,#d4a857,#8b5e3c);">📷</div>
+  </div>
+
+  <!-- Stickers bar -->
+  <div class="stickers-bar">
+    <span onclick="addSticker('❤️')">❤️</span>
+    <span onclick="addSticker('🥺')">🥺</span>
+    <span onclick="addSticker('💕')">💕</span>
+    <span onclick="addSticker('🌸')">🌸</span>
+    <span onclick="addSticker('✨')">✨</span>
+    <span onclick="addSticker('😍')">😍</span>
+    <span onclick="addSticker('🔥')">🔥</span>
+    <span onclick="addSticker('💋')">💋</span>
+  </div>
+
+  <!-- Capture button -->
+  <div class="cam-controls">
+    <button onclick="capturePhoto()" class="cam-capture"></button>
+  </div>
+
+  <!-- Preview after capture -->
+  <div id="camPreview" style="display:none;">
+    <img id="previewImg" style="width:100%;height:100%;object-fit:cover;"/>
+    <div class="preview-actions">
+      <button onclick="retakePhoto()" class="preview-btn retake">🔄 Retake</button>
+      <button onclick="sendCameraPhoto()" class="preview-btn send-cam">💌 Send</button>
     </div>
   </div>
 </div>
@@ -912,6 +1112,9 @@
   <span class="heart">💗</span> Made with love, just for us
   <p>"You are my today and all of my tomorrows."</p>
 </footer>
+
+<!-- Zegocloud SDK loaded separately as regular script -->
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt@1.13.4/zego-uikit-prebuilt.js"></script>
 
 <script type="module">
   // ─── PASSWORD ───
@@ -1032,6 +1235,134 @@
     }
   });
 
+  // ─── SNAPCHAT CAMERA ───
+  let camStream = null;
+  let facingMode = 'user';
+  let currentFilter = 'none';
+  let capturedDataUrl = null;
+
+  window.openCamera = async function() {
+    document.getElementById('cameraOverlay').style.display = 'flex';
+    await startCam();
+  }
+
+  async function startCam() {
+    try {
+      if (camStream) camStream.getTracks().forEach(t => t.stop());
+      camStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      const video = document.getElementById('camVideo');
+      video.srcObject = camStream;
+      applyFilter(currentFilter);
+    } catch(e) {
+      alert('Camera access denied 📸 Please allow camera in browser settings!');
+      closeCamera();
+    }
+  }
+
+  window.closeCamera = function() {
+    if (camStream) camStream.getTracks().forEach(t => t.stop());
+    camStream = null;
+    document.getElementById('cameraOverlay').style.display = 'none';
+    document.getElementById('camPreview').style.display = 'none';
+    document.getElementById('stickerLayer').innerHTML = '';
+  }
+
+  window.flipCamera = async function() {
+    facingMode = facingMode === 'user' ? 'environment' : 'user';
+    await startCam();
+  }
+
+  window.setFilter = function(filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-thumb').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    applyFilter(filter);
+    const labels = { none:'No Filter', rose:'Rose 🌸', bw:'B&W 🖤', warm:'Warm 🌅', cool:'Cool ❄️', vintage:'Vintage 📷' };
+    document.getElementById('filterLabel').textContent = labels[filter] || 'No Filter';
+  }
+
+  function applyFilter(filter) {
+    const video = document.getElementById('camVideo');
+    video.className = filter === 'none' ? '' : 'filter-' + filter;
+  }
+
+  window.addSticker = function(emoji) {
+    const layer = document.getElementById('stickerLayer');
+    const s = document.createElement('div');
+    s.className = 'cam-sticker';
+    s.textContent = emoji;
+    s.style.left = (20 + Math.random() * 60) + '%';
+    s.style.top = (20 + Math.random() * 50) + '%';
+    // Make draggable
+    let startX, startY, startLeft, startTop;
+    s.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      startX = t.clientX; startY = t.clientY;
+      startLeft = s.offsetLeft; startTop = s.offsetTop;
+      e.preventDefault();
+    }, { passive: false });
+    s.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      s.style.left = (startLeft + t.clientX - startX) + 'px';
+      s.style.top = (startTop + t.clientY - startY) + 'px';
+      e.preventDefault();
+    }, { passive: false });
+    // Double tap to remove
+    let lastTap = 0;
+    s.addEventListener('touchend', () => {
+      const now = Date.now();
+      if (now - lastTap < 300) s.remove();
+      lastTap = now;
+    });
+    layer.appendChild(s);
+  }
+
+  window.capturePhoto = function() {
+    const video = document.getElementById('camVideo');
+    const canvas = document.getElementById('camCanvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+
+    // Flip horizontally for front camera
+    if (facingMode === 'user') {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(video, 0, 0);
+    if (facingMode === 'user') ctx.setTransform(1,0,0,1,0,0);
+
+    // Apply CSS filter visually via canvas
+    const filters = {
+      rose: 'saturate(1.4) hue-rotate(320deg) brightness(1.05)',
+      bw: 'grayscale(1) contrast(1.1)',
+      warm: 'sepia(0.4) saturate(1.3) brightness(1.05)',
+      cool: 'hue-rotate(190deg) saturate(1.2) brightness(1.05)',
+      vintage: 'sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8)'
+    };
+    if (filters[currentFilter]) ctx.filter = filters[currentFilter];
+    ctx.drawImage(video, 0, 0);
+
+    capturedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    const preview = document.getElementById('camPreview');
+    document.getElementById('previewImg').src = capturedDataUrl;
+    preview.style.display = 'block';
+  }
+
+  window.retakePhoto = function() {
+    document.getElementById('camPreview').style.display = 'none';
+    capturedDataUrl = null;
+  }
+
+  window.sendCameraPhoto = function() {
+    if (!capturedDataUrl || !window._sendToFirebase) return;
+    window._sendToFirebase(null, null, { data: capturedDataUrl, type: 'image', name: 'camera.jpg' });
+    closeCamera();
+  }
+
   // ─── MEDIA SENDING (Photos & Videos) ───
   window.sendMedia = function(input) {
     const file = input.files[0];
@@ -1076,17 +1407,6 @@
   const ZEGO_SERVER_SECRET = '9546a3a077bf87cc5c4cee58a1de90fc';
   const CALL_ROOM = 'hisham-rasla-room';
 
-  function loadZegoScript() {
-    return new Promise((resolve, reject) => {
-      if (window.ZegoUIKitPrebuilt) { resolve(); return; }
-      const s = document.createElement('script');
-      s.src = 'https://unpkg.com/@zegocloud/zego-uikit-prebuilt@1.13.4/zego-uikit-prebuilt.js';
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-  }
-
   window.startCall = async function(type) {
     if (!currentUser) return;
     const overlay = document.getElementById('callOverlay');
@@ -1097,13 +1417,13 @@
     overlay.style.flexDirection = 'column';
 
     try {
-      await loadZegoScript();
+      if (!window.ZegoUIKitPrebuilt) throw new Error('SDK not loaded');
       const userId = currentUser.includes('Hisham') ? 'hisham001' : 'rasla001';
-      const userName = currentUser;
       const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-        ZEGO_APP_ID, ZEGO_SERVER_SECRET, CALL_ROOM, userId, userName
+        ZEGO_APP_ID, ZEGO_SERVER_SECRET, CALL_ROOM, userId, currentUser
       );
       const zp = ZegoUIKitPrebuilt.create(kitToken);
+      window._zegoInstance = zp;
       zp.joinRoom({
         container: document.getElementById('callContainer'),
         scenario: { mode: ZegoUIKitPrebuilt.OneONoneCall },
@@ -1113,11 +1433,10 @@
         showPreJoinView: false,
         onLeaveRoom: () => endCall(),
       });
-      window._zegoInstance = zp;
     } catch(e) {
       console.error(e);
-      alert('Call failed 😢 Please make sure you are using Chrome browser and the site is HTTPS!');
       overlay.style.display = 'none';
+      alert('Call failed 😢 Error: ' + e.message);
     }
   }
 
@@ -1247,7 +1566,7 @@
     window._chatInitialized = true;
 
     import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js').then(({ initializeApp }) => {
-      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js').then(({ getDatabase, ref, push, onChildAdded, remove, update }) => {
+      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js').then(({ getDatabase, ref, push, onChildAdded, remove, update, onValue, set }) => {
         const app = initializeApp({
           apiKey: "AIzaSyAjocvTwFnSeZTpLTYHqBZBc-cy0yQ-lXc",
           authDomain: "love-chat-75255.firebaseapp.com",
@@ -1288,8 +1607,53 @@
           }
         };
 
+        // ── TYPING INDICATOR ──
+        const typingRef = ref(db, 'typing');
+
+        let typingTimer = null;
+        document.getElementById('chatInput').addEventListener('input', () => {
+          set(ref(db, 'typing/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), true);
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(() => {
+            set(ref(db, 'typing/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), false);
+          }, 2000);
+        });
+
+        onValue(ref(db, 'typing'), (snapshot) => {
+          const data = snapshot.val() || {};
+          const otherKey = currentUser.includes('Hisham') ? 'rasla' : 'hisham';
+          const otherName = currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙';
+          const indicator = document.getElementById('typingIndicator');
+          if (data[otherKey]) {
+            indicator.style.display = 'flex';
+            indicator.querySelector('.typing-name').textContent = otherName + ' is typing';
+          } else {
+            indicator.style.display = 'none';
+          }
+        });
+
+        // ── SEEN STATUS ──
+        const seenRef = ref(db, 'seen');
+        // Mark messages as seen when chat is open
+        const markSeen = () => {
+          set(ref(db, 'seen/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), Date.now());
+        };
+        document.getElementById('chatMessages').addEventListener('scroll', markSeen);
+        markSeen();
+
+        onValue(seenRef, (snapshot) => {
+          const data = snapshot.val() || {};
+          const myKey = currentUser.includes('Hisham') ? 'hisham' : 'rasla';
+          // Update last seen tick on sent messages
+          document.querySelectorAll('.msg.me .seen-status').forEach(el => {
+            el.textContent = data[myKey === 'hisham' ? 'rasla' : 'hisham'] ? '✓✓' : '✓';
+            el.style.color = data[myKey === 'hisham' ? 'rasla' : 'hisham'] ? '#e8687a' : '#aaa';
+          });
+        });
+
         onChildAdded(msgsRef, (snapshot) => {
           renderMessage(snapshot.val(), snapshot.key);
+          markSeen();
         });
       });
     });
@@ -1346,7 +1710,11 @@
       div.innerHTML = `
         <span class="msg-sender">${msg.sender}</span>
         <div class="msg-bubble">${msg.text}${msg.edited ? ' <span class="edited-tag">edited</span>' : ''}</div>
-        <span class="msg-time">${time}</span>${actions}`;
+        <div class="msg-meta">
+          <span class="msg-time">${time}</span>
+          ${isMe ? '<span class="seen-status" style="font-size:0.7rem;color:#aaa;">✓</span>' : ''}
+        </div>
+        ${actions}`;
       box.appendChild(div);
     }
 
