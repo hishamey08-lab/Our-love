@@ -410,8 +410,22 @@
     .chat-messages {
       flex: 1; overflow-y: auto; padding: 14px;
       display: flex; flex-direction: column; gap: 10px;
-      background: #fdf6f0;
+      position: relative;
+      background: transparent;
     }
+    .chat-messages::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(253,246,240,0.45);
+      z-index: 0; pointer-events: none;
+    }
+    .chat-bg-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; z-index: -1;
+      opacity: 0.55;
+    }
+    .chat-messages > * { position: relative; z-index: 1; }
     .chat-messages::-webkit-scrollbar { width: 3px; }
     .chat-messages::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 3px; }
     .msg { display: flex; flex-direction: column; max-width: 78%; }
@@ -425,11 +439,13 @@
     .msg.me .msg-bubble {
       background: linear-gradient(135deg, var(--rose), var(--dusty));
       color: white; border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 12px rgba(122,61,74,0.3);
     }
     .msg.them .msg-bubble {
-      background: white; color: var(--text);
+      background: rgba(255,255,255,0.92); color: var(--text);
       border: 1px solid var(--blush); border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 6px rgba(122,61,74,0.06);
+      box-shadow: 0 2px 12px rgba(122,61,74,0.15);
+      backdrop-filter: blur(4px);
     }
     .msg-time { font-size: 0.6rem; color: var(--blush); margin-top: 2px; }
     .emoji-bar {
@@ -520,25 +536,39 @@
     }
 
     /* Filters applied via CSS on video */
-    #camVideo.filter-rose { filter: saturate(1.4) hue-rotate(320deg) brightness(1.05); }
-    #camVideo.filter-bw   { filter: grayscale(1) contrast(1.1); }
-    #camVideo.filter-warm { filter: sepia(0.4) saturate(1.3) brightness(1.05); }
-    #camVideo.filter-cool { filter: hue-rotate(190deg) saturate(1.2) brightness(1.05); }
-    #camVideo.filter-vintage { filter: sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8); }
+    #camVideo.filter-rose     { filter: saturate(1.4) hue-rotate(320deg) brightness(1.05); }
+    #camVideo.filter-romantic  { filter: saturate(1.8) hue-rotate(300deg) brightness(1.1) contrast(1.1); }
+    #camVideo.filter-cute      { filter: saturate(1.3) brightness(1.15) contrast(0.9) sepia(0.15); }
+    #camVideo.filter-comedy    { filter: saturate(2) hue-rotate(90deg) contrast(1.3) brightness(1.1); }
+    #camVideo.filter-bw        { filter: grayscale(1) contrast(1.1); }
+    #camVideo.filter-warm      { filter: sepia(0.4) saturate(1.3) brightness(1.05); }
+    #camVideo.filter-cool      { filter: hue-rotate(190deg) saturate(1.2) brightness(1.05); }
+    #camVideo.filter-vintage   { filter: sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8); }
+    #camVideo.filter-dreamy    { filter: brightness(1.1) saturate(0.8) blur(0.5px) hue-rotate(270deg) opacity(0.95); }
+    #camVideo.filter-neon      { filter: saturate(3) brightness(1.2) contrast(1.4) hue-rotate(120deg); }
+    #camVideo.filter-golden    { filter: sepia(0.3) saturate(1.8) brightness(1.1) hue-rotate(15deg); }
 
     .filters-bar {
-      display: flex; gap: 10px; padding: 10px 16px;
-      background: rgba(0,0,0,0.7); overflow-x: auto;
-      align-items: center;
+      display: flex; gap: 12px; padding: 10px 16px;
+      background: rgba(0,0,0,0.75); overflow-x: auto;
+      align-items: flex-start; -webkit-overflow-scrolling: touch;
+    }
+    .filter-item {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 4px; flex-shrink: 0;
+    }
+    .filter-name {
+      color: rgba(255,255,255,0.8); font-size: 0.6rem;
+      text-align: center; font-family: sans-serif;
     }
     .filter-thumb {
-      width: 40px; height: 40px; border-radius: 50%;
+      width: 44px; height: 44px; border-radius: 50%;
       border: 3px solid transparent; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; flex-shrink: 0;
+      font-size: 1.2rem; flex-shrink: 0;
       transition: transform .2s, border-color .2s;
     }
-    .filter-thumb.active { border-color: white; transform: scale(1.15); }
+    .filter-thumb.active { border-color: white; transform: scale(1.2); }
     .filter-thumb:hover { transform: scale(1.1); }
 
     .stickers-bar {
@@ -728,7 +758,125 @@
     }
     .end-call-btn:hover { background: #ff2030; transform: scale(1.05); }
 
-    /* ── MUSIC PLAYER ── */
+    /* ── MOOD PLAYLIST PLAYER ── */
+    #playlistPlayer {
+      position: fixed; bottom: 0; right: 0; left: 0;
+      z-index: 997; font-family: 'DM Sans', sans-serif;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .playlist-mini {
+      background: rgba(122,61,74,0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; transition: background .3s;
+    }
+    .playlist-mini:hover { background: rgba(92,45,56,0.98); }
+    .pl-mini-left { display: flex; align-items: center; gap: 12px; }
+    .pl-disc {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--deep));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+      animation: discSpin 4s linear infinite paused;
+    }
+    .pl-disc.playing { animation-play-state: running; }
+    @keyframes discSpin { to { transform: rotate(360deg); } }
+    .pl-mini-info { display: flex; flex-direction: column; }
+    .pl-mini-title { color: white; font-size: 0.85rem; font-weight: 500; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pl-mini-sub { color: var(--blush); font-size: 0.7rem; }
+    .pl-mini-right { display: flex; align-items: center; gap: 6px; }
+    .pl-ctrl {
+      background: rgba(255,255,255,0.12); border: none; color: white;
+      width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+      font-size: 0.85rem; transition: background .2s, transform .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pl-ctrl:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
+    .pl-play { background: var(--rose) !important; }
+
+    /* Full Panel */
+    .playlist-panel {
+      background: linear-gradient(180deg, #3d1a24 0%, #5c2d38 100%);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 0 0 8px; max-height: 85vh; overflow-y: auto;
+    }
+    .pl-panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: white; font-size: 1rem; font-weight: 500; position: sticky; top: 0;
+      background: rgba(61,26,36,0.98); z-index: 1;
+    }
+    .pl-panel-close {
+      background: rgba(255,255,255,0.12); border: none; color: white;
+      width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.8rem;
+    }
+
+    .pl-now-playing {
+      display: flex; align-items: center; gap: 16px;
+      padding: 20px 20px 10px;
+    }
+    .pl-cover {
+      width: 64px; height: 64px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--rose), var(--deep));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      animation: discSpin 6s linear infinite paused;
+    }
+    .pl-cover.playing { animation-play-state: running; }
+    .pl-np-title { color: white; font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+    .pl-np-artist { color: var(--blush); font-size: 0.8rem; }
+
+    .pl-progress-wrap {
+      display: flex; align-items: center; gap: 10px; padding: 8px 20px;
+    }
+    .pl-time { color: rgba(255,255,255,0.6); font-size: 0.7rem; min-width: 32px; }
+    .pl-progress {
+      flex: 1; height: 4px; accent-color: var(--rose);
+      cursor: pointer; border-radius: 4px;
+    }
+
+    .pl-controls {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; padding: 8px 20px 12px;
+    }
+    .pl-ctrl-lg {
+      background: rgba(255,255,255,0.1); border: none; color: white;
+      width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+      font-size: 1.1rem; transition: background .2s, transform .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pl-ctrl-lg:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+    .pl-play-lg { width: 56px !important; height: 56px !important; background: var(--rose) !important; font-size: 1.4rem !important; }
+    .pl-ctrl-lg.active { color: var(--blush); background: rgba(232,104,122,0.2); }
+
+    .pl-volume-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 20px 12px; color: white; font-size: 0.9rem;
+    }
+    .pl-volume { flex: 1; height: 4px; accent-color: var(--rose); cursor: pointer; }
+
+    .pl-list { padding: 0 12px 16px; }
+    .pl-song {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 12px; cursor: pointer;
+      transition: background .2s; margin-bottom: 4px;
+    }
+    .pl-song:hover { background: rgba(255,255,255,0.08); }
+    .pl-song.active { background: rgba(232,104,122,0.2); border: 1px solid rgba(232,104,122,0.3); }
+    .pl-song-num { color: rgba(255,255,255,0.3); font-size: 0.75rem; width: 20px; text-align: center; flex-shrink: 0; }
+    .pl-song.active .pl-song-num { color: var(--rose); }
+    .pl-song-info { flex: 1; min-width: 0; }
+    .pl-song-title { color: white; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pl-song.active .pl-song-title { color: var(--blush); font-weight: 600; }
+    .pl-song-wave { display: flex; align-items: flex-end; gap: 2px; height: 16px; flex-shrink: 0; }
+    .pl-song-wave span { width: 2px; background: var(--rose); border-radius: 1px; animation: waveIdle 0.8s ease-in-out infinite alternate; }
+    .pl-song-wave span:nth-child(2) { animation-delay: .15s; }
+    .pl-song-wave span:nth-child(3) { animation-delay: .3s; }
+
+    /* ── MUSIC PLAYER (old) ── */
     .music-player {
       position: fixed; bottom: 28px; right: 28px; z-index: 999;
       display: flex; align-items: center; gap: 12px;
@@ -998,7 +1146,9 @@
         <button onclick="toggleChat()" class="fc-close">✕</button>
       </div>
     </div>
-    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-messages" id="chatMessages">
+      <video class="chat-bg-video" autoplay loop muted playsinline src="our_love_background.mp4"></video>
+    </div>
     <!-- Typing Indicator -->
     <div id="typingIndicator" style="display:none;" class="typing-indicator">
       <div class="typing-dots"><span></span><span></span><span></span></div>
@@ -1048,12 +1198,54 @@
 
   <!-- Filters bar -->
   <div class="filters-bar">
-    <div class="filter-thumb active" onclick="setFilter('none')" style="background:#fff;">🚫</div>
-    <div class="filter-thumb" onclick="setFilter('rose')" style="background:linear-gradient(135deg,#f4b8c1,#e8687a);">🌸</div>
-    <div class="filter-thumb" onclick="setFilter('bw')" style="background:linear-gradient(135deg,#888,#333);">🖤</div>
-    <div class="filter-thumb" onclick="setFilter('warm')" style="background:linear-gradient(135deg,#fde8d0,#c9a96e);">🌅</div>
-    <div class="filter-thumb" onclick="setFilter('cool')" style="background:linear-gradient(135deg,#b3d9f2,#5b9bd5);">❄️</div>
-    <div class="filter-thumb" onclick="setFilter('vintage')" style="background:linear-gradient(135deg,#d4a857,#8b5e3c);">📷</div>
+    <div class="filter-item">
+      <div class="filter-thumb active" onclick="setFilter('none', this)" style="background:#fff;">🚫</div>
+      <span class="filter-name">Normal</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('rose', this)" style="background:linear-gradient(135deg,#f4b8c1,#e8687a);">🌸</div>
+      <span class="filter-name">Rose</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('romantic', this)" style="background:linear-gradient(135deg,#ff6b9d,#c44569);">💗</div>
+      <span class="filter-name">Romantic</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('cute', this)" style="background:linear-gradient(135deg,#ffeaa7,#fdcb6e);">🍑</div>
+      <span class="filter-name">Cute</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('comedy', this)" style="background:linear-gradient(135deg,#a8e6cf,#3d9970);">🤡</div>
+      <span class="filter-name">Comedy</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('bw', this)" style="background:linear-gradient(135deg,#888,#333);">🖤</div>
+      <span class="filter-name">B&W</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('warm', this)" style="background:linear-gradient(135deg,#fde8d0,#c9a96e);">🌅</div>
+      <span class="filter-name">Warm</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('cool', this)" style="background:linear-gradient(135deg,#b3d9f2,#5b9bd5);">❄️</div>
+      <span class="filter-name">Cool</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('vintage', this)" style="background:linear-gradient(135deg,#d4a857,#8b5e3c);">📷</div>
+      <span class="filter-name">Vintage</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('dreamy', this)" style="background:linear-gradient(135deg,#d7b4f3,#9b59b6);">🌙</div>
+      <span class="filter-name">Dreamy</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('neon', this)" style="background:linear-gradient(135deg,#00ff88,#00b4d8);">🌈</div>
+      <span class="filter-name">Neon</span>
+    </div>
+    <div class="filter-item">
+      <div class="filter-thumb" onclick="setFilter('golden', this)" style="background:linear-gradient(135deg,#f9ca24,#f0932b);">✨</div>
+      <span class="filter-name">Golden</span>
+    </div>
   </div>
 
   <!-- Stickers bar -->
@@ -1092,8 +1284,71 @@
   <div id="callContainer" style="width:100%;height:100%;"></div>
 </div>
 
-<!-- MUSIC PLAYER -->
-<div class="music-player" id="musicPlayer">
+<!-- MOOD PLAYLIST PLAYER -->
+<div id="playlistPlayer">
+  <!-- Mini bar (always visible) -->
+  <div class="playlist-mini" id="playlistMini" onclick="togglePlaylist()">
+    <div class="pl-mini-left">
+      <div class="pl-disc" id="plDisc">🎵</div>
+      <div class="pl-mini-info">
+        <span class="pl-mini-title" id="plMiniTitle">Our Melody 💕</span>
+        <span class="pl-mini-sub">Playing for us</span>
+      </div>
+    </div>
+    <div class="pl-mini-right">
+      <button onclick="event.stopPropagation();prevSong()" class="pl-ctrl">⏮</button>
+      <button onclick="event.stopPropagation();togglePlay()" class="pl-ctrl pl-play" id="plPlayBtn">▶️</button>
+      <button onclick="event.stopPropagation();nextSong()" class="pl-ctrl">⏭</button>
+      <button class="pl-ctrl pl-expand">🎵</button>
+    </div>
+  </div>
+
+  <!-- Full player panel -->
+  <div class="playlist-panel" id="playlistPanel" style="display:none;">
+    <div class="pl-panel-header">
+      <span>🎵 Our Playlist</span>
+      <button onclick="togglePlaylist()" class="pl-panel-close">✕</button>
+    </div>
+
+    <!-- Now playing -->
+    <div class="pl-now-playing">
+      <div class="pl-cover" id="plCover">💕</div>
+      <div class="pl-np-info">
+        <div class="pl-np-title" id="plNpTitle">Select a song</div>
+        <div class="pl-np-artist" id="plNpArtist">Our Playlist 🎵</div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="pl-progress-wrap">
+      <span class="pl-time" id="plCurrentTime">0:00</span>
+      <input type="range" class="pl-progress" id="plProgress" value="0" min="0" max="100" oninput="seekSong(this.value)"/>
+      <span class="pl-time" id="plDuration">0:00</span>
+    </div>
+
+    <!-- Controls -->
+    <div class="pl-controls">
+      <button onclick="toggleShuffle()" class="pl-ctrl-lg" id="shuffleBtn" title="Shuffle">🔀</button>
+      <button onclick="prevSong()" class="pl-ctrl-lg">⏮️</button>
+      <button onclick="togglePlay()" class="pl-ctrl-lg pl-play-lg" id="plPlayBtnLg">▶️</button>
+      <button onclick="nextSong()" class="pl-ctrl-lg">⏭️</button>
+      <button onclick="toggleRepeat()" class="pl-ctrl-lg" id="repeatBtn" title="Repeat">🔁</button>
+    </div>
+
+    <!-- Volume -->
+    <div class="pl-volume-row">
+      <span>🔈</span>
+      <input type="range" class="pl-volume" id="plVolume" value="70" min="0" max="100" oninput="setVolume(this.value)"/>
+      <span>🔊</span>
+    </div>
+
+    <!-- Song list -->
+    <div class="pl-list" id="plList"></div>
+  </div>
+</div>
+
+<!-- MUSIC PLAYER (old - hidden) -->
+<div class="music-player" id="musicPlayer" style="display:none;">
   <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶️</button>
   <div class="music-info">
     <span class="music-title">Our Melody 💕</span>
@@ -1165,7 +1420,143 @@
     }
   }
 
-  // ─── MP3 MUSIC PLAYER ───
+  // ─── MOOD PLAYLIST PLAYER ───
+  const playlist = [
+    { title: 'Pal Pal',              file: 'Afusic_-_Pal_Pal.mp3',          emoji: '🌸' },
+    { title: 'Amsham',               file: 'Amsham.mp3',                     emoji: '💕' },
+    { title: 'Anuv Jain',            file: 'Anuv_Jain.mp3',                  emoji: '🎵' },
+    { title: 'Ethu Kari Raavilum',   file: 'Ethu_Kari_Raavilum.mp3',         emoji: '🌙' },
+    { title: 'Dilshad',              file: 'Dilshad.mp3',                    emoji: '❤️' },
+    { title: 'I Wanna Be Yours',     file: 'I_wanna_be_yours.mp3',           emoji: '💗' },
+    { title: 'Majboor',              file: 'Majboor.mp3',                    emoji: '🥺' },
+    { title: 'LAILAK',               file: 'LAILAK.mp3',                     emoji: '🌺' },
+    { title: 'Neelothi',             file: 'Neelothi.mp3',                   emoji: '✨' },
+    { title: 'Othaiyadi Pathayila',  file: 'othaiyadi_pathayila.mp3',        emoji: '😍' },
+    { title: 'Jhol',                 file: 'Jhol.mp3',                       emoji: '💫' },
+    { title: 'Premikkumbol X Dilshad', file: 'Premikkumbol_X_Dilshad.mp3',  emoji: '💞' },
+    { title: 'Zulfein',              file: 'Zulfein_-_Mehul.mp3',            emoji: '🎶' },
+  ];
+
+  let plAudio = new Audio();
+  let plIndex = 0;
+  let plPlaying = false;
+  let plShuffle = false;
+  let plRepeat = false;
+  let plPanelOpen = false;
+
+  function buildPlaylist() {
+    const list = document.getElementById('plList');
+    list.innerHTML = '';
+    playlist.forEach((song, i) => {
+      const div = document.createElement('div');
+      div.className = 'pl-song' + (i === plIndex ? ' active' : '');
+      div.id = 'plSong_' + i;
+      div.innerHTML = `
+        <span class="pl-song-num">${i === plIndex && plPlaying ? `<div class="pl-song-wave"><span style="height:8px"></span><span style="height:14px"></span><span style="height:6px"></span></div>` : i+1}</span>
+        <div class="pl-song-info"><div class="pl-song-title">${song.emoji} ${song.title}</div></div>`;
+      div.onclick = () => { plIndex = i; loadSong(); playAudio(); };
+      list.appendChild(div);
+    });
+  }
+
+  function loadSong() {
+    const song = playlist[plIndex];
+    plAudio.src = song.file;
+    document.getElementById('plMiniTitle').textContent = song.emoji + ' ' + song.title;
+    document.getElementById('plNpTitle').textContent = song.title;
+    document.getElementById('plNpArtist').textContent = '🎵 Our Playlist';
+    document.getElementById('plCover').textContent = song.emoji;
+    document.querySelectorAll('.pl-song').forEach((el, i) => {
+      el.classList.toggle('active', i === plIndex);
+      el.querySelector('.pl-song-num').textContent = i === plIndex && plPlaying ? '♪' : i+1;
+    });
+    plAudio.volume = document.getElementById('plVolume').value / 100;
+  }
+
+  function playAudio() {
+    plAudio.play();
+    plPlaying = true;
+    document.getElementById('plPlayBtn').textContent = '⏸️';
+    document.getElementById('plPlayBtnLg').textContent = '⏸️';
+    document.getElementById('plDisc').classList.add('playing');
+    document.getElementById('plCover').classList.add('playing');
+    buildPlaylist();
+  }
+
+  function pauseAudio() {
+    plAudio.pause();
+    plPlaying = false;
+    document.getElementById('plPlayBtn').textContent = '▶️';
+    document.getElementById('plPlayBtnLg').textContent = '▶️';
+    document.getElementById('plDisc').classList.remove('playing');
+    document.getElementById('plCover').classList.remove('playing');
+    buildPlaylist();
+  }
+
+  window.togglePlay = function() { plPlaying ? pauseAudio() : playAudio(); }
+
+  window.nextSong = function() {
+    if (plShuffle) {
+      plIndex = Math.floor(Math.random() * playlist.length);
+    } else {
+      plIndex = (plIndex + 1) % playlist.length;
+    }
+    loadSong(); playAudio();
+  }
+
+  window.prevSong = function() {
+    if (plAudio.currentTime > 3) { plAudio.currentTime = 0; return; }
+    plIndex = (plIndex - 1 + playlist.length) % playlist.length;
+    loadSong(); playAudio();
+  }
+
+  window.toggleShuffle = function() {
+    plShuffle = !plShuffle;
+    document.getElementById('shuffleBtn').classList.toggle('active', plShuffle);
+  }
+
+  window.toggleRepeat = function() {
+    plRepeat = !plRepeat;
+    document.getElementById('repeatBtn').classList.toggle('active', plRepeat);
+  }
+
+  window.seekSong = function(val) {
+    if (plAudio.duration) plAudio.currentTime = (val / 100) * plAudio.duration;
+  }
+
+  window.setVolume = function(val) { plAudio.volume = val / 100; }
+
+  window.togglePlaylist = function() {
+    plPanelOpen = !plPanelOpen;
+    document.getElementById('playlistPanel').style.display = plPanelOpen ? 'block' : 'none';
+  }
+
+  // Progress bar update
+  plAudio.addEventListener('timeupdate', () => {
+    if (!plAudio.duration) return;
+    const pct = (plAudio.currentTime / plAudio.duration) * 100;
+    document.getElementById('plProgress').value = pct;
+    document.getElementById('plCurrentTime').textContent = formatDuration(Math.floor(plAudio.currentTime));
+    document.getElementById('plDuration').textContent = formatDuration(Math.floor(plAudio.duration));
+  });
+
+  plAudio.addEventListener('ended', () => {
+    if (plRepeat) { plAudio.currentTime = 0; playAudio(); }
+    else nextSong();
+  });
+
+  // Initialize
+  loadSong();
+  buildPlaylist();
+
+  // Autoplay first song after password
+  const _origStartCountdown2 = window.startCountdown;
+  window.startCountdown = function() {
+    _origStartCountdown2();
+    setTimeout(() => { playAudio(); }, 500);
+  }
+
+  // ─── MP3 MUSIC PLAYER (old - kept for compatibility) ───
   const audio = new Audio('indila-love-story.mp3');
   audio.loop = true;
   audio.volume = 0.7;
@@ -1204,17 +1595,17 @@
   // ─── HIDE MUSIC PLAYER WIDGET WHEN SCROLLED OFF HERO (music keeps playing) ───
   window.addEventListener('scroll', () => {
     const hero = document.querySelector('.hero');
-    const player = document.getElementById('musicPlayer');
+    const player = document.getElementById('playlistPlayer');
     if (!hero || !player) return;
     const heroBottom = hero.getBoundingClientRect().bottom;
     if (heroBottom > 100) {
       player.style.opacity = '1';
       player.style.pointerEvents = 'auto';
-      player.style.transform = 'translateY(0) scale(1)';
+      player.style.transform = 'translateY(0)';
     } else {
       player.style.opacity = '0';
       player.style.pointerEvents = 'none';
-      player.style.transform = 'translateY(10px) scale(0.9)';
+      player.style.transform = 'translateY(100%)';
     }
   });
 
@@ -1275,13 +1666,18 @@
     await startCam();
   }
 
-  window.setFilter = function(filter) {
+  window.setFilter = function(filter, el) {
     currentFilter = filter;
     document.querySelectorAll('.filter-thumb').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+    if (el) el.classList.add('active');
     applyFilter(filter);
-    const labels = { none:'No Filter', rose:'Rose 🌸', bw:'B&W 🖤', warm:'Warm 🌅', cool:'Cool ❄️', vintage:'Vintage 📷' };
-    document.getElementById('filterLabel').textContent = labels[filter] || 'No Filter';
+    const labels = {
+      none:'Normal', rose:'Rose 🌸', romantic:'Romantic 💗',
+      cute:'Cute 🍑', comedy:'Comedy 🤡', bw:'B&W 🖤',
+      warm:'Warm 🌅', cool:'Cool ❄️', vintage:'Vintage 📷',
+      dreamy:'Dreamy 🌙', neon:'Neon 🌈', golden:'Golden ✨'
+    };
+    document.getElementById('filterLabel').textContent = labels[filter] || 'Normal';
   }
 
   function applyFilter(filter) {
@@ -1337,11 +1733,17 @@
 
     // Apply CSS filter visually via canvas
     const filters = {
-      rose: 'saturate(1.4) hue-rotate(320deg) brightness(1.05)',
-      bw: 'grayscale(1) contrast(1.1)',
-      warm: 'sepia(0.4) saturate(1.3) brightness(1.05)',
-      cool: 'hue-rotate(190deg) saturate(1.2) brightness(1.05)',
-      vintage: 'sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8)'
+      rose:     'saturate(1.4) hue-rotate(320deg) brightness(1.05)',
+      romantic: 'saturate(1.8) hue-rotate(300deg) brightness(1.1) contrast(1.1)',
+      cute:     'saturate(1.3) brightness(1.15) contrast(0.9) sepia(0.15)',
+      comedy:   'saturate(2) hue-rotate(90deg) contrast(1.3) brightness(1.1)',
+      bw:       'grayscale(1) contrast(1.1)',
+      warm:     'sepia(0.4) saturate(1.3) brightness(1.05)',
+      cool:     'hue-rotate(190deg) saturate(1.2) brightness(1.05)',
+      vintage:  'sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8)',
+      dreamy:   'brightness(1.1) saturate(0.8) hue-rotate(270deg)',
+      neon:     'saturate(3) brightness(1.2) contrast(1.4) hue-rotate(120deg)',
+      golden:   'sepia(0.3) saturate(1.8) brightness(1.1) hue-rotate(15deg)'
     };
     if (filters[currentFilter]) ctx.filter = filters[currentFilter];
     ctx.drawImage(video, 0, 0);
