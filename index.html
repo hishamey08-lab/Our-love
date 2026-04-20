@@ -1284,6 +1284,11 @@
   <div id="callContainer" style="width:100%;height:100%;"></div>
 </div>
 
+<!-- HIDDEN YOUTUBE PLAYLIST PLAYER -->
+<div style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;">
+  <div id="ytPlFrame"></div>
+</div>
+
 <!-- MOOD PLAYLIST PLAYER -->
 <div id="playlistPlayer">
   <!-- Mini bar (always visible) -->
@@ -1422,90 +1427,148 @@
 
   // ─── MOOD PLAYLIST PLAYER ───
   const playlist = [
-    { title: 'Pal Pal',              file: 'Afusic_-_Pal_Pal.mp3',          emoji: '🌸' },
-    { title: 'Amsham',               file: 'Amsham.mp3',                     emoji: '💕' },
-    { title: 'Anuv Jain',            file: 'Anuv_Jain.mp3',                  emoji: '🎵' },
-    { title: 'Ethu Kari Raavilum',   file: 'Ethu_Kari_Raavilum.mp3',         emoji: '🌙' },
-    { title: 'Dilshad',              file: 'Dilshad.mp3',                    emoji: '❤️' },
-    { title: 'I Wanna Be Yours',     file: 'I_wanna_be_yours.mp3',           emoji: '💗' },
-    { title: 'Majboor',              file: 'Majboor.mp3',                    emoji: '🥺' },
-    { title: 'LAILAK',               file: 'LAILAK.mp3',                     emoji: '🌺' },
-    { title: 'Neelothi',             file: 'Neelothi.mp3',                   emoji: '✨' },
-    { title: 'Othaiyadi Pathayila',  file: 'othaiyadi_pathayila.mp3',        emoji: '😍' },
-    { title: 'Jhol',                 file: 'Jhol.mp3',                       emoji: '💫' },
-    { title: 'Premikkumbol X Dilshad', file: 'Premikkumbol_X_Dilshad.mp3',  emoji: '💞' },
-    { title: 'Zulfein',              file: 'Zulfein_-_Mehul.mp3',            emoji: '🎶' },
+    { title: 'Amsham',               id: 'aqerUe-kfl4', emoji: '🌸' },
+    { title: 'Song 2',               id: 'bP8ATWCvqzw',  emoji: '💕' },
+    { title: 'Song 3',               id: 'WW297yZWdS8',  emoji: '🎵' },
+    { title: 'Song 4',               id: 'gIMCDE0_9Gc',  emoji: '🌙' },
+    { title: 'Song 5',               id: 'aPUvbM8MTLE',  emoji: '❤️' },
+    { title: 'Song 6',               id: 'Zk2r9kdCVAc',  emoji: '💗' },
+    { title: 'Song 7',               id: 'Fkrub0FkvhU',  emoji: '🥺' },
+    { title: 'Song 8',               id: 'NVMa86cxU-k',  emoji: '🌺' },
+    { title: 'Song 9',               id: '-2RAq5o5pwc',  emoji: '✨' },
+    { title: 'Song 10',              id: 'aalJPfJRYaE',  emoji: '😍' },
+    { title: 'Song 11',              id: '8of5w7RgcTc',  emoji: '💫' },
+    { title: 'Song 12',              id: 'fukGbiPuBjU',  emoji: '💞' },
+    { title: 'Song 13',              id: 'z2mDkSDiHuM',  emoji: '🎶' },
+    { title: 'Song 14',              id: 'kzpS-A3QJqE',  emoji: '🌸' },
+    { title: 'Song 15',              id: 'HQp0DwtTP18',  emoji: '💕' },
+    { title: 'Song 16',              id: 'gKD1AhmpOoU',  emoji: '🎵' },
+    { title: 'Song 17',              id: 'ZhhBlQC_5N8',  emoji: '🌙' },
+    { title: 'Song 18',              id: 'wmUJwQNGK3k',  emoji: '❤️' },
+    { title: 'Song 19',              id: 'KgdBrGHviv4',  emoji: '💗' },
+    { title: 'Song 20',              id: 'g44iifQIFyM',  emoji: '🥺' },
+    { title: 'Song 21',              id: 'Suv5QfWKaaw',  emoji: '🌺' },
+    { title: 'Song 22',              id: 'rRKAJ6tLBSw',  emoji: '✨' },
+    { title: 'Song 23',              id: 'IpDKk6XqxZo',  emoji: '😍' },
+    { title: 'Song 24',              id: 'dhY8jRNELUc',  emoji: '💫' },
   ];
 
-  let plAudio = new Audio();
+  // Auto-fetch real song titles from YouTube oEmbed API
+  playlist.forEach((song, i) => {
+    fetch(`https://www.youtube.com/oembed?url=https://youtube.com/watch?v=${song.id}&format=json`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.title) {
+          playlist[i].title = data.title;
+          if (i === plIndex) {
+            document.getElementById('plMiniTitle').textContent = song.emoji + ' ' + data.title;
+            document.getElementById('plNpTitle').textContent = data.title;
+          }
+          buildPlaylist();
+        }
+      }).catch(() => {});
+  });
+
+  let ytPl = null;
   let plIndex = 0;
   let plPlaying = false;
   let plShuffle = false;
   let plRepeat = false;
   let plPanelOpen = false;
+  let plReady = false;
 
-  function buildPlaylist() {
-    const list = document.getElementById('plList');
-    list.innerHTML = '';
-    playlist.forEach((song, i) => {
-      const div = document.createElement('div');
-      div.className = 'pl-song' + (i === plIndex ? ' active' : '');
-      div.id = 'plSong_' + i;
-      div.innerHTML = `
-        <span class="pl-song-num">${i === plIndex && plPlaying ? `<div class="pl-song-wave"><span style="height:8px"></span><span style="height:14px"></span><span style="height:6px"></span></div>` : i+1}</span>
-        <div class="pl-song-info"><div class="pl-song-title">${song.emoji} ${song.title}</div></div>`;
-      div.onclick = () => { plIndex = i; loadSong(); playAudio(); };
-      list.appendChild(div);
+  // Load YouTube IFrame API
+  const ytScript = document.createElement('script');
+  ytScript.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(ytScript);
+
+  window.onYouTubeIframeAPIReady = function() {
+    ytPl = new YT.Player('ytPlFrame', {
+      height: '1', width: '1',
+      videoId: playlist[0].id,
+      playerVars: { autoplay: 0, controls: 0, rel: 0, modestbranding: 1 },
+      events: {
+        onReady: () => { plReady = true; loadSong(); buildPlaylist(); },
+        onStateChange: (e) => {
+          if (e.data === YT.PlayerState.ENDED) {
+            if (plRepeat) { ytPl.seekTo(0); ytPl.playVideo(); }
+            else nextSong();
+          }
+          if (e.data === YT.PlayerState.PLAYING) {
+            plPlaying = true;
+            document.getElementById('plPlayBtn').textContent = '⏸️';
+            document.getElementById('plPlayBtnLg').textContent = '⏸️';
+            document.getElementById('plDisc').classList.add('playing');
+            document.getElementById('plCover').classList.add('playing');
+            startProgressUpdate();
+          }
+          if (e.data === YT.PlayerState.PAUSED) {
+            plPlaying = false;
+            document.getElementById('plPlayBtn').textContent = '▶️';
+            document.getElementById('plPlayBtnLg').textContent = '▶️';
+            document.getElementById('plDisc').classList.remove('playing');
+            document.getElementById('plCover').classList.remove('playing');
+          }
+        }
+      }
     });
+  };
+
+  let progressInterval = null;
+  function startProgressUpdate() {
+    clearInterval(progressInterval);
+    progressInterval = setInterval(() => {
+      if (!ytPl || !plPlaying) return;
+      const cur = ytPl.getCurrentTime() || 0;
+      const dur = ytPl.getDuration() || 0;
+      if (dur > 0) {
+        document.getElementById('plProgress').value = (cur / dur) * 100;
+        document.getElementById('plCurrentTime').textContent = formatDuration(Math.floor(cur));
+        document.getElementById('plDuration').textContent = formatDuration(Math.floor(dur));
+      }
+    }, 500);
   }
 
   function loadSong() {
     const song = playlist[plIndex];
-    plAudio.src = song.file;
     document.getElementById('plMiniTitle').textContent = song.emoji + ' ' + song.title;
     document.getElementById('plNpTitle').textContent = song.title;
     document.getElementById('plNpArtist').textContent = '🎵 Our Playlist';
     document.getElementById('plCover').textContent = song.emoji;
-    document.querySelectorAll('.pl-song').forEach((el, i) => {
-      el.classList.toggle('active', i === plIndex);
-      el.querySelector('.pl-song-num').textContent = i === plIndex && plPlaying ? '♪' : i+1;
-    });
-    plAudio.volume = document.getElementById('plVolume').value / 100;
-  }
-
-  function playAudio() {
-    plAudio.play();
-    plPlaying = true;
-    document.getElementById('plPlayBtn').textContent = '⏸️';
-    document.getElementById('plPlayBtnLg').textContent = '⏸️';
-    document.getElementById('plDisc').classList.add('playing');
-    document.getElementById('plCover').classList.add('playing');
+    document.getElementById('plProgress').value = 0;
+    document.getElementById('plCurrentTime').textContent = '0:00';
+    document.getElementById('plDuration').textContent = '0:00';
     buildPlaylist();
   }
 
+  function playAudio() {
+    if (!plReady || !ytPl) return;
+    ytPl.loadVideoById(playlist[plIndex].id);
+    ytPl.playVideo();
+  }
+
   function pauseAudio() {
-    plAudio.pause();
+    if (ytPl) ytPl.pauseVideo();
     plPlaying = false;
     document.getElementById('plPlayBtn').textContent = '▶️';
     document.getElementById('plPlayBtnLg').textContent = '▶️';
     document.getElementById('plDisc').classList.remove('playing');
     document.getElementById('plCover').classList.remove('playing');
-    buildPlaylist();
   }
 
-  window.togglePlay = function() { plPlaying ? pauseAudio() : playAudio(); }
+  window.togglePlay = function() {
+    if (!plReady) return;
+    if (plPlaying) pauseAudio();
+    else { if (ytPl.getPlayerState() === YT.PlayerState.PAUSED) ytPl.playVideo(); else playAudio(); }
+  }
 
   window.nextSong = function() {
-    if (plShuffle) {
-      plIndex = Math.floor(Math.random() * playlist.length);
-    } else {
-      plIndex = (plIndex + 1) % playlist.length;
-    }
+    plIndex = plShuffle ? Math.floor(Math.random() * playlist.length) : (plIndex + 1) % playlist.length;
     loadSong(); playAudio();
   }
 
   window.prevSong = function() {
-    if (plAudio.currentTime > 3) { plAudio.currentTime = 0; return; }
+    if (ytPl && ytPl.getCurrentTime() > 3) { ytPl.seekTo(0); return; }
     plIndex = (plIndex - 1 + playlist.length) % playlist.length;
     loadSong(); playAudio();
   }
@@ -1521,39 +1584,35 @@
   }
 
   window.seekSong = function(val) {
-    if (plAudio.duration) plAudio.currentTime = (val / 100) * plAudio.duration;
+    if (ytPl && ytPl.getDuration) ytPl.seekTo((val / 100) * ytPl.getDuration(), true);
   }
 
-  window.setVolume = function(val) { plAudio.volume = val / 100; }
+  window.setVolume = function(val) { if (ytPl) ytPl.setVolume(val); }
 
   window.togglePlaylist = function() {
     plPanelOpen = !plPanelOpen;
     document.getElementById('playlistPanel').style.display = plPanelOpen ? 'block' : 'none';
   }
 
-  // Progress bar update
-  plAudio.addEventListener('timeupdate', () => {
-    if (!plAudio.duration) return;
-    const pct = (plAudio.currentTime / plAudio.duration) * 100;
-    document.getElementById('plProgress').value = pct;
-    document.getElementById('plCurrentTime').textContent = formatDuration(Math.floor(plAudio.currentTime));
-    document.getElementById('plDuration').textContent = formatDuration(Math.floor(plAudio.duration));
-  });
+  function buildPlaylist() {
+    const list = document.getElementById('plList');
+    list.innerHTML = '';
+    playlist.forEach((song, i) => {
+      const div = document.createElement('div');
+      div.className = 'pl-song' + (i === plIndex ? ' active' : '');
+      div.innerHTML = `
+        <span class="pl-song-num">${i === plIndex && plPlaying ? '♪' : i+1}</span>
+        <div class="pl-song-info"><div class="pl-song-title">${song.emoji} ${song.title}</div></div>`;
+      div.onclick = () => { plIndex = i; loadSong(); playAudio(); };
+      list.appendChild(div);
+    });
+  }
 
-  plAudio.addEventListener('ended', () => {
-    if (plRepeat) { plAudio.currentTime = 0; playAudio(); }
-    else nextSong();
-  });
-
-  // Initialize
-  loadSong();
-  buildPlaylist();
-
-  // Autoplay first song after password
+  // Autoplay after password
   const _origStartCountdown2 = window.startCountdown;
   window.startCountdown = function() {
     _origStartCountdown2();
-    setTimeout(() => { playAudio(); }, 500);
+    setTimeout(() => { if (plReady) playAudio(); }, 600);
   }
 
   // ─── MP3 MUSIC PLAYER (old - kept for compatibility) ───
