@@ -1349,9 +1349,179 @@
       .tl-item:nth-child(odd) .tl-content { text-align: left !important; }
       .tl-content { max-width: 100% !important; }
     }
+
+    /* ── ANNIVERSARY ── */
+    .anniv-countdown { display:flex; align-items:center; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:48px; }
+    .anniv-box { background:rgba(255,255,255,0.05); backdrop-filter:blur(24px); border:1px solid rgba(201,169,110,0.3); border-radius:24px; padding:28px 40px; box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06); transition:all .4s; }
+    .anniv-box:hover { transform:translateY(-8px); border-color:rgba(201,169,110,0.6); box-shadow:0 20px 60px rgba(201,169,110,0.2); }
+    .anniv-num { font-family:'Playfair Display',serif; font-size:3.5rem; color:#c9a96e; text-shadow:0 0 30px rgba(201,169,110,0.6); line-height:1; }
+    .anniv-label { font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-top:8px; }
+    .anniv-heart { font-size:2.5rem; animation:pulse 1.5s ease-in-out infinite; }
+    .gift-teaser { margin-top:48px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .gift-box-locked { width:100px; height:100px; border-radius:24px; background:rgba(255,255,255,0.04); border:2px dashed rgba(201,169,110,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:3rem; position:relative; cursor:not-allowed; animation:lockedFloat 3s ease-in-out infinite; box-shadow:0 8px 32px rgba(0,0,0,0.3); }
+    .gift-lock { position:absolute; top:-10px; right:-10px; font-size:1.2rem; }
+    @keyframes lockedFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .letter-envelope { background:linear-gradient(135deg,rgba(201,169,110,0.15),rgba(232,104,122,0.1)); backdrop-filter:blur(24px); border:1px solid rgba(201,169,110,0.35); border-radius:24px; padding:40px; cursor:pointer; transition:all .4s; box-shadow:0 8px 40px rgba(201,169,110,0.15),inset 0 1px 0 rgba(255,255,255,0.08); max-width:400px; margin:0 auto; }
+    .letter-envelope:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 20px 60px rgba(201,169,110,0.25); border-color:rgba(201,169,110,0.6); }
+    .envelope-icon { font-size:4rem; margin-bottom:16px; animation:letterFloat 3s ease-in-out infinite; }
+    @keyframes letterFloat { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+    .envelope-text { color:rgba(255,255,255,0.7); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; }
+    .envelope-text span { color:var(--blush); font-size:0.9rem; }
+    .letter-content { background:rgba(255,255,255,0.04); backdrop-filter:blur(32px); border:1px solid rgba(201,169,110,0.25); border-radius:24px; padding:40px; max-width:640px; margin:24px auto 0; box-shadow:0 16px 60px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06); text-align:left; animation:letterReveal .8s ease; }
+    @keyframes letterReveal { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
+    .letter-header { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:28px; }
+    .letter-rose { font-size:1.5rem; }
+    .letter-header h3 { font-family:'Playfair Display',serif; font-size:1.5rem; color:#c9a96e; text-align:center; }
+    .letter-body p { color:rgba(255,255,255,0.7); line-height:1.9; margin-bottom:16px; font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-style:italic; }
+    .letter-footer { margin-top:28px; display:flex; flex-direction:column; align-items:flex-end; gap:4px; border-top:1px solid rgba(201,169,110,0.15); padding-top:20px; }
+    .letter-footer span,.letter-footer strong { color:rgba(255,255,255,0.5); font-size:0.9rem; }
+    .letter-footer strong { color:#c9a96e; font-size:1rem; }
+    .letter-date { font-size:0.75rem !important; color:var(--rose) !important; letter-spacing:0.08em; }
+    .gift-box-open { background:linear-gradient(135deg,rgba(201,169,110,0.15),rgba(232,104,122,0.1)); backdrop-filter:blur(24px); border:1px solid rgba(201,169,110,0.4); border-radius:24px; padding:40px; cursor:pointer; transition:all .4s; max-width:400px; margin:0 auto; box-shadow:0 8px 40px rgba(201,169,110,0.2); }
+    .gift-box-open:hover { transform:translateY(-6px); box-shadow:0 20px 60px rgba(201,169,110,0.3); }
+    .gift-emoji { font-size:4rem; animation:giftBounce 1s ease-in-out infinite; }
+    @keyframes giftBounce { 0%,100%{transform:scale(1) rotate(-5deg)} 50%{transform:scale(1.1) rotate(5deg)} }
+    .gift-box-open p { color:rgba(255,255,255,0.7); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-top:12px; }
+    .gift-box-open span { color:var(--blush); font-size:0.9rem; }
+    .gift-content { max-width:600px; margin:24px auto 0; animation:letterReveal .8s ease; }
+    .gift-message { background:rgba(255,255,255,0.04); backdrop-filter:blur(32px); border:1px solid rgba(201,169,110,0.25); border-radius:24px; padding:40px; box-shadow:0 16px 60px rgba(0,0,0,0.4); }
+    .gift-message h3 { font-family:'Playfair Display',serif; font-size:1.6rem; color:#c9a96e; margin-bottom:20px; }
+    .gift-message p { color:rgba(255,255,255,0.65); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; line-height:1.9; margin-bottom:16px; }
+    .gift-promise { display:flex; flex-direction:column; gap:10px; margin:20px 0; padding:20px; background:rgba(201,169,110,0.08); border-radius:16px; border:1px solid rgba(201,169,110,0.2); }
+    .gift-promise span { color:#c9a96e; font-size:0.95rem; letter-spacing:0.04em; }
+    #anniversaryOverlay { position:fixed; inset:0; z-index:9990; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    #confettiCanvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+    .anniv-overlay-msg { position:relative; z-index:1; text-align:center; display:flex; flex-direction:column; align-items:center; gap:16px; }
+    .anniv-overlay-emoji { font-size:3rem; animation:pulse 1s ease-in-out infinite; }
+    .anniv-overlay-msg h2 { font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,4rem); color:#c9a96e; text-shadow:0 0 40px rgba(201,169,110,0.8); }
+    .anniv-overlay-msg p { color:var(--blush); font-size:1.2rem; font-family:'Cormorant Garamond',serif; font-style:italic; }
+    .anniv-overlay-msg button { margin-top:16px; padding:14px 36px; background:linear-gradient(135deg,#c9a96e,#a07840); border:none; border-radius:50px; color:white; font-size:1rem; cursor:pointer; box-shadow:0 4px 24px rgba(201,169,110,0.4); transition:all .3s; }
+    .anniv-overlay-msg button:hover { transform:translateY(-3px); box-shadow:0 8px 40px rgba(201,169,110,0.6); }
+    body.anniversary-mode::before { background:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(201,169,110,0.25) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 80%,rgba(201,169,110,0.2) 0%,transparent 60%),linear-gradient(135deg,#1a1005 0%,#0d0a03 50%,#1a0d05 100%) !important; }
+    body.anniversary-mode .section-title em { color:#c9a96e !important; }
+    body.anniversary-mode .section-label { color:#c9a96e !important; }
+
+    /* ── 8K QUALITY 3D ANIMATION STYLES ── */
+    #webglCanvas {
+      position: fixed; inset: 0; z-index: -1;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    /* Ultra smooth all transitions */
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    /* 3D card tilt effect */
+    .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease;
+    }
+
+    /* Shimmer effect on glass cards */
+    .note-card::after, .count-box::after, .tl-content::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
+      background-size: 200% 200%;
+      border-radius: inherit;
+      animation: shimmer3D 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes shimmer3D {
+      0% { background-position: 200% 0%; }
+      100% { background-position: -200% 0%; }
+    }
+
+    /* Neon glow borders */
+    .photo-card::after {
+      content: '';
+      position: absolute; inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(232,104,122,0), rgba(232,104,122,0.3), rgba(201,169,110,0), rgba(244,184,193,0.2));
+      background-size: 300% 300%;
+      animation: borderGlow 6s ease infinite;
+      z-index: 1; pointer-events: none;
+      opacity: 0; transition: opacity .4s;
+    }
+    .photo-card:hover::after { opacity: 1; }
+    @keyframes borderGlow {
+      0%,100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Depth layers parallax */
+    .hero { transform-style: preserve-3d; }
+    .hero h1 { transform: translateZ(40px); }
+    .hero-sub { transform: translateZ(20px); }
+    .hero-date { transform: translateZ(30px); }
+    .hero-tag { transform: translateZ(10px); }
+
+    /* Ultra glow text for section titles */
+    .section-title {
+      text-shadow: 0 0 80px rgba(232,104,122,0.2), 0 2px 20px rgba(0,0,0,0.5) !important;
+    }
+
+    /* 3D floating animation for cards */
+    @keyframes float3D {
+      0%,100% { transform: translateY(0) translateZ(0) rotateX(0); }
+      33% { transform: translateY(-6px) translateZ(10px) rotateX(1deg); }
+      66% { transform: translateY(3px) translateZ(5px) rotateX(-0.5deg); }
+    }
+
+    /* Scanline effect for ultra quality look */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 9998;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.015) 2px,
+        rgba(0,0,0,0.015) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Chromatic aberration glow on hover */
+    .photo-card:hover img {
+      filter: brightness(1.05) contrast(1.02) saturate(1.1);
+    }
+
+    /* Ultra depth shadow system */
+    .note-card, .count-box, .video-card {
+      position: relative;
+    }
+
+    /* 8K style grain texture overlay */
+    #grainOverlay {
+      position: fixed; inset: 0; z-index: 9997;
+      pointer-events: none; opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 128px 128px;
+      mix-blend-mode: overlay;
+    }
+
+    /* Vignette for cinematic 8K feel */
+    #vignette {
+      position: fixed; inset: 0; z-index: 9996; pointer-events: none;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 60%, rgba(0,0,0,0.5) 100%);
+    }
+
+    /* Ultra smooth scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--rose), var(--deep)); border-radius: 4px; }
+
   </style>
 </head>
 <body>
+
+<!-- 8K WebGL Background Canvas -->
+<canvas id="webglCanvas"></canvas>
+
+<!-- Film grain & vignette for cinematic quality -->
+<div id="grainOverlay"></div>
+<div id="vignette"></div>
 
 <!-- PASSWORD GATE -->
 <div id="gate">
@@ -1812,6 +1982,117 @@
   </div>
 </div>
 
+<!-- ANNIVERSARY COUNTDOWN SECTION -->
+<section id="anniversary" style="background:transparent; padding: 80px 24px;">
+  <div class="container" style="text-align:center;">
+    <p class="section-label reveal">✦ Our Special Milestone ✦</p>
+    <h2 class="section-title reveal">720 Days of <em>Us</em> 💛</h2>
+    <div id="anniversaryContent" class="reveal">
+      <!-- Shown before day 720 -->
+      <div id="preAnniversary">
+        <p style="color:rgba(255,255,255,0.5); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; margin-bottom:40px;">
+          Something magical is coming... 🌙
+        </p>
+        <div class="anniv-countdown">
+          <div class="anniv-box" id="aDays">
+            <div class="anniv-num">--</div>
+            <div class="anniv-label">Days Left</div>
+          </div>
+          <div class="anniv-heart">💛</div>
+          <div class="anniv-box">
+            <div class="anniv-num" id="aTarget">720</div>
+            <div class="anniv-label">Days Together</div>
+          </div>
+        </div>
+        <p style="color:rgba(255,255,255,0.3); font-size:0.85rem; margin-top:28px; letter-spacing:0.05em;">
+          July 22, 2026 • Our 720th Day 💕
+        </p>
+
+        <!-- Gift box teaser -->
+        <div class="gift-teaser">
+          <div class="gift-box-locked" title="Unlocks on day 720!">
+            🎁
+            <div class="gift-lock">🔒</div>
+          </div>
+          <p style="color:rgba(255,255,255,0.35); font-size:0.8rem; margin-top:12px; font-style:italic;">
+            A special gift is waiting for you Rasla... unlocks on July 22 💕
+          </p>
+        </div>
+      </div>
+
+      <!-- Shown ON day 720 -->
+      <div id="onAnniversary" style="display:none;">
+        <!-- Love letter -->
+        <div class="love-letter-wrap" id="loveLetter">
+          <div class="letter-envelope" id="letterEnvelope" onclick="openLetter()">
+            <div class="envelope-icon">💌</div>
+            <p class="envelope-text">A letter from Hisham<br/><span>Tap to open 🥺</span></p>
+          </div>
+          <div class="letter-content" id="letterContent" style="display:none;">
+            <div class="letter-header">
+              <span class="letter-rose">🌹</span>
+              <h3>My Dearest Rasla,</h3>
+              <span class="letter-rose">🌹</span>
+            </div>
+            <div class="letter-body">
+              <p>720 days. And still, every single one feels like the first time my heart chose you.</p>
+              <p>Before you came into my life, everything felt dark — like I was wandering without a reason. Then you arrived, and suddenly my world had colour, warmth, and a reason to smile every single morning.</p>
+              <p>When I talk to you, I feel happiness so deep that no words in any language can measure it. You are not just my girlfriend — you are my peace, my home, my everything.</p>
+              <p>Every night before I sleep, I look at your photos. Not because it's a habit — but because a day without seeing your face feels incomplete. You are the last thought that walks me into my dreams, and the first reason I smile when I wake up.</p>
+              <p>You are the most beautiful moon I have ever seen — glowing softly every night, making everything around you brighter just by existing.</p>
+              <p>I have made you a promise, and I will keep it with everything I am — I will never hurt you. I will never leave you. If I ever have a wife in this lifetime, it will only be you. Only ever you, Rasla.</p>
+              <p>I love you more than I love my own parents. More than anything this world has ever offered me. I would take any risk, face any storm, climb any mountain — for you, without hesitation, without regret.</p>
+              <p>You are my princess. My cute girl. My whole world. And no matter how many days pass — 720, 7200, a lifetime — that will never change.</p>
+              <p style="margin-top:24px; font-weight:600;">I love you, Rasla. More than yesterday. Less than tomorrow. Always. 💕</p>
+            </div>
+            <div class="letter-footer">
+              <span>Forever yours,</span>
+              <strong>Hisham 💙</strong>
+              <span class="letter-date">July 22, 2026 • Day 720 ✨</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gift box unlocked -->
+        <div class="gift-unlocked" id="giftBox">
+          <div class="gift-box-open" id="giftBoxBtn" onclick="openGift()">
+            <div class="gift-emoji">🎁</div>
+            <p>Your special gift is here Rasla! 💛<br/><span>Tap to unwrap 🎀</span></p>
+          </div>
+          <div class="gift-content" id="giftContent" style="display:none;">
+            <div class="gift-message">
+              <div style="font-size:3rem; margin-bottom:16px;">👑</div>
+              <h3>Happy 720 Days, My Princess! 🥺</h3>
+              <p>You came into my life and turned every dark corner into something beautiful. This website, every photo, every memory stored here — it's all for you. Because you deserve a world that remembers every moment of us.</p>
+              <p>Here's my gift to you today — not just this site, but my promise, renewed and stronger than ever:</p>
+              <div class="gift-promise">
+                <span>💙 I will never leave you</span>
+                <span>💙 I will never hurt you</span>
+                <span>💙 I will only ever marry you</span>
+                <span>💙 I will love you more every single day</span>
+              </div>
+              <p style="margin-top:20px; font-style:italic; color:var(--blush);">"You are my moon, my peace, my everything — 720 days and forever more." 💕</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GOLDEN ANNIVERSARY OVERLAY (shown on day 720) -->
+<div id="anniversaryOverlay" style="display:none;">
+  <canvas id="confettiCanvas"></canvas>
+  <div class="anniv-overlay-msg">
+    <div class="anniv-overlay-emoji">✨💛✨</div>
+    <h2>Happy 720 Days!</h2>
+    <p>Hisham & Rasla 💕</p>
+    <button onclick="document.getElementById('anniversaryOverlay').style.display='none'">
+      Continue to our world 💛
+    </button>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <span class="heart">💗</span> Made with love, just for us
@@ -1823,6 +2104,327 @@
 
 <script type="module">
   // ─── PASSWORD ───
+  // ─── 8K WEBGL 3D PARTICLE SYSTEM ───
+  (function() {
+    const canvas = document.getElementById('webglCanvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) { fallbackCanvas(); return; }
+
+    function resize() {
+      // 8K style - use device pixel ratio for crisp rendering
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    // Vertex shader
+    const vsSource = `
+      attribute vec4 aPosition;
+      attribute float aSize;
+      attribute vec4 aColor;
+      attribute float aAlpha;
+      uniform mat4 uMatrix;
+      uniform float uTime;
+      varying vec4 vColor;
+      varying float vAlpha;
+
+      void main() {
+        vec4 pos = aPosition;
+        pos.x += sin(uTime * 0.5 + aPosition.y * 2.0) * 0.02;
+        pos.y += cos(uTime * 0.3 + aPosition.x * 2.0) * 0.02;
+        gl_Position = uMatrix * pos;
+        gl_PointSize = aSize * (1.0 + 0.3 * sin(uTime + aPosition.z * 5.0));
+        vColor = aColor;
+        vAlpha = aAlpha * (0.7 + 0.3 * sin(uTime * 2.0 + aPosition.x * 10.0));
+      }
+    `;
+
+    // Fragment shader - soft glowing points
+    const fsSource = `
+      precision highp float;
+      varying vec4 vColor;
+      varying float vAlpha;
+
+      void main() {
+        vec2 coord = gl_PointCoord - vec2(0.5);
+        float dist = length(coord);
+        if (dist > 0.5) discard;
+        float glow = 1.0 - smoothstep(0.0, 0.5, dist);
+        float core = 1.0 - smoothstep(0.0, 0.15, dist);
+        float alpha = (glow * 0.6 + core * 0.4) * vAlpha;
+        gl_FragColor = vec4(vColor.rgb, alpha);
+      }
+    `;
+
+    function compileShader(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      return shader;
+    }
+
+    const vs = compileShader(gl.VERTEX_SHADER, vsSource);
+    const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    // Particle data
+    const N = 600;
+    const positions = new Float32Array(N * 3);
+    const sizes = new Float32Array(N);
+    const colors = new Float32Array(N * 4);
+    const alphas = new Float32Array(N);
+    const velocities = new Float32Array(N * 3);
+
+    // Color palette - rose, blush, gold, white
+    const palette = [
+      [0.91, 0.41, 0.48], // rose
+      [0.96, 0.72, 0.76], // blush
+      [0.79, 0.66, 0.43], // gold
+      [1.00, 1.00, 1.00], // white
+      [0.48, 0.24, 0.29], // deep
+    ];
+
+    for (let i = 0; i < N; i++) {
+      positions[i*3]   = (Math.random() - 0.5) * 2.2;
+      positions[i*3+1] = (Math.random() - 0.5) * 2.2;
+      positions[i*3+2] = (Math.random() - 0.5) * 1.5;
+      velocities[i*3]   = (Math.random() - 0.5) * 0.003;
+      velocities[i*3+1] = -Math.random() * 0.004 - 0.001;
+      velocities[i*3+2] = (Math.random() - 0.5) * 0.001;
+      sizes[i] = Math.random() * 6 + 1.5;
+      const c = palette[Math.floor(Math.random() * palette.length)];
+      colors[i*4] = c[0]; colors[i*4+1] = c[1];
+      colors[i*4+2] = c[2]; colors[i*4+3] = 1.0;
+      alphas[i] = Math.random() * 0.6 + 0.1;
+    }
+
+    // Buffers
+    const posBuf  = gl.createBuffer();
+    const sizeBuf = gl.createBuffer();
+    const colBuf  = gl.createBuffer();
+    const alBuf   = gl.createBuffer();
+
+    const aPos   = gl.getAttribLocation(program, 'aPosition');
+    const aSize  = gl.getAttribLocation(program, 'aSize');
+    const aColor = gl.getAttribLocation(program, 'aColor');
+    const aAlpha = gl.getAttribLocation(program, 'aAlpha');
+    const uMatrix = gl.getUniformLocation(program, 'uMatrix');
+    const uTime   = gl.getUniformLocation(program, 'uTime');
+
+    // Simple orthographic-style matrix
+    function getMatrix() {
+      return new Float32Array([
+        1,0,0,0, 0,1,0,0, 0,0,0.1,0, 0,0,0,1
+      ]);
+    }
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+
+    let startTime = performance.now();
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', e => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 0.1;
+      mouseY = -(e.clientY / window.innerHeight - 0.5) * 0.1;
+    });
+
+    function draw(ts) {
+      requestAnimationFrame(draw);
+      const t = (ts - startTime) * 0.001;
+
+      // Update particle positions
+      for (let i = 0; i < N; i++) {
+        positions[i*3]   += velocities[i*3]   + mouseX * 0.01;
+        positions[i*3+1] += velocities[i*3+1] + mouseY * 0.01;
+        positions[i*3+2] += velocities[i*3+2];
+        // Reset when out of bounds
+        if (positions[i*3+1] < -1.2) {
+          positions[i*3]   = (Math.random()-0.5)*2.2;
+          positions[i*3+1] = 1.2;
+          positions[i*3+2] = (Math.random()-0.5)*1.5;
+        }
+        if (Math.abs(positions[i*3]) > 1.2) velocities[i*3] *= -1;
+      }
+
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.clearColor(0, 0, 0, 0);
+
+      // Upload position buffer
+      gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, sizes, gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(aSize);
+      gl.vertexAttribPointer(aSize, 1, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, colBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(aColor);
+      gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, alBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, alphas, gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(aAlpha);
+      gl.vertexAttribPointer(aAlpha, 1, gl.FLOAT, false, 0, 0);
+
+      gl.uniformMatrix4fv(uMatrix, false, getMatrix());
+      gl.uniform1f(uTime, t);
+      gl.drawArrays(gl.POINTS, 0, N);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(draw);
+
+    // 3D tilt effect on cards
+    document.querySelectorAll('.note-card, .count-box, .tl-content, .video-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(600px) rotateX(${-y*12}deg) rotateY(${x*12}deg) translateZ(20px) scale(1.03)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.transition = 'transform 0.5s ease';
+        setTimeout(() => card.style.transition = '', 500);
+      });
+    });
+  })();
+
+  // Fallback canvas 2D if WebGL not supported
+  function fallbackCanvas() {
+    const canvas = document.getElementById('webglCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particles = Array.from({length:200}, () => ({
+      x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+      r: Math.random()*3+0.5, vx: (Math.random()-0.5)*0.5, vy: -Math.random()*0.8-0.2,
+      alpha: Math.random()*0.4+0.1,
+      color: ['232,104,122','244,184,193','201,169,110','255,255,255'][Math.floor(Math.random()*4)]
+    }));
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.y < -10) { p.y = canvas.height+10; p.x = Math.random()*canvas.width; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // ─── MOUSE PARALLAX ON HERO ───
+  document.addEventListener('mousemove', e => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      const h1 = hero.querySelector('h1');
+      const sub = hero.querySelector('.hero-sub');
+      const tag = hero.querySelector('.hero-tag');
+      const date = hero.querySelector('.hero-date');
+      if (h1) h1.style.transform = `translate3d(${x*0.8}px,${y*0.8}px,40px)`;
+      if (sub) sub.style.transform = `translate3d(${x*0.4}px,${y*0.4}px,20px)`;
+      if (tag) tag.style.transform = `translate3d(${x*0.2}px,${y*0.2}px,10px)`;
+      if (date) date.style.transform = `translate3d(${x*0.6}px,${y*0.6}px,30px)`;
+    }
+  });
+
+  // ─── ANNIVERSARY SYSTEM ───
+  const ANNIVERSARY_DATE = new Date('2024-07-22T00:00:00');
+  const SPECIAL_DAY = 720;
+  const SPECIAL_DATE = new Date('2026-07-22T00:00:00'); // Day 720
+
+  function checkAnniversary() {
+    const now = new Date();
+    const daysTogether = Math.floor((now - ANNIVERSARY_DATE) / (1000*60*60*24));
+    const daysLeft = SPECIAL_DAY - daysTogether;
+
+    if (daysTogether >= SPECIAL_DAY) {
+      // IT'S THE ANNIVERSARY! 🎉
+      document.getElementById('preAnniversary').style.display = 'none';
+      document.getElementById('onAnniversary').style.display = 'block';
+      document.body.classList.add('anniversary-mode');
+      // Show overlay after 1 second
+      setTimeout(() => {
+        document.getElementById('anniversaryOverlay').style.display = 'flex';
+        startConfetti();
+      }, 1200);
+    } else {
+      // Countdown
+      document.getElementById('aDays').querySelector('.anniv-num').textContent = daysLeft;
+    }
+  }
+
+  window.openLetter = function() {
+    const env = document.getElementById('letterEnvelope');
+    const content = document.getElementById('letterContent');
+    env.style.display = 'none';
+    content.style.display = 'block';
+  }
+
+  window.openGift = function() {
+    const btn = document.getElementById('giftBoxBtn');
+    const content = document.getElementById('giftContent');
+    btn.style.display = 'none';
+    content.style.display = 'block';
+  }
+
+  // ─── CONFETTI ───
+  function startConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const colors = ['#c9a96e','#e8687a','#f4b8c1','#fff','#ffd700','#ff69b4'];
+    const pieces = Array.from({length:150}, () => ({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height - canvas.height,
+      w: Math.random()*12+4,
+      h: Math.random()*6+2,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      rotV: (Math.random()-0.5)*8,
+      vy: Math.random()*4+2,
+      vx: (Math.random()-0.5)*2,
+      alpha: Math.random()*0.8+0.2,
+    }));
+    function drawConfetti() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pieces.forEach(p => {
+        p.y += p.vy; p.x += p.vx; p.rot += p.rotV;
+        if (p.y > canvas.height) { p.y = -20; p.x = Math.random()*canvas.width; }
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI/180);
+        ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        ctx.restore();
+      });
+      requestAnimationFrame(drawConfetti);
+    }
+    drawConfetti();
+  }
+
+  checkAnniversary();
+
   // ─── TYPEWRITER ANIMATION ───
   const welcomeText = "Welcome to Our World 💕";
   let twIndex = 0;
