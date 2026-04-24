@@ -1401,6 +1401,171 @@
     body.anniversary-mode .section-title em { color:#c9a96e !important; }
     body.anniversary-mode .section-label { color:#c9a96e !important; }
 
+    /* ── PHOTO PUZZLE ── */
+    .puzzle-diff-btns { display:flex; flex-direction:column; gap:12px; }
+    .puzzle-diff-btn {
+      padding:14px 28px; background:rgba(255,255,255,0.05);
+      backdrop-filter:blur(12px); border:1px solid rgba(232,104,122,0.25);
+      border-radius:50px; color:white; font-size:0.95rem; cursor:pointer;
+      transition:all .3s; font-family:'DM Sans',sans-serif;
+    }
+    .puzzle-diff-btn:hover { background:rgba(232,104,122,0.15); border-color:rgba(232,104,122,0.5); transform:translateY(-3px); box-shadow:0 8px 24px rgba(232,104,122,0.2); }
+
+    .puzzle-info-row { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; justify-content:center; }
+    .puzzle-stat { background:rgba(255,255,255,0.05); border:1px solid rgba(232,104,122,0.2); border-radius:14px; padding:10px 20px; text-align:center; }
+    .puzzle-stat-val { display:block; font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--rose); }
+    .puzzle-stat-label { font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+    .puzzle-action-btn { padding:10px 18px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50px; color:rgba(255,255,255,0.7); font-size:0.8rem; cursor:pointer; transition:all .3s; }
+    .puzzle-action-btn:hover { background:rgba(232,104,122,0.15); border-color:rgba(232,104,122,0.3); color:white; }
+
+    .puzzle-grid {
+      display:grid; gap:3px;
+      background:rgba(232,104,122,0.1);
+      border:2px solid rgba(232,104,122,0.25);
+      border-radius:20px; overflow:hidden;
+      box-shadow:0 16px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+      width:100%; aspect-ratio:1;
+    }
+    .puzzle-tile {
+      background-size:cover; background-repeat:no-repeat;
+      cursor:pointer; transition:all .15s ease;
+      position:relative; overflow:hidden;
+    }
+    .puzzle-tile:hover { filter:brightness(1.15); transform:scale(0.97); z-index:1; }
+    .puzzle-tile.empty { background:#0d0508 !important; cursor:default; }
+    .puzzle-tile.empty:hover { filter:none; transform:none; }
+    .puzzle-tile::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(135deg,rgba(255,255,255,0.06),transparent);
+      pointer-events:none;
+    }
+    .puzzle-tile.correct-pos { box-shadow:inset 0 0 0 2px rgba(46,204,113,0.5); }
+
+    /* ── LOVE LETTER REPLY ── */
+    .letters-display { display:flex; flex-direction:column; gap:16px; margin-bottom:28px; }
+    .letter-msg {
+      background:rgba(255,255,255,0.04);
+      backdrop-filter:blur(24px);
+      border:1px solid rgba(232,104,122,0.2);
+      border-radius:20px; padding:24px 28px; text-align:left;
+      box-shadow:0 8px 32px rgba(0,0,0,0.3);
+      animation:letterReveal .6s ease;
+    }
+    .letter-msg-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .letter-msg-from { color:var(--rose); font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; }
+    .letter-msg-date { color:rgba(255,255,255,0.3); font-size:0.75rem; }
+    .letter-msg-body { color:rgba(255,255,255,0.7); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; line-height:1.8; }
+
+    .reply-card {
+      background:rgba(255,255,255,0.04);
+      backdrop-filter:blur(32px);
+      border:1px solid rgba(232,104,122,0.2);
+      border-radius:24px; padding:32px;
+      box-shadow:0 16px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+      text-align:left; position:relative; overflow:hidden;
+    }
+    .reply-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--rose),var(--blush),var(--gold),var(--rose)); background-size:200% 100%; animation:shimmer3D 3s linear infinite; }
+    .reply-header { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+    .reply-envelope { font-size:2.5rem; animation:letterFloat 3s ease-in-out infinite; }
+    .reply-title { font-family:'Playfair Display',serif; font-size:1.3rem; color:white; margin-bottom:4px; }
+    .reply-sub { color:rgba(255,255,255,0.4); font-size:0.85rem; font-style:italic; }
+    .reply-textarea {
+      width:100%; padding:16px 18px;
+      background:rgba(255,255,255,0.04);
+      backdrop-filter:blur(8px);
+      border:1px solid rgba(232,104,122,0.2);
+      border-radius:16px; color:rgba(255,255,255,0.8);
+      font-size:1rem; font-family:'Cormorant Garamond',serif;
+      font-style:italic; resize:none; outline:none;
+      transition:border-color .3s; line-height:1.8;
+    }
+    .reply-textarea::placeholder { color:rgba(255,255,255,0.2); }
+    .reply-textarea:focus { border-color:rgba(232,104,122,0.5); background:rgba(255,255,255,0.06); }
+    .reply-footer-row { display:flex; align-items:center; justify-content:space-between; margin-top:16px; flex-wrap:wrap; gap:12px; }
+    .reply-from { color:var(--blush); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; }
+
+    /* ── LOVE QUIZ ── */
+    #quizContainer { max-width: 580px; margin: 0 auto; }
+
+    .quiz-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(32px);
+      border: 1px solid rgba(232,104,122,0.2);
+      border-radius: 28px;
+      padding: 48px 36px;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
+      position: relative; overflow: hidden;
+    }
+    .quiz-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--rose), var(--blush), var(--gold), var(--rose));
+      background-size: 200% 100%;
+      animation: shimmer3D 3s linear infinite;
+    }
+
+    /* Start screen */
+    .quiz-start-icon { font-size: 4rem; margin-bottom: 20px; animation: letterFloat 3s ease-in-out infinite; }
+    .quiz-start-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: white; margin-bottom: 12px; }
+    .quiz-start-sub { color: rgba(255,255,255,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; margin-bottom: 32px; line-height: 1.6; }
+    .quiz-start-btn {
+      padding: 16px 48px;
+      background: linear-gradient(135deg, var(--rose), #c44569);
+      border: none; border-radius: 50px; color: white;
+      font-size: 1.05rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 4px 24px rgba(232,104,122,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+      transition: all .3s; animation: btnGlow 3s ease-in-out infinite;
+    }
+    .quiz-start-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 40px rgba(232,104,122,0.6); }
+
+    /* Progress */
+    .quiz-progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .quiz-progress-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; }
+    .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--rose), var(--blush)); border-radius: 6px; transition: width .5s cubic-bezier(0.23,1,0.32,1); width: 20%; }
+    .quiz-progress-text { color: rgba(255,255,255,0.4); font-size: 0.8rem; flex-shrink: 0; }
+
+    .quiz-q-num { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; }
+    .quiz-question { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: white; margin-bottom: 28px; line-height: 1.5; text-align: left; }
+
+    /* Options */
+    .quiz-options { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+    .quiz-option {
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(232,104,122,0.2);
+      border-radius: 16px; color: rgba(255,255,255,0.75);
+      font-size: 0.95rem; cursor: pointer;
+      transition: all .3s; display: flex; align-items: center; gap: 12px;
+      backdrop-filter: blur(8px);
+    }
+    .quiz-option:hover { background: rgba(232,104,122,0.1); border-color: rgba(232,104,122,0.4); color: white; transform: translateX(4px); }
+    .quiz-option.correct { background: rgba(46,204,113,0.15) !important; border-color: rgba(46,204,113,0.5) !important; color: #2ecc71 !important; transform: translateX(6px); }
+    .quiz-option.wrong { background: rgba(231,76,60,0.15) !important; border-color: rgba(231,76,60,0.5) !important; color: #e74c3c !important; }
+    .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+    .quiz-option-letter {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(232,104,122,0.2); border: 1px solid rgba(232,104,122,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; color: var(--rose); flex-shrink: 0;
+    }
+
+    /* Feedback */
+    .quiz-feedback {
+      margin-top: 16px; padding: 14px 18px; border-radius: 14px;
+      font-size: 0.9rem; line-height: 1.6; font-family: 'Cormorant Garamond', serif;
+      font-style: italic; animation: letterReveal .4s ease;
+    }
+    .quiz-feedback.correct-fb { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.2); color: #7dcea0; }
+    .quiz-feedback.wrong-fb { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.2); color: #f1948a; }
+
+    /* Result */
+    .quiz-result-emoji { font-size: 4rem; margin-bottom: 16px; animation: pulse 1.5s ease-in-out infinite; }
+    .quiz-result-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: white; margin-bottom: 12px; }
+    .quiz-result-sub { color: rgba(255,255,255,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; margin-bottom: 28px; line-height: 1.6; }
+    .quiz-score-wrap { margin: 20px 0; }
+    .quiz-score { font-family: 'Playfair Display', serif; font-size: 4rem; color: var(--rose); text-shadow: 0 0 30px rgba(232,104,122,0.5); line-height: 1; }
+    .quiz-score-label { color: rgba(255,255,255,0.4); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; }
+    .quiz-hearts { display: flex; justify-content: center; gap: 8px; font-size: 1.5rem; margin-top: 16px; }
+
     /* ── 8K QUALITY 3D ANIMATION STYLES ── */
     #webglCanvas {
       position: fixed; inset: 0; z-index: -1;
@@ -1566,6 +1731,9 @@
     <li><a href="#gallery">Photos</a></li>
     <li><a href="#videos">Videos</a></li>
     <li><a href="#memories">Memories</a></li>
+    <li><a href="#quiz">Love Quiz 💌</a></li>
+    <li><a href="#puzzle">Puzzle 🧩</a></li>
+    <li><a href="#letterReply">Letter 💌</a></li>
   </ul>
 </nav>
 
@@ -2093,6 +2261,144 @@
   </div>
 </div>
 
+<!-- LOVE QUIZ -->
+<section id="quiz" style="background:transparent; padding:80px 24px;">
+  <div class="container" style="text-align:center;">
+    <p class="section-label reveal">✦ Just For You Rasla ✦</p>
+    <h2 class="section-title reveal">The <em>Love Quiz</em> 💌</h2>
+    <p class="reveal" style="color:rgba(255,255,255,0.45); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-bottom:48px;">
+      How well do you know our love story? 🥺
+    </p>
+
+    <div id="quizContainer" class="reveal">
+
+      <!-- Start screen -->
+      <div id="quizStart" class="quiz-card">
+        <div class="quiz-start-icon">💌</div>
+        <h3 class="quiz-start-title">Are you ready, Rasla? 🥺</h3>
+        <p class="quiz-start-sub">5 questions about us — our story, our love, our everything 💕</p>
+        <button onclick="startQuiz()" class="quiz-start-btn">Let's Go! 💗</button>
+      </div>
+
+      <!-- Question screen -->
+      <div id="quizQuestion" class="quiz-card" style="display:none;">
+        <div class="quiz-progress-wrap">
+          <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizFill"></div></div>
+          <span class="quiz-progress-text" id="quizProgressText">1 / 5</span>
+        </div>
+        <div class="quiz-q-num" id="quizQNum">Question 1</div>
+        <div class="quiz-question" id="quizQuestionText"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback" style="display:none;"></div>
+      </div>
+
+      <!-- Result screen -->
+      <div id="quizResult" class="quiz-card" style="display:none;">
+        <div class="quiz-result-emoji" id="resultEmoji">🥺</div>
+        <h3 class="quiz-result-title" id="resultTitle"></h3>
+        <p class="quiz-result-sub" id="resultSub"></p>
+        <div class="quiz-score-wrap">
+          <div class="quiz-score" id="quizScore">0/5</div>
+          <div class="quiz-score-label">Love Score 💕</div>
+        </div>
+        <div class="quiz-hearts" id="quizHearts"></div>
+        <button onclick="restartQuiz()" class="quiz-start-btn" style="margin-top:24px;">Play Again 🔄</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO PUZZLE GAME -->
+<section id="puzzle" style="background:transparent; padding:80px 24px;">
+  <div class="container" style="text-align:center;">
+    <p class="section-label reveal">✦ A Game Just For You ✦</p>
+    <h2 class="section-title reveal">Photo <em>Puzzle</em> 🧩</h2>
+    <p class="reveal" style="color:rgba(255,255,255,0.45); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-bottom:48px;">
+      Solve the puzzle to reveal a beautiful moment of us 💕
+    </p>
+
+    <div class="reveal" id="puzzleWrap">
+      <!-- Difficulty -->
+      <div id="puzzleStart" class="quiz-card" style="max-width:500px; margin:0 auto;">
+        <div style="font-size:3.5rem; margin-bottom:16px; animation:letterFloat 3s ease-in-out infinite;">🧩</div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:1.6rem; color:white; margin-bottom:12px;">Unscramble Us 🥺</h3>
+        <p style="color:rgba(255,255,255,0.5); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; margin-bottom:28px;">Choose your difficulty and piece our photo back together!</p>
+        <div class="puzzle-diff-btns">
+          <button onclick="startPuzzle(3)" class="puzzle-diff-btn">🌸 Easy (3×3)</button>
+          <button onclick="startPuzzle(4)" class="puzzle-diff-btn">💗 Medium (4×4)</button>
+          <button onclick="startPuzzle(5)" class="puzzle-diff-btn">🔥 Hard (5×5)</button>
+        </div>
+      </div>
+
+      <!-- Puzzle board -->
+      <div id="puzzleBoard" style="display:none; max-width:520px; margin:0 auto;">
+        <div class="puzzle-info-row">
+          <div class="puzzle-stat">
+            <span class="puzzle-stat-val" id="puzzleMoves">0</span>
+            <span class="puzzle-stat-label">Moves</span>
+          </div>
+          <div class="puzzle-stat">
+            <span class="puzzle-stat-val" id="puzzleTimer">0:00</span>
+            <span class="puzzle-stat-label">Time</span>
+          </div>
+          <button onclick="shufflePuzzle()" class="puzzle-action-btn">🔀 Shuffle</button>
+          <button onclick="resetPuzzle()" class="puzzle-action-btn">🔄 Reset</button>
+        </div>
+        <div id="puzzleGrid" class="puzzle-grid"></div>
+        <button onclick="document.getElementById('puzzleBoard').style.display='none'; document.getElementById('puzzleStart').style.display='block';" class="quiz-start-btn" style="margin-top:20px; padding:12px 32px; font-size:0.9rem;">← Back</button>
+      </div>
+
+      <!-- Win screen -->
+      <div id="puzzleWin" class="quiz-card" style="display:none; max-width:500px; margin:0 auto;">
+        <div style="font-size:3.5rem; margin-bottom:16px;">🎉</div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:1.6rem; color:white; margin-bottom:12px;">You did it Rasla! 🥺💕</h3>
+        <p style="color:rgba(255,255,255,0.5); font-family:'Cormorant Garamond',serif; font-style:italic; margin-bottom:20px;">
+          Completed in <span id="winMoves" style="color:var(--rose); font-weight:600;"></span> moves & <span id="winTime" style="color:var(--rose); font-weight:600;"></span>!
+        </p>
+        <img id="puzzleWinImg" src="RAAHII4.png" style="width:100%; border-radius:20px; box-shadow:0 8px 40px rgba(232,104,122,0.3); margin-bottom:20px;"/>
+        <p style="color:rgba(255,255,255,0.6); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:1.05rem;">
+          "Just like this puzzle — no matter how scattered things get, we always find our way back to each other 💕"
+        </p>
+        <button onclick="resetPuzzle()" class="quiz-start-btn" style="margin-top:24px;">Play Again 🧩</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOVE LETTER REPLY BOX -->
+<section id="letterReply" style="background:transparent; padding:80px 24px;">
+  <div class="container" style="text-align:center;">
+    <p class="section-label reveal">✦ Your Turn, Rasla ✦</p>
+    <h2 class="section-title reveal">Write Me a <em>Letter</em> 💌</h2>
+    <p class="reveal" style="color:rgba(255,255,255,0.45); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-bottom:48px;">
+      I wrote you my heart. Now it's your turn 🥺
+    </p>
+
+    <div class="reveal" style="max-width:640px; margin:0 auto;">
+      <!-- Sent letters display -->
+      <div id="lettersDisplay" class="letters-display"></div>
+
+      <!-- Write form -->
+      <div class="reply-card" id="replyForm">
+        <div class="reply-header">
+          <span class="reply-envelope">💌</span>
+          <div>
+            <h3 class="reply-title">Dear Hisham,</h3>
+            <p class="reply-sub">Write whatever is in your heart 🥺</p>
+          </div>
+        </div>
+        <textarea id="replyText" class="reply-textarea" placeholder="Start writing your letter here... pour your heart out 💕" rows="6"></textarea>
+        <div class="reply-footer-row">
+          <span class="reply-from">— Rasla 💗</span>
+          <button onclick="sendLetter()" class="quiz-start-btn" style="padding:12px 32px; font-size:0.9rem;">Send Letter 💌</button>
+        </div>
+        <div id="replyMsg" style="display:none; margin-top:16px; color:var(--blush); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:1rem;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <span class="heart">💗</span> Made with love, just for us
@@ -2345,6 +2651,323 @@
       if (date) date.style.transform = `translate3d(${x*0.6}px,${y*0.6}px,30px)`;
     }
   });
+
+  // ─── PHOTO PUZZLE GAME ───
+  const PUZZLE_IMAGE = 'RAAHII4.png'; // Beautiful couple photo
+  let puzzleSize = 3;
+  let puzzleTiles = [];
+  let emptyIndex = 0;
+  let puzzleMoves = 0;
+  let puzzleSeconds = 0;
+  let puzzleTimerInterval = null;
+  let puzzleSolved = false;
+
+  window.startPuzzle = function(size) {
+    puzzleSize = size;
+    puzzleMoves = 0;
+    puzzleSeconds = 0;
+    puzzleSolved = false;
+    document.getElementById('puzzleMoves').textContent = '0';
+    document.getElementById('puzzleTimer').textContent = '0:00';
+    document.getElementById('puzzleStart').style.display = 'none';
+    document.getElementById('puzzleWin').style.display = 'none';
+    document.getElementById('puzzleBoard').style.display = 'block';
+
+    const n = size * size;
+    puzzleTiles = Array.from({length: n}, (_, i) => i);
+    emptyIndex = n - 1;
+    puzzleTiles[emptyIndex] = n - 1; // last tile is empty
+
+    shufflePuzzle();
+    renderPuzzle();
+    clearInterval(puzzleTimerInterval);
+    puzzleTimerInterval = setInterval(() => {
+      puzzleSeconds++;
+      const m = Math.floor(puzzleSeconds / 60);
+      const s = String(puzzleSeconds % 60).padStart(2, '0');
+      document.getElementById('puzzleTimer').textContent = `${m}:${s}`;
+    }, 1000);
+  }
+
+  window.shufflePuzzle = function() {
+    // Shuffle by making random valid moves
+    for (let i = 0; i < 200; i++) {
+      const neighbors = getNeighbors(emptyIndex, puzzleSize);
+      const rand = neighbors[Math.floor(Math.random() * neighbors.length)];
+      [puzzleTiles[emptyIndex], puzzleTiles[rand]] = [puzzleTiles[rand], puzzleTiles[emptyIndex]];
+      emptyIndex = rand;
+    }
+    renderPuzzle();
+  }
+
+  window.resetPuzzle = function() {
+    clearInterval(puzzleTimerInterval);
+    document.getElementById('puzzleBoard').style.display = 'none';
+    document.getElementById('puzzleWin').style.display = 'none';
+    document.getElementById('puzzleStart').style.display = 'block';
+  }
+
+  function getNeighbors(idx, size) {
+    const neighbors = [];
+    const row = Math.floor(idx / size);
+    const col = idx % size;
+    if (row > 0) neighbors.push(idx - size);
+    if (row < size - 1) neighbors.push(idx + size);
+    if (col > 0) neighbors.push(idx - 1);
+    if (col < size - 1) neighbors.push(idx + 1);
+    return neighbors;
+  }
+
+  function renderPuzzle() {
+    const grid = document.getElementById('puzzleGrid');
+    grid.style.gridTemplateColumns = `repeat(${puzzleSize}, 1fr)`;
+    grid.innerHTML = '';
+    const n = puzzleSize * puzzleSize;
+
+    puzzleTiles.forEach((tileVal, pos) => {
+      const tile = document.createElement('div');
+      tile.className = 'puzzle-tile';
+      if (tileVal === n - 1) {
+        tile.classList.add('empty');
+      } else {
+        const tileRow = Math.floor(tileVal / puzzleSize);
+        const tileCol = tileVal % puzzleSize;
+        const pct = 100 / (puzzleSize - 1);
+        tile.style.backgroundImage = `url('${PUZZLE_IMAGE}')`;
+        tile.style.backgroundSize = `${puzzleSize * 100}%`;
+        tile.style.backgroundPosition = `${tileCol * pct}% ${tileRow * pct}%`;
+        if (tileVal === pos) tile.classList.add('correct-pos');
+        tile.onclick = () => moveTile(pos);
+      }
+      grid.appendChild(tile);
+    });
+  }
+
+  function moveTile(pos) {
+    if (puzzleSolved) return;
+    const neighbors = getNeighbors(emptyIndex, puzzleSize);
+    if (!neighbors.includes(pos)) return;
+    [puzzleTiles[emptyIndex], puzzleTiles[pos]] = [puzzleTiles[pos], puzzleTiles[emptyIndex]];
+    emptyIndex = pos;
+    puzzleMoves++;
+    document.getElementById('puzzleMoves').textContent = puzzleMoves;
+    renderPuzzle();
+    checkWin();
+  }
+
+  function checkWin() {
+    const n = puzzleSize * puzzleSize;
+    const solved = puzzleTiles.every((val, idx) => val === idx);
+    if (solved) {
+      puzzleSolved = true;
+      clearInterval(puzzleTimerInterval);
+      const m = Math.floor(puzzleSeconds / 60);
+      const s = String(puzzleSeconds % 60).padStart(2, '0');
+      setTimeout(() => {
+        document.getElementById('puzzleBoard').style.display = 'none';
+        document.getElementById('winMoves').textContent = `${puzzleMoves} moves`;
+        document.getElementById('winTime').textContent = `${m}:${s}`;
+        document.getElementById('puzzleWin').style.display = 'block';
+        startConfetti();
+        setTimeout(() => document.getElementById('anniversaryOverlay').style.display = 'none', 3500);
+      }, 400);
+    }
+  }
+
+  // ─── LOVE LETTER REPLY (Firebase) ───
+  window.sendLetter = function() {
+    const text = document.getElementById('replyText').value.trim();
+    if (!text) return;
+    if (!window._sendLetterToFirebase) {
+      // Store locally if Firebase not ready
+      displayLetter('Rasla 💗', text);
+      document.getElementById('replyText').value = '';
+      showReplyMsg('Your letter has been sent to Hisham 💌🥺');
+      return;
+    }
+    window._sendLetterToFirebase(text);
+    document.getElementById('replyText').value = '';
+    showReplyMsg('Your letter has been sent to Hisham 💌🥺');
+  }
+
+  function showReplyMsg(msg) {
+    const el = document.getElementById('replyMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 3000);
+  }
+
+  function displayLetter(from, text) {
+    const now = new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+    const div = document.createElement('div');
+    div.className = 'letter-msg';
+    div.innerHTML = `
+      <div class="letter-msg-header">
+        <span class="letter-msg-from">💌 From ${from}</span>
+        <span class="letter-msg-date">${now}</span>
+      </div>
+      <div class="letter-msg-body">${text}</div>`;
+    document.getElementById('lettersDisplay').prepend(div);
+  }
+
+  // Connect letters to Firebase when available
+  function initLetterFirebase() {
+    const checkReady = setInterval(() => {
+      if (window._firebaseDb && window._firebaseRef && window._firebasePush && window._firebaseOnChildAdded) {
+        clearInterval(checkReady);
+        const { db, ref, push, onChildAdded } = window._firebaseDb;
+        const lettersRef = ref(db, 'loveLetters');
+        window._sendLetterToFirebase = (text) => {
+          push(lettersRef, { from: 'Rasla 💗', text, time: Date.now() });
+        };
+        onChildAdded(lettersRef, (snapshot) => {
+          const l = snapshot.val();
+          displayLetter(l.from, l.text);
+        });
+      }
+    }, 1000);
+  }
+  initLetterFirebase();
+
+  // ─── LOVE QUIZ ───
+  const quizData = [
+    {
+      question: "Where did Hisham and Rasla first meet and fall in love? 🌸",
+      options: ["At a park 🌳", "At school 🏫", "At a wedding 💒", "Online 📱"],
+      correct: 1,
+      correctFeedback: "Yes! It was at school 🏫 — the place where everything began. A new school year, a new class, and a moment that changed everything forever 💕",
+      wrongFeedback: "It was at school 🏫! A new 8th grade year, and the universe brought you two together in the same classroom 🌸"
+    },
+    {
+      question: "What was the very first thing Rasla ever gave Hisham? 🥺",
+      options: ["A letter 💌", "A flower 🌸", "A pen 🖊️", "A photo 📸"],
+      correct: 2,
+      correctFeedback: "Yes! A simple pen 🖊️ — but to Hisham it became the most precious thing in the world. He still remembers that moment like it was yesterday 💙",
+      wrongFeedback: "It was a pen 🖊️! His friend Rishal needed one, and Rasla had it. That one small pen started the greatest love story 💕"
+    },
+    {
+      question: "How much do you love Hisham? 💗",
+      options: ["A little bit 🌱", "So so much 💕", "More than everything in this world 🌍💙", "Just as a friend 😊"],
+      correct: 2,
+      correctFeedback: "More than everything in this world 💙 — and Hisham loves you even more than that, Rasla. Every single day, without fail 🥺✨",
+      wrongFeedback: "The right answer is: More than everything in this world 🌍💙 — at least that's how Hisham loves YOU, forever and always 💕"
+    },
+    {
+      question: "What is the thing Hisham loves most about Rasla? 💛",
+      options: ["Her smile 😊", "Her loyalty 🤍", "Her beauty 🌺", "Her voice 🎵"],
+      correct: 1,
+      correctFeedback: "Her loyalty 🤍 — because you never hurt him, never left him, and never gave him a reason to doubt you. That means more to him than anything 💙",
+      wrongFeedback: "It's your loyalty 🤍! You never hurt him, you stayed true, and that means the world to a boy who came from a dark place 💙"
+    },
+    {
+      question: "Why did Hisham keep the pen Rasla gave him close to his chest? 💙",
+      options: [
+        "Because it was an expensive pen ✒️",
+        "Because his friend asked him to keep it 👦",
+        "Because it was given by the girl he fell in love with at first sight 💙",
+        "Because he lost his own pen 😅"
+      ],
+      correct: 2,
+      correctFeedback: "Because it was given by YOU 💙 — the girl he fell in love with the very first moment he saw you. That pen wasn't just a pen. It was his first connection to you, Rasla 🥺✨",
+      wrongFeedback: "It was because of YOU 💙! The moment he saw you, his heart chose you. That pen was the first thing that connected him to you — so he kept it close to his heart 🥺"
+    }
+  ];
+
+  let quizIndex = 0;
+  let quizScore = 0;
+  let quizAnswered = false;
+
+  window.startQuiz = function() {
+    quizIndex = 0; quizScore = 0;
+    document.getElementById('quizStart').style.display = 'none';
+    document.getElementById('quizResult').style.display = 'none';
+    document.getElementById('quizQuestion').style.display = 'block';
+    showQuestion();
+  }
+
+  function showQuestion() {
+    const q = quizData[quizIndex];
+    quizAnswered = false;
+    document.getElementById('quizFeedback').style.display = 'none';
+    document.getElementById('quizQNum').textContent = `Question ${quizIndex + 1}`;
+    document.getElementById('quizQuestionText').textContent = q.question;
+    document.getElementById('quizProgressText').textContent = `${quizIndex + 1} / ${quizData.length}`;
+    document.getElementById('quizFill').style.width = `${((quizIndex + 1) / quizData.length) * 100}%`;
+
+    const letters = ['A', 'B', 'C', 'D'];
+    const opts = document.getElementById('quizOptions');
+    opts.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.innerHTML = `<span class="quiz-option-letter">${letters[i]}</span>${opt}`;
+      btn.onclick = () => answerQuestion(i, btn);
+      opts.appendChild(btn);
+    });
+  }
+
+  function answerQuestion(index, btn) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    const q = quizData[quizIndex];
+    const allBtns = document.querySelectorAll('.quiz-option');
+    allBtns.forEach(b => b.classList.add('disabled'));
+
+    const feedback = document.getElementById('quizFeedback');
+
+    if (index === q.correct) {
+      quizScore++;
+      btn.classList.add('correct');
+      feedback.className = 'quiz-feedback correct-fb';
+      feedback.innerHTML = '✅ ' + q.correctFeedback;
+    } else {
+      btn.classList.add('wrong');
+      allBtns[q.correct].classList.add('correct');
+      feedback.className = 'quiz-feedback wrong-fb';
+      feedback.innerHTML = '💭 ' + q.wrongFeedback;
+    }
+    feedback.style.display = 'block';
+
+    setTimeout(() => {
+      quizIndex++;
+      if (quizIndex < quizData.length) showQuestion();
+      else showResult();
+    }, 2800);
+  }
+
+  function showResult() {
+    document.getElementById('quizQuestion').style.display = 'none';
+    document.getElementById('quizResult').style.display = 'block';
+    document.getElementById('quizScore').textContent = `${quizScore}/${quizData.length}`;
+
+    const hearts = document.getElementById('quizHearts');
+    hearts.innerHTML = Array.from({length: quizData.length}, (_, i) =>
+      `<span>${i < quizScore ? '💗' : '🤍'}</span>`).join('');
+
+    const results = [
+      { emoji:'😢', title:'Keep trying Rasla!', sub:'Don\'t worry — love is about the journey, not the score! Read our story again and try once more 💕' },
+      { emoji:'🥺', title:'You\'re learning!', sub:'You know some of our story! But there\'s so much more to discover about us 💕' },
+      { emoji:'💗', title:'Getting there!', sub:'You know us pretty well! Hisham loves that you\'re paying attention to our beautiful story 🌸' },
+      { emoji:'😍', title:'You know us so well!', sub:'Almost perfect! You know this love story inside and out — just like Hisham knows your heart 💙' },
+      { emoji:'👑', title:'You ARE the love story, Rasla!', sub:'5/5! Of course you knew it all — you\'re the one who made every moment of it magical. Hisham loves you forever 🥺💕' },
+    ];
+
+    const r = results[quizScore];
+    document.getElementById('resultEmoji').textContent = r.emoji;
+    document.getElementById('resultTitle').textContent = r.title;
+    document.getElementById('resultSub').textContent = r.sub;
+
+    if (quizScore === 5) {
+      // Mini confetti for perfect score
+      setTimeout(() => startConfetti(), 300);
+      setTimeout(() => document.getElementById('anniversaryOverlay').style.display = 'none', 3000);
+    }
+  }
+
+  window.restartQuiz = function() {
+    document.getElementById('quizResult').style.display = 'none';
+    document.getElementById('quizStart').style.display = 'block';
+  }
 
   // ─── ANNIVERSARY SYSTEM ───
   const ANNIVERSARY_DATE = new Date('2024-07-22T00:00:00');
@@ -3229,6 +3852,8 @@
         });
 
         const db = getDatabase(app);
+        // Expose to letter reply system
+        window._firebaseDb = { db, ref, push, onChildAdded };
         const msgsRef = ref(db, 'messages');
 
         window._sendToFirebase = (text, voice = null, media = null) => {
