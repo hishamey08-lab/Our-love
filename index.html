@@ -535,7 +535,6 @@
       from { transform: scale(0); } to { transform: scale(1); }
     }
 
-    /* Filters applied via CSS on video */
     #camVideo.filter-rose     { filter: saturate(1.4) hue-rotate(320deg) brightness(1.05); }
     #camVideo.filter-romantic  { filter: saturate(1.8) hue-rotate(300deg) brightness(1.1) contrast(1.1); }
     #camVideo.filter-cute      { filter: saturate(1.3) brightness(1.15) contrast(0.9) sepia(0.15); }
@@ -594,7 +593,6 @@
     .cam-capture:hover { transform: scale(1.08); background: #f4b8c1; }
     .cam-capture:active { transform: scale(0.95); }
 
-    /* Preview */
     #camPreview {
       position: absolute; inset: 0; z-index: 20;
       background: #000;
@@ -796,7 +794,6 @@
     .pl-ctrl:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
     .pl-play { background: var(--rose) !important; }
 
-    /* Full Panel */
     .playlist-panel {
       background: linear-gradient(180deg, #3d1a24 0%, #5c2d38 100%);
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -876,45 +873,6 @@
     .pl-song-wave span:nth-child(2) { animation-delay: .15s; }
     .pl-song-wave span:nth-child(3) { animation-delay: .3s; }
 
-    /* ── MUSIC PLAYER (old) ── */
-    .music-player {
-      position: fixed; bottom: 28px; right: 28px; z-index: 999;
-      display: flex; align-items: center; gap: 12px;
-      background: rgba(122,61,74,0.92);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 50px;
-      padding: 10px 20px 10px 10px;
-      box-shadow: 0 8px 32px rgba(122,61,74,0.4);
-      transition: transform .4s ease, opacity .4s ease;
-      opacity: 1;
-    }
-    .music-player:hover { transform: translateY(-3px); }
-    .music-btn {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--blush); border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; flex-shrink: 0;
-      transition: background .2s, transform .2s;
-    }
-    .music-btn:hover { background: white; transform: scale(1.1); }
-    .music-info { display: flex; flex-direction: column; }
-    .music-title { color: white; font-size: 0.8rem; font-weight: 500; }
-    .music-sub { color: var(--blush); font-size: 0.7rem; }
-    .music-bars {
-      display: flex; align-items: flex-end; gap: 3px; height: 20px;
-    }
-    .bar {
-      width: 3px; background: var(--blush); border-radius: 2px;
-      animation: barDance var(--s) ease-in-out infinite alternate;
-    }
-    @keyframes barDance {
-      from { height: 4px; } to { height: 18px; }
-    }
-    .bar:nth-child(1){--s:0.4s} .bar:nth-child(2){--s:0.6s}
-    .bar:nth-child(3){--s:0.5s} .bar:nth-child(4){--s:0.7s}
-    .bar.paused { animation-play-state: paused; height: 4px; }
-
     /* ── SCROLL REVEAL ── */
     .reveal { opacity: 0; transform: translateY(32px); transition: opacity .8s ease, transform .8s ease; }
     .reveal.visible { opacity: 1; transform: none; }
@@ -931,7 +889,7 @@
     }
   </style>
 
-  <!-- 3D STYLE OVERRIDES -->
+  <!-- 3D STYLE OVERRIDES (dark glass theme) -->
   <style>
     /* ── DARK 3D BACKGROUND ── */
     body {
@@ -946,11 +904,7 @@
         radial-gradient(ellipse 60% 50% at 80% 80%, rgba(122,61,74,0.25) 0%, transparent 60%),
         radial-gradient(ellipse 70% 40% at 50% 50%, rgba(201,169,110,0.08) 0%, transparent 70%),
         linear-gradient(135deg, #1a0810 0%, #0d0508 50%, #1a0d08 100%);
-      animation: meshMove 14s ease-in-out infinite alternate;
       pointer-events: none;
-    }
-    @keyframes meshMove {
-      0% { opacity: 0.8; } 100% { opacity: 1; }
     }
 
     /* ── NAV 3D ── */
@@ -966,71 +920,89 @@
 
     /* ── PASSWORD GATE 3D ── */
     #gate {
-      background: linear-gradient(135deg, rgba(26,8,16,0.98), rgba(13,5,8,0.99)) !important;
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0a0308;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
     }
-    #gate::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(232,104,122,0.12) 0%, transparent 70%);
-      pointer-events: none;
+    .gate-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(60px); pointer-events: none;
+      animation: orbFloat 8s ease-in-out infinite;
     }
-    #gate .lock-icon { filter: drop-shadow(0 0 24px rgba(232,104,122,0.7)); }
-    #gate h2 { color: white !important; text-shadow: 0 0 30px rgba(232,104,122,0.4); }
-    #gate p { color: var(--blush) !important; }
-    #gate input {
-      background: rgba(255,255,255,0.06) !important;
-      backdrop-filter: blur(20px) !important;
-      border: 1px solid rgba(244,184,193,0.25) !important;
-      color: white !important;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    .gate-orb1 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(232,104,122,0.35) 0%, transparent 70%); top: -100px; left: -100px; animation-delay: 0s; }
+    .gate-orb2 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(122,61,74,0.4) 0%, transparent 70%); bottom: -80px; right: -80px; animation-delay: -3s; }
+    .gate-orb3 { width: 250px; height: 250px; background: radial-gradient(circle, rgba(201,169,110,0.2) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -5s; }
+    @keyframes orbFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(30px,-20px) scale(1.05); }
+      66% { transform: translate(-20px,30px) scale(0.95); }
     }
-    #gate input::placeholder { color: rgba(255,255,255,0.3); }
-    #gate input:focus {
-      border-color: var(--rose) !important;
-      box-shadow: 0 0 0 3px rgba(232,104,122,0.2) !important;
-      background: rgba(255,255,255,0.09) !important;
+    .gate-stars { position: absolute; inset: 0; pointer-events: none; }
+    .gate-star { position: absolute; border-radius: 50%; background: white; animation: starTwinkle var(--d) ease-in-out infinite; animation-delay: var(--delay); }
+    @keyframes starTwinkle { 0%,100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.5); } }
+    .gate-content { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; padding: 24px; }
+    .gate-lock { font-size: 64px; filter: drop-shadow(0 0 30px rgba(232,104,122,0.8)); animation: lockPulse 2s ease-in-out infinite; }
+    @keyframes lockPulse {
+      0%,100% { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 30px rgba(232,104,122,0.8)); }
+      50% { transform: scale(1.1) rotate(3deg); filter: drop-shadow(0 0 50px rgba(232,104,122,1)); }
     }
-    #gate button {
-      background: linear-gradient(135deg, var(--rose), var(--deep)) !important;
-      box-shadow: 0 4px 24px rgba(232,104,122,0.4), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+    .gate-welcome { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 5vw, 2.8rem); color: white; min-height: 1.4em; display: flex; align-items: center; gap: 2px; text-shadow: 0 0 40px rgba(232,104,122,0.5); }
+    .welcome-line { color: white; }
+    .welcome-cursor { color: var(--rose); font-weight: 300; animation: cursorBlink 0.8s step-end infinite; }
+    @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .gate-sub { color: rgba(255,255,255,0.45); font-size: 0.9rem; letter-spacing: 0.05em; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; }
+    .gate-input-wrap { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; }
+    #pwInput {
+      padding: 16px 24px; background: rgba(255,255,255,0.06); backdrop-filter: blur(24px);
+      border: 1px solid rgba(232,104,122,0.25); border-radius: 50px; font-size: 1rem;
+      color: white; outline: none; text-align: center; transition: all .4s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); letter-spacing: 0.15em;
     }
-    #gate button:hover {
-      box-shadow: 0 8px 40px rgba(232,104,122,0.6) !important;
-      transform: translateY(-3px) scale(1.04) !important;
+    #pwInput::placeholder { color: rgba(255,255,255,0.25); letter-spacing: normal; }
+    #pwInput:focus { border-color: var(--rose); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(232,104,122,0.2), 0 4px 32px rgba(0,0,0,0.4); }
+    .gate-btn {
+      padding: 16px 40px; background: linear-gradient(135deg, var(--rose) 0%, #c44569 50%, var(--deep) 100%);
+      background-size: 200% 200%; border: none; border-radius: 50px; color: white; font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px; transition: all .4s;
+      box-shadow: 0 4px 24px rgba(232,104,122,0.4), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.15);
+      animation: btnGlow 3s ease-in-out infinite;
     }
+    @keyframes btnGlow {
+      0%,100% { box-shadow: 0 4px 24px rgba(232,104,122,0.4), 0 0 0 1px rgba(255,255,255,0.06); background-position: 0% 50%; }
+      50% { box-shadow: 0 8px 40px rgba(232,104,122,0.7), 0 0 60px rgba(232,104,122,0.2); background-position: 100% 50%; }
+    }
+    .gate-btn:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 12px 48px rgba(232,104,122,0.7) !important; }
+    .gate-btn:active { transform: scale(0.97); }
+    .btn-icon { font-size: 1.1rem; animation: spin 3s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .err { color: var(--rose); font-size: 0.85rem; min-height: 20px; text-shadow: 0 0 10px rgba(232,104,122,0.5); }
 
     /* ── HERO 3D ── */
     .hero-bg { display: none !important; }
-    .hero h1 {
-      color: white !important;
-      text-shadow: 0 0 60px rgba(232,104,122,0.35), 0 4px 32px rgba(0,0,0,0.6) !important;
-    }
+    .hero h1 { color: white !important; text-shadow: 0 0 60px rgba(232,104,122,0.35), 0 4px 32px rgba(0,0,0,0.6) !important; }
     .hero-sub { color: rgba(255,255,255,0.55) !important; }
     .hero-date {
-      background: rgba(255,255,255,0.06) !important;
-      backdrop-filter: blur(24px) !important;
-      border: 1px solid rgba(232,104,122,0.25) !important;
-      color: white !important;
+      background: rgba(255,255,255,0.06) !important; backdrop-filter: blur(24px) !important;
+      border: 1px solid rgba(232,104,122,0.25) !important; color: white !important;
       box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08) !important;
     }
 
     /* ── SECTIONS BG ── */
     section { background: transparent !important; }
-    .section-title { color: white !important; }
+    .section-title { color: white !important; text-shadow: 0 0 40px rgba(232,104,122,0.15), 0 2px 10px rgba(0,0,0,0.5) !important; }
     .section-label { text-shadow: 0 0 16px rgba(232,104,122,0.4); }
 
     /* ── COUNTDOWN 3D GLASS ── */
     .countdown-section { background: transparent !important; }
     .count-box {
-      background: rgba(255,255,255,0.04) !important;
-      backdrop-filter: blur(24px) !important;
+      background: rgba(255,255,255,0.04) !important; backdrop-filter: blur(24px) !important;
       border: 1px solid rgba(232,104,122,0.18) !important;
       box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07) !important;
       transition: all .4s cubic-bezier(0.23,1,0.32,1) !important;
     }
     .count-box:hover {
-      transform: translateY(-10px) scale(1.06) !important;
-      background: rgba(232,104,122,0.1) !important;
+      transform: translateY(-10px) scale(1.06) !important; background: rgba(232,104,122,0.1) !important;
       border-color: rgba(232,104,122,0.45) !important;
       box-shadow: 0 24px 60px rgba(232,104,122,0.2), 0 0 0 1px rgba(232,104,122,0.2) !important;
     }
@@ -1039,22 +1011,13 @@
 
     /* ── TIMELINE 3D ── */
     .tl-content {
-      background: rgba(255,255,255,0.04) !important;
-      backdrop-filter: blur(24px) !important;
-      border: 1px solid rgba(232,104,122,0.12) !important;
-      border-radius: 20px !important;
-      padding: 24px !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06) !important;
-      transition: all .4s !important;
+      background: rgba(255,255,255,0.04) !important; backdrop-filter: blur(24px) !important;
+      border: 1px solid rgba(232,104,122,0.12) !important; border-radius: 20px !important; padding: 24px !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06) !important; transition: all .4s !important;
     }
-    .tl-content:hover {
-      transform: translateY(-6px) !important;
-      border-color: rgba(232,104,122,0.3) !important;
-      box-shadow: 0 20px 50px rgba(232,104,122,0.15) !important;
-    }
+    .tl-content:hover { transform: translateY(-6px) !important; border-color: rgba(232,104,122,0.3) !important; box-shadow: 0 20px 50px rgba(232,104,122,0.15) !important; }
     .tl-dot {
-      background: rgba(255,255,255,0.06) !important;
-      backdrop-filter: blur(20px) !important;
+      background: rgba(255,255,255,0.06) !important; backdrop-filter: blur(20px) !important;
       border: 2px solid rgba(232,104,122,0.5) !important;
       box-shadow: 0 0 0 6px rgba(232,104,122,0.1), 0 0 24px rgba(232,104,122,0.3) !important;
     }
@@ -1062,253 +1025,62 @@
     .tl-desc { color: rgba(255,255,255,0.5) !important; }
 
     /* ── PHOTO CARDS 3D ── */
-    .photo-card {
-      border: 1px solid rgba(255,255,255,0.07) !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
-      transition: all .5s cubic-bezier(0.23,1,0.32,1) !important;
-    }
-    .photo-card:hover {
-      transform: translateY(-12px) scale(1.03) rotateX(3deg) !important;
-      box-shadow: 0 32px 64px rgba(232,104,122,0.25), 0 0 0 1px rgba(232,104,122,0.3) !important;
-    }
+    .photo-card { border: 1px solid rgba(255,255,255,0.07) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important; transition: all .4s !important; }
+    .photo-card:hover { transform: translateY(-10px) scale(1.02) !important; box-shadow: 0 28px 56px rgba(232,104,122,0.22) !important; }
 
     /* ── VIDEO CARDS 3D ── */
     .video-card {
-      background: rgba(255,255,255,0.03) !important;
-      border: 1px solid rgba(255,255,255,0.07) !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
-      transition: all .4s cubic-bezier(0.23,1,0.32,1) !important;
+      background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(255,255,255,0.07) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important; transition: all .4s !important;
     }
-    .video-card:hover {
-      transform: translateY(-10px) scale(1.02) !important;
-      box-shadow: 0 28px 56px rgba(232,104,122,0.2), 0 0 0 1px rgba(232,104,122,0.25) !important;
-    }
+    .video-card:hover { transform: translateY(-10px) scale(1.02) !important; box-shadow: 0 28px 56px rgba(232,104,122,0.2), 0 0 0 1px rgba(232,104,122,0.25) !important; }
 
     /* ── NOTE CARDS 3D ── */
     .note-card {
-      background: rgba(255,255,255,0.04) !important;
-      backdrop-filter: blur(24px) !important;
+      background: rgba(255,255,255,0.04) !important; backdrop-filter: blur(24px) !important;
       border: 1px solid rgba(232,104,122,0.1) !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06) !important;
-      transition: all .5s cubic-bezier(0.23,1,0.32,1) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06) !important; transition: all .4s !important;
     }
-    .note-card::before {
-      background: linear-gradient(90deg, var(--rose), var(--blush), var(--gold)) !important;
-      height: 2px !important;
-    }
-    .note-card:hover {
-      transform: translateY(-12px) rotateX(4deg) !important;
-      border-color: rgba(232,104,122,0.3) !important;
-      box-shadow: 0 36px 72px rgba(232,104,122,0.15), 0 0 0 1px rgba(232,104,122,0.2) !important;
-    }
+    .note-card::before { background: linear-gradient(90deg, var(--rose), var(--blush), var(--gold)) !important; height: 2px !important; }
+    .note-card:hover { transform: translateY(-10px) !important; border-color: rgba(232,104,122,0.3) !important; box-shadow: 0 30px 60px rgba(232,104,122,0.15) !important; }
     .note-title { color: white !important; }
     .note-text { color: rgba(255,255,255,0.5) !important; }
 
     /* ── FOOTER 3D ── */
     footer {
-      background: rgba(0,0,0,0.6) !important;
-      backdrop-filter: blur(24px) !important;
-      border-top: 1px solid rgba(232,104,122,0.1) !important;
-      color: rgba(255,255,255,0.35) !important;
+      background: rgba(0,0,0,0.6) !important; backdrop-filter: blur(24px) !important;
+      border-top: 1px solid rgba(232,104,122,0.1) !important; color: rgba(255,255,255,0.35) !important;
     }
 
-    /* ── REVEAL 3D ── */
-    .reveal { opacity: 0; transform: translateY(40px) scale(0.97); transition: opacity .9s ease, transform .9s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
-
-    /* ── BEAUTIFUL PASSWORD GATE ── */
-    #gate {
-      position: fixed; inset: 0; z-index: 9999;
-      background: #0a0308;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-    }
-
-    /* Floating orbs */
-    .gate-orb {
-      position: absolute; border-radius: 50%;
-      filter: blur(60px); pointer-events: none;
-      animation: orbFloat 8s ease-in-out infinite;
-    }
-    .gate-orb1 {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(232,104,122,0.35) 0%, transparent 70%);
-      top: -100px; left: -100px;
-      animation-delay: 0s;
-    }
-    .gate-orb2 {
-      width: 350px; height: 350px;
-      background: radial-gradient(circle, rgba(122,61,74,0.4) 0%, transparent 70%);
-      bottom: -80px; right: -80px;
-      animation-delay: -3s;
-    }
-    .gate-orb3 {
-      width: 250px; height: 250px;
-      background: radial-gradient(circle, rgba(201,169,110,0.2) 0%, transparent 70%);
-      top: 50%; left: 50%; transform: translate(-50%,-50%);
-      animation-delay: -5s;
-    }
-    @keyframes orbFloat {
-      0%,100% { transform: translate(0,0) scale(1); }
-      33% { transform: translate(30px,-20px) scale(1.05); }
-      66% { transform: translate(-20px,30px) scale(0.95); }
-    }
-
-    /* Stars */
-    .gate-stars { position: absolute; inset: 0; pointer-events: none; }
-    .gate-star {
-      position: absolute; border-radius: 50%;
-      background: white; animation: starTwinkle var(--d) ease-in-out infinite;
-      animation-delay: var(--delay);
-    }
-    @keyframes starTwinkle {
-      0%,100% { opacity: 0.1; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.5); }
-    }
-
-    /* Gate content */
-    .gate-content {
-      position: relative; z-index: 10;
-      display: flex; flex-direction: column;
-      align-items: center; gap: 20px;
-      text-align: center; padding: 24px;
-    }
-
-    /* Lock icon */
-    .gate-lock {
-      font-size: 64px;
-      filter: drop-shadow(0 0 30px rgba(232,104,122,0.8));
-      animation: lockPulse 2s ease-in-out infinite;
-    }
-    @keyframes lockPulse {
-      0%,100% { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 30px rgba(232,104,122,0.8)); }
-      50% { transform: scale(1.1) rotate(3deg); filter: drop-shadow(0 0 50px rgba(232,104,122,1)); }
-    }
-
-    /* Typewriter text */
-    .gate-welcome {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 5vw, 2.8rem);
-      color: white; min-height: 1.4em;
-      display: flex; align-items: center; gap: 2px;
-      text-shadow: 0 0 40px rgba(232,104,122,0.5);
-    }
-    .welcome-line { color: white; }
-    .welcome-cursor {
-      color: var(--rose); font-weight: 300;
-      animation: cursorBlink 0.8s step-end infinite;
-    }
-    @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-    .gate-sub {
-      color: rgba(255,255,255,0.45);
-      font-size: 0.9rem; letter-spacing: 0.05em;
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-size: 1.1rem;
-    }
-
-    /* Input wrap */
-    .gate-input-wrap {
-      display: flex; flex-direction: column;
-      gap: 12px; width: 100%; max-width: 300px;
-    }
-    #pwInput {
-      padding: 16px 24px;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(24px);
-      border: 1px solid rgba(232,104,122,0.25);
-      border-radius: 50px; font-size: 1rem;
-      color: white; outline: none; text-align: center;
-      transition: all .4s;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
-      letter-spacing: 0.15em;
-    }
-    #pwInput::placeholder { color: rgba(255,255,255,0.25); letter-spacing: normal; }
-    #pwInput:focus {
-      border-color: var(--rose);
-      background: rgba(255,255,255,0.09);
-      box-shadow: 0 0 0 3px rgba(232,104,122,0.2), 0 4px 32px rgba(0,0,0,0.4);
-    }
-
-    .gate-btn {
-      padding: 16px 40px;
-      background: linear-gradient(135deg, var(--rose) 0%, #c44569 50%, var(--deep) 100%);
-      background-size: 200% 200%;
-      border: none; border-radius: 50px;
-      color: white; font-size: 1rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: all .4s;
-      box-shadow: 0 4px 24px rgba(232,104,122,0.4), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.15);
-      animation: btnGlow 3s ease-in-out infinite;
-    }
-    @keyframes btnGlow {
-      0%,100% { box-shadow: 0 4px 24px rgba(232,104,122,0.4), 0 0 0 1px rgba(255,255,255,0.06); background-position: 0% 50%; }
-      50% { box-shadow: 0 8px 40px rgba(232,104,122,0.7), 0 0 60px rgba(232,104,122,0.2); background-position: 100% 50%; }
-    }
-    .gate-btn:hover {
-      transform: translateY(-4px) scale(1.04);
-      box-shadow: 0 12px 48px rgba(232,104,122,0.7) !important;
-    }
-    .gate-btn:active { transform: scale(0.97); }
-    .btn-icon { font-size: 1.1rem; animation: spin 3s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .err { color: var(--rose); font-size: 0.85rem; min-height: 20px; text-shadow: 0 0 10px rgba(232,104,122,0.5); }
-
-    /* ── CHAT BACKGROUND 3D ANIMATION ── */
-    #chatBubble {
-      box-shadow: 0 8px 32px rgba(232,104,122,0.5), 0 0 0 1px rgba(232,104,122,0.2) !important;
-    }
+    /* ── CHAT 3D ── */
+    #chatBubble { box-shadow: 0 8px 32px rgba(232,104,122,0.5), 0 0 0 1px rgba(232,104,122,0.2) !important; }
     #floatingChat {
-      background: rgba(13,5,8,0.88) !important;
-      backdrop-filter: blur(32px) saturate(180%) !important;
+      background: rgba(13,5,8,0.88) !important; backdrop-filter: blur(32px) saturate(180%) !important;
       border: 1px solid rgba(232,104,122,0.2) !important;
       box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) !important;
     }
     .fc-pick-body { background: rgba(255,255,255,0.02) !important; }
     .fc-pick-title { color: white !important; }
-    .name-btn {
-      background: rgba(255,255,255,0.06) !important;
-      border: 1px solid rgba(232,104,122,0.25) !important;
-      color: white !important;
-    }
+    .name-btn { background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(232,104,122,0.25) !important; color: white !important; }
     .name-btn:hover { background: var(--rose) !important; }
-    .chat-messages { background: transparent !important; }
+    .chat-messages { background: transparent !important; position: relative; overflow: hidden; }
     .msg.them .msg-bubble {
-      background: rgba(255,255,255,0.08) !important;
-      backdrop-filter: blur(12px) !important;
-      border: 1px solid rgba(255,255,255,0.1) !important;
-      color: white !important;
+      background: rgba(255,255,255,0.08) !important; backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important; color: white !important;
     }
     .emoji-bar { background: rgba(255,255,255,0.04) !important; border-top: 1px solid rgba(255,255,255,0.06) !important; }
     .chat-input-row { background: rgba(13,5,8,0.9) !important; border-top: 1px solid rgba(232,104,122,0.12) !important; }
-    #chatInput {
-      background: rgba(255,255,255,0.06) !important;
-      border: 1px solid rgba(232,104,122,0.2) !important;
-      color: white !important;
-    }
+    #chatInput { background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(232,104,122,0.2) !important; color: white !important; }
     #chatInput::placeholder { color: rgba(255,255,255,0.3) !important; }
-
-    /* ── CHAT 3D ANIMATED BACKGROUND ── */
-    .chat-messages { position: relative; overflow: hidden; }
-    #chatCanvas3D {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      z-index: 0; pointer-events: none;
-    }
-    .chat-messages > *:not(#chatCanvas3D):not(.chat-bg-video) { position: relative; z-index: 1; }
     .chat-bg-video { opacity: 0.25 !important; z-index: 0 !important; }
 
-    /* ── 3D MUSIC PLAYER ── */
+    /* ── MUSIC PLAYER 3D ── */
     .playlist-mini {
-      background: rgba(8,2,5,0.94) !important;
-      backdrop-filter: blur(40px) saturate(200%) !important;
+      background: rgba(8,2,5,0.94) !important; backdrop-filter: blur(40px) saturate(200%) !important;
       border-top: 1px solid rgba(232,104,122,0.2) !important;
       box-shadow: 0 -4px 40px rgba(232,104,122,0.15), inset 0 1px 0 rgba(255,255,255,0.05) !important;
     }
-    .pl-disc {
-      box-shadow: 0 0 0 2px rgba(232,104,122,0.3), 0 0 20px rgba(232,104,122,0.4) !important;
-    }
+    .pl-disc { box-shadow: 0 0 0 2px rgba(232,104,122,0.3), 0 0 20px rgba(232,104,122,0.4) !important; }
     .pl-disc.playing {
       box-shadow: 0 0 0 3px rgba(232,104,122,0.7), 0 0 50px rgba(232,104,122,0.7) !important;
       animation: discSpin 4s linear infinite, discGlow 2s ease-in-out infinite alternate !important;
@@ -1319,13 +1091,9 @@
     }
     .playlist-panel {
       background: linear-gradient(180deg, rgba(8,2,5,0.97) 0%, rgba(18,4,10,0.98) 100%) !important;
-      backdrop-filter: blur(40px) !important;
-      box-shadow: 0 -20px 80px rgba(232,104,122,0.12) !important;
+      backdrop-filter: blur(40px) !important; box-shadow: 0 -20px 80px rgba(232,104,122,0.12) !important;
     }
-    .pl-cover.playing {
-      box-shadow: 0 16px 60px rgba(232,104,122,0.7), 0 0 80px rgba(232,104,122,0.3) !important;
-      transform: scale(1.06) !important;
-    }
+    .pl-cover.playing { box-shadow: 0 16px 60px rgba(232,104,122,0.7), 0 0 80px rgba(232,104,122,0.3) !important; transform: scale(1.06) !important; }
     .pl-song { transition: all .3s !important; border: 1px solid transparent !important; }
     .pl-song:hover { background: rgba(232,104,122,0.08) !important; transform: translateX(5px) !important; border-color: rgba(232,104,122,0.12) !important; }
     .pl-song.active { background: rgba(232,104,122,0.13) !important; border-color: rgba(232,104,122,0.28) !important; box-shadow: 0 4px 20px rgba(232,104,122,0.12) !important; }
@@ -1333,12 +1101,9 @@
     .pl-ctrl-lg:hover { background: rgba(232,104,122,0.2) !important; transform: scale(1.18) !important; box-shadow: 0 4px 24px rgba(232,104,122,0.35) !important; }
     .pl-play-lg:hover { box-shadow: 0 8px 48px rgba(232,104,122,0.8) !important; transform: scale(1.22) !important; }
 
-    /* ── PLAYLIST 3D ── */
-    .playlist-mini {
-      background: rgba(13,5,8,0.92) !important;
-      backdrop-filter: blur(32px) !important;
-      border-top: 1px solid rgba(232,104,122,0.15) !important;
-    }
+    /* ── REVEAL 3D ── */
+    .reveal { opacity: 0; transform: translateY(40px) scale(0.97); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
 
     /* ── MEDIA RESPONSIVE ── */
     @media (max-width: 700px) {
@@ -1350,366 +1115,27 @@
       .tl-content { max-width: 100% !important; }
     }
 
-    /* ── ANNIVERSARY ── */
-    .anniv-countdown { display:flex; align-items:center; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:48px; }
-    .anniv-box { background:rgba(255,255,255,0.05); backdrop-filter:blur(24px); border:1px solid rgba(201,169,110,0.3); border-radius:24px; padding:28px 40px; box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06); transition:all .4s; }
-    .anniv-box:hover { transform:translateY(-8px); border-color:rgba(201,169,110,0.6); box-shadow:0 20px 60px rgba(201,169,110,0.2); }
-    .anniv-num { font-family:'Playfair Display',serif; font-size:3.5rem; color:#c9a96e; text-shadow:0 0 30px rgba(201,169,110,0.6); line-height:1; }
-    .anniv-label { font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-top:8px; }
-    .anniv-heart { font-size:2.5rem; animation:pulse 1.5s ease-in-out infinite; }
-    .gift-teaser { margin-top:48px; display:flex; flex-direction:column; align-items:center; gap:12px; }
-    .gift-box-locked { width:100px; height:100px; border-radius:24px; background:rgba(255,255,255,0.04); border:2px dashed rgba(201,169,110,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:3rem; position:relative; cursor:not-allowed; animation:lockedFloat 3s ease-in-out infinite; box-shadow:0 8px 32px rgba(0,0,0,0.3); }
-    .gift-lock { position:absolute; top:-10px; right:-10px; font-size:1.2rem; }
-    @keyframes lockedFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-    .letter-envelope { background:linear-gradient(135deg,rgba(201,169,110,0.15),rgba(232,104,122,0.1)); backdrop-filter:blur(24px); border:1px solid rgba(201,169,110,0.35); border-radius:24px; padding:40px; cursor:pointer; transition:all .4s; box-shadow:0 8px 40px rgba(201,169,110,0.15),inset 0 1px 0 rgba(255,255,255,0.08); max-width:400px; margin:0 auto; }
-    .letter-envelope:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 20px 60px rgba(201,169,110,0.25); border-color:rgba(201,169,110,0.6); }
-    .envelope-icon { font-size:4rem; margin-bottom:16px; animation:letterFloat 3s ease-in-out infinite; }
-    @keyframes letterFloat { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
-    .envelope-text { color:rgba(255,255,255,0.7); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; }
-    .envelope-text span { color:var(--blush); font-size:0.9rem; }
-    .letter-content { background:rgba(255,255,255,0.04); backdrop-filter:blur(32px); border:1px solid rgba(201,169,110,0.25); border-radius:24px; padding:40px; max-width:640px; margin:24px auto 0; box-shadow:0 16px 60px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06); text-align:left; animation:letterReveal .8s ease; }
-    @keyframes letterReveal { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
-    .letter-header { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:28px; }
-    .letter-rose { font-size:1.5rem; }
-    .letter-header h3 { font-family:'Playfair Display',serif; font-size:1.5rem; color:#c9a96e; text-align:center; }
-    .letter-body p { color:rgba(255,255,255,0.7); line-height:1.9; margin-bottom:16px; font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-style:italic; }
-    .letter-footer { margin-top:28px; display:flex; flex-direction:column; align-items:flex-end; gap:4px; border-top:1px solid rgba(201,169,110,0.15); padding-top:20px; }
-    .letter-footer span,.letter-footer strong { color:rgba(255,255,255,0.5); font-size:0.9rem; }
-    .letter-footer strong { color:#c9a96e; font-size:1rem; }
-    .letter-date { font-size:0.75rem !important; color:var(--rose) !important; letter-spacing:0.08em; }
-    .gift-box-open { background:linear-gradient(135deg,rgba(201,169,110,0.15),rgba(232,104,122,0.1)); backdrop-filter:blur(24px); border:1px solid rgba(201,169,110,0.4); border-radius:24px; padding:40px; cursor:pointer; transition:all .4s; max-width:400px; margin:0 auto; box-shadow:0 8px 40px rgba(201,169,110,0.2); }
-    .gift-box-open:hover { transform:translateY(-6px); box-shadow:0 20px 60px rgba(201,169,110,0.3); }
-    .gift-emoji { font-size:4rem; animation:giftBounce 1s ease-in-out infinite; }
-    @keyframes giftBounce { 0%,100%{transform:scale(1) rotate(-5deg)} 50%{transform:scale(1.1) rotate(5deg)} }
-    .gift-box-open p { color:rgba(255,255,255,0.7); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-top:12px; }
-    .gift-box-open span { color:var(--blush); font-size:0.9rem; }
-    .gift-content { max-width:600px; margin:24px auto 0; animation:letterReveal .8s ease; }
-    .gift-message { background:rgba(255,255,255,0.04); backdrop-filter:blur(32px); border:1px solid rgba(201,169,110,0.25); border-radius:24px; padding:40px; box-shadow:0 16px 60px rgba(0,0,0,0.4); }
-    .gift-message h3 { font-family:'Playfair Display',serif; font-size:1.6rem; color:#c9a96e; margin-bottom:20px; }
-    .gift-message p { color:rgba(255,255,255,0.65); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; line-height:1.9; margin-bottom:16px; }
-    .gift-promise { display:flex; flex-direction:column; gap:10px; margin:20px 0; padding:20px; background:rgba(201,169,110,0.08); border-radius:16px; border:1px solid rgba(201,169,110,0.2); }
-    .gift-promise span { color:#c9a96e; font-size:0.95rem; letter-spacing:0.04em; }
-    #anniversaryOverlay { position:fixed; inset:0; z-index:9990; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); display:flex; flex-direction:column; align-items:center; justify-content:center; }
-    #confettiCanvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
-    .anniv-overlay-msg { position:relative; z-index:1; text-align:center; display:flex; flex-direction:column; align-items:center; gap:16px; }
-    .anniv-overlay-emoji { font-size:3rem; animation:pulse 1s ease-in-out infinite; }
-    .anniv-overlay-msg h2 { font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,4rem); color:#c9a96e; text-shadow:0 0 40px rgba(201,169,110,0.8); }
-    .anniv-overlay-msg p { color:var(--blush); font-size:1.2rem; font-family:'Cormorant Garamond',serif; font-style:italic; }
-    .anniv-overlay-msg button { margin-top:16px; padding:14px 36px; background:linear-gradient(135deg,#c9a96e,#a07840); border:none; border-radius:50px; color:white; font-size:1rem; cursor:pointer; box-shadow:0 4px 24px rgba(201,169,110,0.4); transition:all .3s; }
-    .anniv-overlay-msg button:hover { transform:translateY(-3px); box-shadow:0 8px 40px rgba(201,169,110,0.6); }
-    body.anniversary-mode::before { background:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(201,169,110,0.25) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 80%,rgba(201,169,110,0.2) 0%,transparent 60%),linear-gradient(135deg,#1a1005 0%,#0d0a03 50%,#1a0d05 100%) !important; }
-    body.anniversary-mode .section-title em { color:#c9a96e !important; }
-    body.anniversary-mode .section-label { color:#c9a96e !important; }
-
-    /* ── PHOTO PUZZLE ── */
-    .puzzle-diff-btns { display:flex; flex-direction:column; gap:12px; }
-    .puzzle-diff-btn {
-      padding:14px 28px; background:rgba(255,255,255,0.05);
-      backdrop-filter:blur(12px); border:1px solid rgba(232,104,122,0.25);
-      border-radius:50px; color:white; font-size:0.95rem; cursor:pointer;
-      transition:all .3s; font-family:'DM Sans',sans-serif;
-    }
-    .puzzle-diff-btn:hover { background:rgba(232,104,122,0.15); border-color:rgba(232,104,122,0.5); transform:translateY(-3px); box-shadow:0 8px 24px rgba(232,104,122,0.2); }
-
-    .puzzle-info-row { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; justify-content:center; }
-    .puzzle-stat { background:rgba(255,255,255,0.05); border:1px solid rgba(232,104,122,0.2); border-radius:14px; padding:10px 20px; text-align:center; }
-    .puzzle-stat-val { display:block; font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--rose); }
-    .puzzle-stat-label { font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
-    .puzzle-action-btn { padding:10px 18px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50px; color:rgba(255,255,255,0.7); font-size:0.8rem; cursor:pointer; transition:all .3s; }
-    .puzzle-action-btn:hover { background:rgba(232,104,122,0.15); border-color:rgba(232,104,122,0.3); color:white; }
-
-    .puzzle-grid {
-      display:grid; gap:3px;
-      background:rgba(232,104,122,0.1);
-      border:2px solid rgba(232,104,122,0.25);
-      border-radius:20px; overflow:hidden;
-      box-shadow:0 16px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
-      width:100%; aspect-ratio:1;
-    }
-    .puzzle-tile {
-      background-size:cover; background-repeat:no-repeat;
-      cursor:pointer; transition:all .15s ease;
-      position:relative; overflow:hidden;
-    }
-    .puzzle-tile:hover { filter:brightness(1.15); transform:scale(0.97); z-index:1; }
-    .puzzle-tile.empty { background:#0d0508 !important; cursor:default; }
-    .puzzle-tile.empty:hover { filter:none; transform:none; }
-    .puzzle-tile::after {
-      content:''; position:absolute; inset:0;
-      background:linear-gradient(135deg,rgba(255,255,255,0.06),transparent);
-      pointer-events:none;
-    }
-    .puzzle-tile.correct-pos { box-shadow:inset 0 0 0 2px rgba(46,204,113,0.5); }
-
-    /* ── LOVE LETTER REPLY ── */
-    .letters-display { display:flex; flex-direction:column; gap:16px; margin-bottom:28px; }
-    .letter-msg {
-      background:rgba(255,255,255,0.04);
-      backdrop-filter:blur(24px);
-      border:1px solid rgba(232,104,122,0.2);
-      border-radius:20px; padding:24px 28px; text-align:left;
-      box-shadow:0 8px 32px rgba(0,0,0,0.3);
-      animation:letterReveal .6s ease;
-    }
-    .letter-msg-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .letter-msg-from { color:var(--rose); font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; }
-    .letter-msg-date { color:rgba(255,255,255,0.3); font-size:0.75rem; }
-    .letter-msg-body { color:rgba(255,255,255,0.7); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; line-height:1.8; }
-
-    .reply-card {
-      background:rgba(255,255,255,0.04);
-      backdrop-filter:blur(32px);
-      border:1px solid rgba(232,104,122,0.2);
-      border-radius:24px; padding:32px;
-      box-shadow:0 16px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
-      text-align:left; position:relative; overflow:hidden;
-    }
-    .reply-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--rose),var(--blush),var(--gold),var(--rose)); background-size:200% 100%; animation:shimmer3D 3s linear infinite; }
-    .reply-header { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
-    .reply-envelope { font-size:2.5rem; animation:letterFloat 3s ease-in-out infinite; }
-    .reply-title { font-family:'Playfair Display',serif; font-size:1.3rem; color:white; margin-bottom:4px; }
-    .reply-sub { color:rgba(255,255,255,0.4); font-size:0.85rem; font-style:italic; }
-    .reply-textarea {
-      width:100%; padding:16px 18px;
-      background:rgba(255,255,255,0.04);
-      backdrop-filter:blur(8px);
-      border:1px solid rgba(232,104,122,0.2);
-      border-radius:16px; color:rgba(255,255,255,0.8);
-      font-size:1rem; font-family:'Cormorant Garamond',serif;
-      font-style:italic; resize:none; outline:none;
-      transition:border-color .3s; line-height:1.8;
-    }
-    .reply-textarea::placeholder { color:rgba(255,255,255,0.2); }
-    .reply-textarea:focus { border-color:rgba(232,104,122,0.5); background:rgba(255,255,255,0.06); }
-    .reply-footer-row { display:flex; align-items:center; justify-content:space-between; margin-top:16px; flex-wrap:wrap; gap:12px; }
-    .reply-from { color:var(--blush); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; }
-
-    /* ── LOVE QUIZ ── */
-    #quizContainer { max-width: 580px; margin: 0 auto; }
-
-    .quiz-card {
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(32px);
-      border: 1px solid rgba(232,104,122,0.2);
-      border-radius: 28px;
-      padding: 48px 36px;
-      box-shadow: 0 16px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
-      position: relative; overflow: hidden;
-    }
-    .quiz-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--rose), var(--blush), var(--gold), var(--rose));
-      background-size: 200% 100%;
-      animation: shimmer3D 3s linear infinite;
-    }
-
-    /* Start screen */
-    .quiz-start-icon { font-size: 4rem; margin-bottom: 20px; animation: letterFloat 3s ease-in-out infinite; }
-    .quiz-start-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: white; margin-bottom: 12px; }
-    .quiz-start-sub { color: rgba(255,255,255,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; margin-bottom: 32px; line-height: 1.6; }
-    .quiz-start-btn {
-      padding: 16px 48px;
-      background: linear-gradient(135deg, var(--rose), #c44569);
-      border: none; border-radius: 50px; color: white;
-      font-size: 1.05rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
-      box-shadow: 0 4px 24px rgba(232,104,122,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
-      transition: all .3s; animation: btnGlow 3s ease-in-out infinite;
-    }
-    .quiz-start-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 40px rgba(232,104,122,0.6); }
-
-    /* Progress */
-    .quiz-progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
-    .quiz-progress-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; }
-    .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--rose), var(--blush)); border-radius: 6px; transition: width .5s cubic-bezier(0.23,1,0.32,1); width: 20%; }
-    .quiz-progress-text { color: rgba(255,255,255,0.4); font-size: 0.8rem; flex-shrink: 0; }
-
-    .quiz-q-num { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; }
-    .quiz-question { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: white; margin-bottom: 28px; line-height: 1.5; text-align: left; }
-
-    /* Options */
-    .quiz-options { display: flex; flex-direction: column; gap: 12px; text-align: left; }
-    .quiz-option {
-      padding: 14px 20px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(232,104,122,0.2);
-      border-radius: 16px; color: rgba(255,255,255,0.75);
-      font-size: 0.95rem; cursor: pointer;
-      transition: all .3s; display: flex; align-items: center; gap: 12px;
-      backdrop-filter: blur(8px);
-    }
-    .quiz-option:hover { background: rgba(232,104,122,0.1); border-color: rgba(232,104,122,0.4); color: white; transform: translateX(4px); }
-    .quiz-option.correct { background: rgba(46,204,113,0.15) !important; border-color: rgba(46,204,113,0.5) !important; color: #2ecc71 !important; transform: translateX(6px); }
-    .quiz-option.wrong { background: rgba(231,76,60,0.15) !important; border-color: rgba(231,76,60,0.5) !important; color: #e74c3c !important; }
-    .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
-    .quiz-option-letter {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(232,104,122,0.2); border: 1px solid rgba(232,104,122,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 600; color: var(--rose); flex-shrink: 0;
-    }
-
-    /* Feedback */
-    .quiz-feedback {
-      margin-top: 16px; padding: 14px 18px; border-radius: 14px;
-      font-size: 0.9rem; line-height: 1.6; font-family: 'Cormorant Garamond', serif;
-      font-style: italic; animation: letterReveal .4s ease;
-    }
-    .quiz-feedback.correct-fb { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.2); color: #7dcea0; }
-    .quiz-feedback.wrong-fb { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.2); color: #f1948a; }
-
-    /* Result */
-    .quiz-result-emoji { font-size: 4rem; margin-bottom: 16px; animation: pulse 1.5s ease-in-out infinite; }
-    .quiz-result-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: white; margin-bottom: 12px; }
-    .quiz-result-sub { color: rgba(255,255,255,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; margin-bottom: 28px; line-height: 1.6; }
-    .quiz-score-wrap { margin: 20px 0; }
-    .quiz-score { font-family: 'Playfair Display', serif; font-size: 4rem; color: var(--rose); text-shadow: 0 0 30px rgba(232,104,122,0.5); line-height: 1; }
-    .quiz-score-label { color: rgba(255,255,255,0.4); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; }
-    .quiz-hearts { display: flex; justify-content: center; gap: 8px; font-size: 1.5rem; margin-top: 16px; }
-
-    /* ── 8K QUALITY 3D ANIMATION STYLES ── */
-    #webglCanvas {
-      position: fixed; inset: 0; z-index: -1;
-      width: 100%; height: 100%;
-      pointer-events: none;
-    }
-    /* Ultra smooth all transitions */
-    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-
-    /* 3D card tilt effect */
-    .card-3d {
-      transform-style: preserve-3d;
-      transition: transform 0.15s ease;
-    }
-
-    /* Shimmer effect on glass cards */
-    .note-card::after, .count-box::after, .tl-content::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
-      background-size: 200% 200%;
-      border-radius: inherit;
-      animation: shimmer3D 4s ease-in-out infinite;
-      pointer-events: none;
-    }
-    @keyframes shimmer3D {
-      0% { background-position: 200% 0%; }
-      100% { background-position: -200% 0%; }
-    }
-
-    /* Neon glow borders */
-    .photo-card::after {
-      content: '';
-      position: absolute; inset: -1px;
-      border-radius: inherit;
-      background: linear-gradient(135deg, rgba(232,104,122,0), rgba(232,104,122,0.3), rgba(201,169,110,0), rgba(244,184,193,0.2));
-      background-size: 300% 300%;
-      animation: borderGlow 6s ease infinite;
-      z-index: 1; pointer-events: none;
-      opacity: 0; transition: opacity .4s;
-    }
-    .photo-card:hover::after { opacity: 1; }
-    @keyframes borderGlow {
-      0%,100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    /* Depth layers parallax */
-    .hero { transform-style: preserve-3d; }
-    .hero h1 { transform: translateZ(40px); }
-    .hero-sub { transform: translateZ(20px); }
-    .hero-date { transform: translateZ(30px); }
-    .hero-tag { transform: translateZ(10px); }
-
-    /* Ultra glow text for section titles */
-    .section-title {
-      text-shadow: 0 0 80px rgba(232,104,122,0.2), 0 2px 20px rgba(0,0,0,0.5) !important;
-    }
-
-    /* 3D floating animation for cards */
-    @keyframes float3D {
-      0%,100% { transform: translateY(0) translateZ(0) rotateX(0); }
-      33% { transform: translateY(-6px) translateZ(10px) rotateX(1deg); }
-      66% { transform: translateY(3px) translateZ(5px) rotateX(-0.5deg); }
-    }
-
-    /* Scanline effect for ultra quality look */
-    body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 9998;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.015) 2px,
-        rgba(0,0,0,0.015) 4px
-      );
-      pointer-events: none;
-    }
-
-    /* Chromatic aberration glow on hover */
-    .photo-card:hover img {
-      filter: brightness(1.05) contrast(1.02) saturate(1.1);
-    }
-
-    /* Ultra depth shadow system */
-    .note-card, .count-box, .video-card {
-      position: relative;
-    }
-
-    /* 8K style grain texture overlay */
-    #grainOverlay {
-      position: fixed; inset: 0; z-index: 9997;
-      pointer-events: none; opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 128px 128px;
-      mix-blend-mode: overlay;
-    }
-
-    /* Vignette for cinematic 8K feel */
-    #vignette {
-      position: fixed; inset: 0; z-index: 9996; pointer-events: none;
-      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 60%, rgba(0,0,0,0.5) 100%);
-    }
-
-    /* Ultra smooth scrollbar */
+    /* ── Ultra smooth scrollbar ── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
     ::-webkit-scrollbar-thumb { background: linear-gradient(var(--rose), var(--deep)); border-radius: 4px; }
-
   </style>
 </head>
 <body>
 
-<!-- 8K WebGL Background Canvas -->
-<canvas id="webglCanvas"></canvas>
-
-<!-- Film grain & vignette for cinematic quality -->
-<div id="grainOverlay"></div>
-<div id="vignette"></div>
-
 <!-- PASSWORD GATE -->
 <div id="gate">
-  <!-- 3D floating orbs -->
   <div class="gate-orb gate-orb1"></div>
   <div class="gate-orb gate-orb2"></div>
   <div class="gate-orb gate-orb3"></div>
-
-  <!-- Animated stars -->
   <div class="gate-stars" id="gateStars"></div>
-
-  <!-- Content -->
   <div class="gate-content">
     <div class="gate-lock">🔒</div>
-
-    <!-- Typewriter welcome text -->
     <div class="gate-welcome">
       <span class="welcome-line" id="welcomeLine"></span>
       <span class="welcome-cursor">|</span>
     </div>
-
     <p class="gate-sub">Enter the password to step inside 💕</p>
-
     <div class="gate-input-wrap">
       <input type="password" id="pwInput" placeholder="Enter password…" onkeydown="if(event.key==='Enter')checkPw()"/>
       <button onclick="checkPw()" class="gate-btn">
@@ -1717,7 +1143,6 @@
         <span class="btn-icon">✨</span>
       </button>
     </div>
-
     <span class="err" id="errMsg"></span>
   </div>
 </div>
@@ -1731,9 +1156,6 @@
     <li><a href="#gallery">Photos</a></li>
     <li><a href="#videos">Videos</a></li>
     <li><a href="#memories">Memories</a></li>
-    <li class="nav-quiz" style="display:none;"><a href="#quiz">Love Quiz 💌</a></li>
-    <li class="nav-puzzle" style="display:none;"><a href="#puzzle">Puzzle 🧩</a></li>
-    <li class="nav-letter" style="display:none;"><a href="#letterReply">Letter 💌</a></li>
   </ul>
 </nav>
 
@@ -1764,7 +1186,7 @@
 </section>
 
 <!-- TIMELINE -->
-<section id="story" style="background:#fff;">
+<section id="story">
   <div class="container">
     <p class="section-label reveal">✦ How It All Began ✦</p>
     <h2 class="section-title reveal">Our <em>Story</em></h2>
@@ -1810,78 +1232,48 @@
 </section>
 
 <!-- GALLERY -->
-<section id="gallery" style="background:var(--cream);">
+<section id="gallery">
   <div class="container">
     <p class="section-label reveal">✦ Captured Moments ✦</p>
     <h2 class="section-title reveal">Our <em>Photos</em></h2>
     <div class="gallery-grid reveal">
-      <div class="photo-card"><img src="RAAHII1.png" alt="Us together" style="width:100%;height:100%;min-height:360px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Just us 🖤💕</span></div></div>
-      <div class="photo-card"><img src="RAAHII2.png" alt="Sweet selfie" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Us & our hearts 💗</span></div></div>
-      <div class="photo-card"><img src="RAAHII3.png" alt="Together always" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Always together 🩷</span></div></div>
-      <div class="photo-card"><img src="RAAHII4.png" alt="Our adventure" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our adventure ✌️</span></div></div>
-      <div class="photo-card"><img src="RAAHII5.png" alt="Side by side" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Side by side 🌸</span></div></div>
-      <div class="photo-card"><img src="RAAHII6.png" alt="Sunny day together" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Sunny days with you ☀️</span></div></div>
-      <div class="photo-card"><img src="RAAHII7.png" alt="Dressed up together" style="width:100%;height:100%;min-height:360px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Dressed up for us 🖤</span></div></div>
-      <div class="photo-card"><img src="RAAHII8.png" alt="Garden moment" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Garden memories 🌿</span></div></div>
-      <div class="photo-card"><img src="RAAHII9.png" alt="Nature backdrop" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Always smiling 💕</span></div></div>
-      <div class="photo-card"><img src="RAAHII10.png" alt="Bike ride" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Ride together 🏍️</span></div></div>
-      <div class="photo-card"><img src="RAAHII11.png" alt="Selfie moment" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our selfie 📱💕</span></div></div>
-      <div class="photo-card"><img src="RAAHII12.png" alt="Close together" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">So close 🥺</span></div></div>
-      <div class="photo-card"><img src="RAAHII13.png" alt="Sharing a moment" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our moment 🌸</span></div></div>
-      <div class="photo-card"><img src="RAAHII14.png" alt="Smiling together" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Your smile ❤️</span></div></div>
-      <div class="photo-card"><img src="RAAHII15.png" alt="Bike day" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Perfect day 💗</span></div></div>
+      <div class="photo-card"><img src="RAAHII1.png" alt="Us together" loading="lazy" style="width:100%;height:100%;min-height:360px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Just us 🖤💕</span></div></div>
+      <div class="photo-card"><img src="RAAHII2.png" alt="Sweet selfie" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Us & our hearts 💗</span></div></div>
+      <div class="photo-card"><img src="RAAHII3.png" alt="Together always" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Always together 🩷</span></div></div>
+      <div class="photo-card"><img src="RAAHII4.png" alt="Our adventure" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our adventure ✌️</span></div></div>
+      <div class="photo-card"><img src="RAAHII5.png" alt="Side by side" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Side by side 🌸</span></div></div>
+      <div class="photo-card"><img src="RAAHII6.png" alt="Sunny day together" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Sunny days with you ☀️</span></div></div>
+      <div class="photo-card"><img src="RAAHII7.png" alt="Dressed up together" loading="lazy" style="width:100%;height:100%;min-height:360px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Dressed up for us 🖤</span></div></div>
+      <div class="photo-card"><img src="RAAHII8.png" alt="Garden moment" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Garden memories 🌿</span></div></div>
+      <div class="photo-card"><img src="RAAHII9.png" alt="Nature backdrop" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Always smiling 💕</span></div></div>
+      <div class="photo-card"><img src="RAAHII10.png" alt="Bike ride" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Ride together 🏍️</span></div></div>
+      <div class="photo-card"><img src="RAAHII11.png" alt="Selfie moment" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our selfie 📱💕</span></div></div>
+      <div class="photo-card"><img src="RAAHII12.png" alt="Close together" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">So close 🥺</span></div></div>
+      <div class="photo-card"><img src="RAAHII13.png" alt="Sharing a moment" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Our moment 🌸</span></div></div>
+      <div class="photo-card"><img src="RAAHII14.png" alt="Smiling together" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Your smile ❤️</span></div></div>
+      <div class="photo-card"><img src="RAAHII15.png" alt="Bike day" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block;"/><div class="photo-overlay"><span class="photo-caption">Perfect day 💗</span></div></div>
     </div>
   </div>
 </section>
 
 <!-- VIDEOS -->
-<section id="videos" style="background:var(--deep);">
+<section id="videos">
   <div class="container">
-    <p class="section-label reveal" style="color:var(--blush);">✦ Moving Memories ✦</p>
-    <h2 class="section-title reveal" style="color:white;">Our <em>Videos</em></h2>
+    <p class="section-label reveal">✦ Moving Memories ✦</p>
+    <h2 class="section-title reveal">Our <em>Videos</em></h2>
     <div class="videos-grid reveal">
-      <div class="video-card">
-        <video controls preload="metadata" poster="">
-          <source src="Video1.mp4" type="video/mp4"/>
-        </video>
-        <div class="video-caption">Memory 1 💕</div>
-      </div>
-      <div class="video-card">
-        <video controls preload="metadata">
-          <source src="Video2.mp4" type="video/mp4"/>
-        </video>
-        <div class="video-caption">Memory 2 🌸</div>
-      </div>
-      <div class="video-card">
-        <video controls preload="metadata">
-          <source src="Video3.mp4" type="video/mp4"/>
-        </video>
-        <div class="video-caption">Memory 3 💗</div>
-      </div>
-      <div class="video-card">
-        <video controls preload="metadata">
-          <source src="Video4.mp4" type="video/mp4"/>
-        </video>
-        <div class="video-caption">Memory 4 ✨</div>
-      </div>
-      <div class="video-card">
-        <video controls preload="metadata">
-          <source src="Video5.mp4" type="video/mp4"/>
-        </video>
-        <div class="video-caption">Memory 5 🌺</div>
-      </div>
-      <div class="video-card">
-        <video controls preload="metadata">
-          <source src="Video6.mp4" type="video/mp4"/>
-        </video>
-        <div class="video-caption">Memory 6 💖</div>
-      </div>
+      <div class="video-card"><video controls preload="none" poster=""><source src="Video1.mp4" type="video/mp4"/></video><div class="video-caption">Memory 1 💕</div></div>
+      <div class="video-card"><video controls preload="none"><source src="Video2.mp4" type="video/mp4"/></video><div class="video-caption">Memory 2 🌸</div></div>
+      <div class="video-card"><video controls preload="none"><source src="Video3.mp4" type="video/mp4"/></video><div class="video-caption">Memory 3 💗</div></div>
+      <div class="video-card"><video controls preload="none"><source src="Video4.mp4" type="video/mp4"/></video><div class="video-caption">Memory 4 ✨</div></div>
+      <div class="video-card"><video controls preload="none"><source src="Video5.mp4" type="video/mp4"/></video><div class="video-caption">Memory 5 🌺</div></div>
+      <div class="video-card"><video controls preload="none"><source src="Video6.mp4" type="video/mp4"/></video><div class="video-caption">Memory 6 💖</div></div>
     </div>
   </div>
 </section>
 
 <!-- MEMORIES / NOTES -->
-<section id="memories" style="background:white;">
+<section id="memories">
   <div class="container">
     <p class="section-label reveal">✦ Little Notes to Keep ✦</p>
     <h2 class="section-title reveal">Favourite <em>Memories</em></h2>
@@ -1904,7 +1296,6 @@
 
 <!-- FLOATING CHAT WINDOW -->
 <div id="floatingChat" style="display:none;">
-  <!-- Name Picker -->
   <div id="namePicker">
     <div class="fc-header">
       <span>💕 Our Private Chat</span>
@@ -1917,7 +1308,6 @@
     </div>
   </div>
 
-  <!-- Chat Window -->
   <div id="chatBox" style="display:none; flex-direction:column; height:100%;">
     <div class="fc-header">
       <span id="chatUserLabel"></span>
@@ -1929,10 +1319,8 @@
       </div>
     </div>
     <div class="chat-messages" id="chatMessages">
-      <canvas id="chatCanvas3D"></canvas>
       <video class="chat-bg-video" autoplay loop muted playsinline src="our_love_background.mp4"></video>
     </div>
-    <!-- Typing Indicator -->
     <div id="typingIndicator" style="display:none;" class="typing-indicator">
       <div class="typing-dots"><span></span><span></span><span></span></div>
       <span class="typing-name"></span>
@@ -1966,72 +1354,26 @@
     <span class="cam-title">📸 Camera</span>
     <button onclick="flipCamera()" class="cam-flip">🔄</button>
   </div>
-
-  <!-- Live viewfinder -->
   <div class="cam-viewfinder">
     <video id="camVideo" autoplay playsinline muted></video>
     <canvas id="camCanvas" style="display:none;"></canvas>
-
-    <!-- Filter overlay label -->
     <div class="filter-label" id="filterLabel">No Filter</div>
-
-    <!-- Sticker layer -->
     <div id="stickerLayer"></div>
   </div>
-
-  <!-- Filters bar -->
   <div class="filters-bar">
-    <div class="filter-item">
-      <div class="filter-thumb active" onclick="setFilter('none', this)" style="background:#fff;">🚫</div>
-      <span class="filter-name">Normal</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('rose', this)" style="background:linear-gradient(135deg,#f4b8c1,#e8687a);">🌸</div>
-      <span class="filter-name">Rose</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('romantic', this)" style="background:linear-gradient(135deg,#ff6b9d,#c44569);">💗</div>
-      <span class="filter-name">Romantic</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('cute', this)" style="background:linear-gradient(135deg,#ffeaa7,#fdcb6e);">🍑</div>
-      <span class="filter-name">Cute</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('comedy', this)" style="background:linear-gradient(135deg,#a8e6cf,#3d9970);">🤡</div>
-      <span class="filter-name">Comedy</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('bw', this)" style="background:linear-gradient(135deg,#888,#333);">🖤</div>
-      <span class="filter-name">B&W</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('warm', this)" style="background:linear-gradient(135deg,#fde8d0,#c9a96e);">🌅</div>
-      <span class="filter-name">Warm</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('cool', this)" style="background:linear-gradient(135deg,#b3d9f2,#5b9bd5);">❄️</div>
-      <span class="filter-name">Cool</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('vintage', this)" style="background:linear-gradient(135deg,#d4a857,#8b5e3c);">📷</div>
-      <span class="filter-name">Vintage</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('dreamy', this)" style="background:linear-gradient(135deg,#d7b4f3,#9b59b6);">🌙</div>
-      <span class="filter-name">Dreamy</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('neon', this)" style="background:linear-gradient(135deg,#00ff88,#00b4d8);">🌈</div>
-      <span class="filter-name">Neon</span>
-    </div>
-    <div class="filter-item">
-      <div class="filter-thumb" onclick="setFilter('golden', this)" style="background:linear-gradient(135deg,#f9ca24,#f0932b);">✨</div>
-      <span class="filter-name">Golden</span>
-    </div>
+    <div class="filter-item"><div class="filter-thumb active" onclick="setFilter('none', this)" style="background:#fff;">🚫</div><span class="filter-name">Normal</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('rose', this)" style="background:linear-gradient(135deg,#f4b8c1,#e8687a);">🌸</div><span class="filter-name">Rose</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('romantic', this)" style="background:linear-gradient(135deg,#ff6b9d,#c44569);">💗</div><span class="filter-name">Romantic</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('cute', this)" style="background:linear-gradient(135deg,#ffeaa7,#fdcb6e);">🍑</div><span class="filter-name">Cute</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('comedy', this)" style="background:linear-gradient(135deg,#a8e6cf,#3d9970);">🤡</div><span class="filter-name">Comedy</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('bw', this)" style="background:linear-gradient(135deg,#888,#333);">🖤</div><span class="filter-name">B&W</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('warm', this)" style="background:linear-gradient(135deg,#fde8d0,#c9a96e);">🌅</div><span class="filter-name">Warm</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('cool', this)" style="background:linear-gradient(135deg,#b3d9f2,#5b9bd5);">❄️</div><span class="filter-name">Cool</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('vintage', this)" style="background:linear-gradient(135deg,#d4a857,#8b5e3c);">📷</div><span class="filter-name">Vintage</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('dreamy', this)" style="background:linear-gradient(135deg,#d7b4f3,#9b59b6);">🌙</div><span class="filter-name">Dreamy</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('neon', this)" style="background:linear-gradient(135deg,#00ff88,#00b4d8);">🌈</div><span class="filter-name">Neon</span></div>
+    <div class="filter-item"><div class="filter-thumb" onclick="setFilter('golden', this)" style="background:linear-gradient(135deg,#f9ca24,#f0932b);">✨</div><span class="filter-name">Golden</span></div>
   </div>
-
-  <!-- Stickers bar -->
   <div class="stickers-bar">
     <span onclick="addSticker('❤️')">❤️</span>
     <span onclick="addSticker('🥺')">🥺</span>
@@ -2042,13 +1384,9 @@
     <span onclick="addSticker('🔥')">🔥</span>
     <span onclick="addSticker('💋')">💋</span>
   </div>
-
-  <!-- Capture button -->
   <div class="cam-controls">
     <button onclick="capturePhoto()" class="cam-capture"></button>
   </div>
-
-  <!-- Preview after capture -->
   <div id="camPreview" style="display:none;">
     <img id="previewImg" style="width:100%;height:100%;object-fit:cover;"/>
     <div class="preview-actions">
@@ -2074,7 +1412,6 @@
 
 <!-- MOOD PLAYLIST PLAYER -->
 <div id="playlistPlayer">
-  <!-- Mini bar (always visible) -->
   <div class="playlist-mini" id="playlistMini" onclick="togglePlaylist()">
     <div class="pl-mini-left">
       <div class="pl-disc" id="plDisc">🎵</div>
@@ -2090,15 +1427,11 @@
       <button class="pl-ctrl pl-expand">🎵</button>
     </div>
   </div>
-
-  <!-- Full player panel -->
   <div class="playlist-panel" id="playlistPanel" style="display:none;">
     <div class="pl-panel-header">
       <span>🎵 Our Playlist</span>
       <button onclick="togglePlaylist()" class="pl-panel-close">✕</button>
     </div>
-
-    <!-- Now playing -->
     <div class="pl-now-playing">
       <div class="pl-cover" id="plCover">💕</div>
       <div class="pl-np-info">
@@ -2106,15 +1439,11 @@
         <div class="pl-np-artist" id="plNpArtist">Our Playlist 🎵</div>
       </div>
     </div>
-
-    <!-- Progress bar -->
     <div class="pl-progress-wrap">
       <span class="pl-time" id="plCurrentTime">0:00</span>
       <input type="range" class="pl-progress" id="plProgress" value="0" min="0" max="100" oninput="seekSong(this.value)"/>
       <span class="pl-time" id="plDuration">0:00</span>
     </div>
-
-    <!-- Controls -->
     <div class="pl-controls">
       <button onclick="toggleShuffle()" class="pl-ctrl-lg" id="shuffleBtn" title="Shuffle">🔀</button>
       <button onclick="prevSong()" class="pl-ctrl-lg">⏮️</button>
@@ -2122,283 +1451,14 @@
       <button onclick="nextSong()" class="pl-ctrl-lg">⏭️</button>
       <button onclick="toggleRepeat()" class="pl-ctrl-lg" id="repeatBtn" title="Repeat">🔁</button>
     </div>
-
-    <!-- Volume -->
     <div class="pl-volume-row">
       <span>🔈</span>
       <input type="range" class="pl-volume" id="plVolume" value="70" min="0" max="100" oninput="setVolume(this.value)"/>
       <span>🔊</span>
     </div>
-
-    <!-- Song list -->
     <div class="pl-list" id="plList"></div>
   </div>
 </div>
-
-<!-- MUSIC PLAYER (old - hidden) -->
-<div class="music-player" id="musicPlayer" style="display:none;">
-  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶️</button>
-  <div class="music-info">
-    <span class="music-title">Our Melody 💕</span>
-    <span class="music-sub">Playing for us</span>
-  </div>
-  <div class="music-bars" id="musicBars">
-    <div class="bar paused"></div>
-    <div class="bar paused"></div>
-    <div class="bar paused"></div>
-    <div class="bar paused"></div>
-  </div>
-</div>
-
-<!-- ANNIVERSARY COUNTDOWN SECTION -->
-<section id="anniversary" style="background:transparent; padding: 80px 24px;">
-  <div class="container" style="text-align:center;">
-    <p class="section-label reveal">✦ Our Special Milestone ✦</p>
-    <h2 class="section-title reveal">720 Days of <em>Us</em> 💛</h2>
-    <div id="anniversaryContent" class="reveal">
-      <!-- Shown before day 720 -->
-      <div id="preAnniversary">
-        <p style="color:rgba(255,255,255,0.5); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; margin-bottom:40px;">
-          Something magical is coming... 🌙
-        </p>
-        <div class="anniv-countdown">
-          <div class="anniv-box" id="aDays">
-            <div class="anniv-num">--</div>
-            <div class="anniv-label">Days Left</div>
-          </div>
-          <div class="anniv-heart">💛</div>
-          <div class="anniv-box">
-            <div class="anniv-num" id="aTarget">720</div>
-            <div class="anniv-label">Days Together</div>
-          </div>
-        </div>
-        <p style="color:rgba(255,255,255,0.3); font-size:0.85rem; margin-top:28px; letter-spacing:0.05em;">
-          July 22, 2026 • Our 720th Day 💕
-        </p>
-
-        <!-- Gift box teaser -->
-        <div class="gift-teaser">
-          <div class="gift-box-locked" title="Unlocks on day 720!">
-            🎁
-            <div class="gift-lock">🔒</div>
-          </div>
-          <p style="color:rgba(255,255,255,0.35); font-size:0.8rem; margin-top:12px; font-style:italic;">
-            A special gift is waiting for you Rasla... unlocks on July 22 💕
-          </p>
-        </div>
-      </div>
-
-      <!-- Shown ON day 720 -->
-      <div id="onAnniversary" style="display:none;">
-        <!-- Love letter -->
-        <div class="love-letter-wrap" id="loveLetter">
-          <div class="letter-envelope" id="letterEnvelope" onclick="openLetter()">
-            <div class="envelope-icon">💌</div>
-            <p class="envelope-text">A letter from Hisham<br/><span>Tap to open 🥺</span></p>
-          </div>
-          <div class="letter-content" id="letterContent" style="display:none;">
-            <div class="letter-header">
-              <span class="letter-rose">🌹</span>
-              <h3>My Dearest Rasla,</h3>
-              <span class="letter-rose">🌹</span>
-            </div>
-            <div class="letter-body">
-              <p>720 days. And still, every single one feels like the first time my heart chose you.</p>
-              <p>Before you came into my life, everything felt dark — like I was wandering without a reason. Then you arrived, and suddenly my world had colour, warmth, and a reason to smile every single morning.</p>
-              <p>When I talk to you, I feel happiness so deep that no words in any language can measure it. You are not just my girlfriend — you are my peace, my home, my everything.</p>
-              <p>Every night before I sleep, I look at your photos. Not because it's a habit — but because a day without seeing your face feels incomplete. You are the last thought that walks me into my dreams, and the first reason I smile when I wake up.</p>
-              <p>You are the most beautiful moon I have ever seen — glowing softly every night, making everything around you brighter just by existing.</p>
-              <p>I have made you a promise, and I will keep it with everything I am — I will never hurt you. I will never leave you. If I ever have a wife in this lifetime, it will only be you. Only ever you, Rasla.</p>
-              <p>I love you more than I love my own parents. More than anything this world has ever offered me. I would take any risk, face any storm, climb any mountain — for you, without hesitation, without regret.</p>
-              <p>You are my princess. My cute girl. My whole world. And no matter how many days pass — 720, 7200, a lifetime — that will never change.</p>
-              <p style="margin-top:24px; font-weight:600;">I love you, Rasla. More than yesterday. Less than tomorrow. Always. 💕</p>
-            </div>
-            <div class="letter-footer">
-              <span>Forever yours,</span>
-              <strong>Hisham 💙</strong>
-              <span class="letter-date">July 22, 2026 • Day 720 ✨</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gift box unlocked -->
-        <div class="gift-unlocked" id="giftBox">
-          <div class="gift-box-open" id="giftBoxBtn" onclick="openGift()">
-            <div class="gift-emoji">🎁</div>
-            <p>Your special gift is here Rasla! 💛<br/><span>Tap to unwrap 🎀</span></p>
-          </div>
-          <div class="gift-content" id="giftContent" style="display:none;">
-            <div class="gift-message">
-              <div style="font-size:3rem; margin-bottom:16px;">👑</div>
-              <h3>Happy 720 Days, My Princess! 🥺</h3>
-              <p>You came into my life and turned every dark corner into something beautiful. This website, every photo, every memory stored here — it's all for you. Because you deserve a world that remembers every moment of us.</p>
-              <p>Here's my gift to you today — not just this site, but my promise, renewed and stronger than ever:</p>
-              <div class="gift-promise">
-                <span>💙 I will never leave you</span>
-                <span>💙 I will never hurt you</span>
-                <span>💙 I will only ever marry you</span>
-                <span>💙 I will love you more every single day</span>
-              </div>
-              <p style="margin-top:20px; font-style:italic; color:var(--blush);">"You are my moon, my peace, my everything — 720 days and forever more." 💕</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GOLDEN ANNIVERSARY OVERLAY (shown on day 720) -->
-<div id="anniversaryOverlay" style="display:none;">
-  <canvas id="confettiCanvas"></canvas>
-  <div class="anniv-overlay-msg">
-    <div class="anniv-overlay-emoji">✨💛✨</div>
-    <h2>Happy 720 Days!</h2>
-    <p>Hisham & Rasla 💕</p>
-    <button onclick="document.getElementById('anniversaryOverlay').style.display='none'">
-      Continue to our world 💛
-    </button>
-  </div>
-</div>
-
-<!-- LOVE QUIZ (hidden until day 720) -->
-<section id="quiz" style="background:transparent; padding:80px 24px; display:none;">
-  <div class="container" style="text-align:center;">
-    <p class="section-label reveal">✦ Just For You Rasla ✦</p>
-    <h2 class="section-title reveal">The <em>Love Quiz</em> 💌</h2>
-    <p class="reveal" style="color:rgba(255,255,255,0.45); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-bottom:48px;">
-      How well do you know our love story? 🥺
-    </p>
-
-    <div id="quizContainer" class="reveal">
-
-      <!-- Start screen -->
-      <div id="quizStart" class="quiz-card">
-        <div class="quiz-start-icon">💌</div>
-        <h3 class="quiz-start-title">Are you ready, Rasla? 🥺</h3>
-        <p class="quiz-start-sub">5 questions about us — our story, our love, our everything 💕</p>
-        <button onclick="startQuiz()" class="quiz-start-btn">Let's Go! 💗</button>
-      </div>
-
-      <!-- Question screen -->
-      <div id="quizQuestion" class="quiz-card" style="display:none;">
-        <div class="quiz-progress-wrap">
-          <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizFill"></div></div>
-          <span class="quiz-progress-text" id="quizProgressText">1 / 5</span>
-        </div>
-        <div class="quiz-q-num" id="quizQNum">Question 1</div>
-        <div class="quiz-question" id="quizQuestionText"></div>
-        <div class="quiz-options" id="quizOptions"></div>
-        <div class="quiz-feedback" id="quizFeedback" style="display:none;"></div>
-      </div>
-
-      <!-- Result screen -->
-      <div id="quizResult" class="quiz-card" style="display:none;">
-        <div class="quiz-result-emoji" id="resultEmoji">🥺</div>
-        <h3 class="quiz-result-title" id="resultTitle"></h3>
-        <p class="quiz-result-sub" id="resultSub"></p>
-        <div class="quiz-score-wrap">
-          <div class="quiz-score" id="quizScore">0/5</div>
-          <div class="quiz-score-label">Love Score 💕</div>
-        </div>
-        <div class="quiz-hearts" id="quizHearts"></div>
-        <button onclick="restartQuiz()" class="quiz-start-btn" style="margin-top:24px;">Play Again 🔄</button>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- PHOTO PUZZLE GAME (hidden until day 720) -->
-<section id="puzzle" style="background:transparent; padding:80px 24px; display:none;">
-  <div class="container" style="text-align:center;">
-    <p class="section-label reveal">✦ A Game Just For You ✦</p>
-    <h2 class="section-title reveal">Photo <em>Puzzle</em> 🧩</h2>
-    <p class="reveal" style="color:rgba(255,255,255,0.45); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-bottom:48px;">
-      Solve the puzzle to reveal a beautiful moment of us 💕
-    </p>
-
-    <div class="reveal" id="puzzleWrap">
-      <!-- Difficulty -->
-      <div id="puzzleStart" class="quiz-card" style="max-width:500px; margin:0 auto;">
-        <div style="font-size:3.5rem; margin-bottom:16px; animation:letterFloat 3s ease-in-out infinite;">🧩</div>
-        <h3 style="font-family:'Playfair Display',serif; font-size:1.6rem; color:white; margin-bottom:12px;">Unscramble Us 🥺</h3>
-        <p style="color:rgba(255,255,255,0.5); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; margin-bottom:28px;">Choose your difficulty and piece our photo back together!</p>
-        <div class="puzzle-diff-btns">
-          <button onclick="startPuzzle(3)" class="puzzle-diff-btn">🌸 Easy (3×3)</button>
-          <button onclick="startPuzzle(4)" class="puzzle-diff-btn">💗 Medium (4×4)</button>
-          <button onclick="startPuzzle(5)" class="puzzle-diff-btn">🔥 Hard (5×5)</button>
-        </div>
-      </div>
-
-      <!-- Puzzle board -->
-      <div id="puzzleBoard" style="display:none; max-width:520px; margin:0 auto;">
-        <div class="puzzle-info-row">
-          <div class="puzzle-stat">
-            <span class="puzzle-stat-val" id="puzzleMoves">0</span>
-            <span class="puzzle-stat-label">Moves</span>
-          </div>
-          <div class="puzzle-stat">
-            <span class="puzzle-stat-val" id="puzzleTimer">0:00</span>
-            <span class="puzzle-stat-label">Time</span>
-          </div>
-          <button onclick="shufflePuzzle()" class="puzzle-action-btn">🔀 Shuffle</button>
-          <button onclick="resetPuzzle()" class="puzzle-action-btn">🔄 Reset</button>
-          <button onclick="autoSolvePuzzle()" class="puzzle-action-btn" style="background:rgba(232,104,122,0.15); border-color:rgba(232,104,122,0.4); color:var(--blush);">✨ Auto Solve</button>
-        </div>
-        <div id="puzzleGrid" class="puzzle-grid"></div>
-        <button onclick="document.getElementById('puzzleBoard').style.display='none'; document.getElementById('puzzleStart').style.display='block';" class="quiz-start-btn" style="margin-top:20px; padding:12px 32px; font-size:0.9rem;">← Back</button>
-      </div>
-
-      <!-- Win screen -->
-      <div id="puzzleWin" class="quiz-card" style="display:none; max-width:500px; margin:0 auto;">
-        <div style="font-size:3.5rem; margin-bottom:16px;">🎉</div>
-        <h3 style="font-family:'Playfair Display',serif; font-size:1.6rem; color:white; margin-bottom:12px;">You did it Rasla! 🥺💕</h3>
-        <p style="color:rgba(255,255,255,0.5); font-family:'Cormorant Garamond',serif; font-style:italic; margin-bottom:20px;">
-          Completed in <span id="winMoves" style="color:var(--rose); font-weight:600;"></span> moves & <span id="winTime" style="color:var(--rose); font-weight:600;"></span>!
-        </p>
-        <img id="puzzleWinImg" src="RAAHII7.png" style="width:100%; border-radius:20px; box-shadow:0 8px 40px rgba(232,104,122,0.3); margin-bottom:20px;"/>
-        <p style="color:rgba(255,255,255,0.6); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:1.05rem;">
-          "Just like this puzzle — no matter how scattered things get, we always find our way back to each other 💕"
-        </p>
-        <button onclick="resetPuzzle()" class="quiz-start-btn" style="margin-top:24px;">Play Again 🧩</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- LOVE LETTER REPLY BOX (hidden until day 720) -->
-<section id="letterReply" style="background:transparent; padding:80px 24px; display:none;">
-  <div class="container" style="text-align:center;">
-    <p class="section-label reveal">✦ Your Turn, Rasla ✦</p>
-    <h2 class="section-title reveal">Write Me a <em>Letter</em> 💌</h2>
-    <p class="reveal" style="color:rgba(255,255,255,0.45); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-bottom:48px;">
-      I wrote you my heart. Now it's your turn 🥺
-    </p>
-
-    <div class="reveal" style="max-width:640px; margin:0 auto;">
-      <!-- Sent letters display -->
-      <div id="lettersDisplay" class="letters-display"></div>
-
-      <!-- Write form -->
-      <div class="reply-card" id="replyForm">
-        <div class="reply-header">
-          <span class="reply-envelope">💌</span>
-          <div>
-            <h3 class="reply-title">Dear Hisham,</h3>
-            <p class="reply-sub">Write whatever is in your heart 🥺</p>
-          </div>
-        </div>
-        <textarea id="replyText" class="reply-textarea" placeholder="Start writing your letter here... pour your heart out 💕" rows="6"></textarea>
-        <div class="reply-footer-row">
-          <span class="reply-from">— Rasla 💗</span>
-          <button onclick="sendLetter()" class="quiz-start-btn" style="padding:12px 32px; font-size:0.9rem;">Send Letter 💌</button>
-        </div>
-        <div id="replyMsg" style="display:none; margin-top:16px; color:var(--blush); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:1rem;"></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- FOOTER -->
 <footer>
@@ -2406,696 +1466,10 @@
   <p>"You are my today and all of my tomorrows."</p>
 </footer>
 
-<!-- Zegocloud SDK loaded separately as regular script -->
+<!-- Zegocloud SDK -->
 <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt@1.13.4/zego-uikit-prebuilt.js"></script>
 
 <script type="module">
-  // ─── PASSWORD ───
-  // ─── 8K WEBGL 3D PARTICLE SYSTEM ───
-  (function() {
-    const canvas = document.getElementById('webglCanvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (!gl) { fallbackCanvas(); return; }
-
-    function resize() {
-      // 8K style - use device pixel ratio for crisp rendering
-      const dpr = Math.min(window.devicePixelRatio || 1, 3);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    }
-
-    // Vertex shader
-    const vsSource = `
-      attribute vec4 aPosition;
-      attribute float aSize;
-      attribute vec4 aColor;
-      attribute float aAlpha;
-      uniform mat4 uMatrix;
-      uniform float uTime;
-      varying vec4 vColor;
-      varying float vAlpha;
-
-      void main() {
-        vec4 pos = aPosition;
-        pos.x += sin(uTime * 0.5 + aPosition.y * 2.0) * 0.02;
-        pos.y += cos(uTime * 0.3 + aPosition.x * 2.0) * 0.02;
-        gl_Position = uMatrix * pos;
-        gl_PointSize = aSize * (1.0 + 0.3 * sin(uTime + aPosition.z * 5.0));
-        vColor = aColor;
-        vAlpha = aAlpha * (0.7 + 0.3 * sin(uTime * 2.0 + aPosition.x * 10.0));
-      }
-    `;
-
-    // Fragment shader - soft glowing points
-    const fsSource = `
-      precision highp float;
-      varying vec4 vColor;
-      varying float vAlpha;
-
-      void main() {
-        vec2 coord = gl_PointCoord - vec2(0.5);
-        float dist = length(coord);
-        if (dist > 0.5) discard;
-        float glow = 1.0 - smoothstep(0.0, 0.5, dist);
-        float core = 1.0 - smoothstep(0.0, 0.15, dist);
-        float alpha = (glow * 0.6 + core * 0.4) * vAlpha;
-        gl_FragColor = vec4(vColor.rgb, alpha);
-      }
-    `;
-
-    function compileShader(type, source) {
-      const shader = gl.createShader(type);
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      return shader;
-    }
-
-    const vs = compileShader(gl.VERTEX_SHADER, vsSource);
-    const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
-    const program = gl.createProgram();
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    // Particle data
-    const N = 600;
-    const positions = new Float32Array(N * 3);
-    const sizes = new Float32Array(N);
-    const colors = new Float32Array(N * 4);
-    const alphas = new Float32Array(N);
-    const velocities = new Float32Array(N * 3);
-
-    // Color palette - rose, blush, gold, white
-    const palette = [
-      [0.91, 0.41, 0.48], // rose
-      [0.96, 0.72, 0.76], // blush
-      [0.79, 0.66, 0.43], // gold
-      [1.00, 1.00, 1.00], // white
-      [0.48, 0.24, 0.29], // deep
-    ];
-
-    for (let i = 0; i < N; i++) {
-      positions[i*3]   = (Math.random() - 0.5) * 2.2;
-      positions[i*3+1] = (Math.random() - 0.5) * 2.2;
-      positions[i*3+2] = (Math.random() - 0.5) * 1.5;
-      velocities[i*3]   = (Math.random() - 0.5) * 0.003;
-      velocities[i*3+1] = -Math.random() * 0.004 - 0.001;
-      velocities[i*3+2] = (Math.random() - 0.5) * 0.001;
-      sizes[i] = Math.random() * 6 + 1.5;
-      const c = palette[Math.floor(Math.random() * palette.length)];
-      colors[i*4] = c[0]; colors[i*4+1] = c[1];
-      colors[i*4+2] = c[2]; colors[i*4+3] = 1.0;
-      alphas[i] = Math.random() * 0.6 + 0.1;
-    }
-
-    // Buffers
-    const posBuf  = gl.createBuffer();
-    const sizeBuf = gl.createBuffer();
-    const colBuf  = gl.createBuffer();
-    const alBuf   = gl.createBuffer();
-
-    const aPos   = gl.getAttribLocation(program, 'aPosition');
-    const aSize  = gl.getAttribLocation(program, 'aSize');
-    const aColor = gl.getAttribLocation(program, 'aColor');
-    const aAlpha = gl.getAttribLocation(program, 'aAlpha');
-    const uMatrix = gl.getUniformLocation(program, 'uMatrix');
-    const uTime   = gl.getUniformLocation(program, 'uTime');
-
-    // Simple orthographic-style matrix
-    function getMatrix() {
-      return new Float32Array([
-        1,0,0,0, 0,1,0,0, 0,0,0.1,0, 0,0,0,1
-      ]);
-    }
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-
-    let startTime = performance.now();
-    let mouseX = 0, mouseY = 0;
-    document.addEventListener('mousemove', e => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 0.1;
-      mouseY = -(e.clientY / window.innerHeight - 0.5) * 0.1;
-    });
-
-    function draw(ts) {
-      requestAnimationFrame(draw);
-      const t = (ts - startTime) * 0.001;
-
-      // Update particle positions
-      for (let i = 0; i < N; i++) {
-        positions[i*3]   += velocities[i*3]   + mouseX * 0.01;
-        positions[i*3+1] += velocities[i*3+1] + mouseY * 0.01;
-        positions[i*3+2] += velocities[i*3+2];
-        // Reset when out of bounds
-        if (positions[i*3+1] < -1.2) {
-          positions[i*3]   = (Math.random()-0.5)*2.2;
-          positions[i*3+1] = 1.2;
-          positions[i*3+2] = (Math.random()-0.5)*1.5;
-        }
-        if (Math.abs(positions[i*3]) > 1.2) velocities[i*3] *= -1;
-      }
-
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.clearColor(0, 0, 0, 0);
-
-      // Upload position buffer
-      gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
-      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.DYNAMIC_DRAW);
-      gl.enableVertexAttribArray(aPos);
-      gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuf);
-      gl.bufferData(gl.ARRAY_BUFFER, sizes, gl.STATIC_DRAW);
-      gl.enableVertexAttribArray(aSize);
-      gl.vertexAttribPointer(aSize, 1, gl.FLOAT, false, 0, 0);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, colBuf);
-      gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
-      gl.enableVertexAttribArray(aColor);
-      gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, alBuf);
-      gl.bufferData(gl.ARRAY_BUFFER, alphas, gl.STATIC_DRAW);
-      gl.enableVertexAttribArray(aAlpha);
-      gl.vertexAttribPointer(aAlpha, 1, gl.FLOAT, false, 0, 0);
-
-      gl.uniformMatrix4fv(uMatrix, false, getMatrix());
-      gl.uniform1f(uTime, t);
-      gl.drawArrays(gl.POINTS, 0, N);
-    }
-
-    resize();
-    window.addEventListener('resize', resize);
-    requestAnimationFrame(draw);
-
-    // 3D tilt effect on cards
-    document.querySelectorAll('.note-card, .count-box, .tl-content, .video-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        card.style.transform = `perspective(600px) rotateX(${-y*12}deg) rotateY(${x*12}deg) translateZ(20px) scale(1.03)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-        card.style.transition = 'transform 0.5s ease';
-        setTimeout(() => card.style.transition = '', 500);
-      });
-    });
-  })();
-
-  // Fallback canvas 2D if WebGL not supported
-  function fallbackCanvas() {
-    const canvas = document.getElementById('webglCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const particles = Array.from({length:200}, () => ({
-      x: Math.random()*canvas.width, y: Math.random()*canvas.height,
-      r: Math.random()*3+0.5, vx: (Math.random()-0.5)*0.5, vy: -Math.random()*0.8-0.2,
-      alpha: Math.random()*0.4+0.1,
-      color: ['232,104,122','244,184,193','201,169,110','255,255,255'][Math.floor(Math.random()*4)]
-    }));
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.y < -10) { p.y = canvas.height+10; p.x = Math.random()*canvas.width; }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
-        ctx.fill();
-      });
-      requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  // ─── MOUSE PARALLAX ON HERO ───
-  document.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 20;
-    const y = (e.clientY / window.innerHeight - 0.5) * 20;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-      const h1 = hero.querySelector('h1');
-      const sub = hero.querySelector('.hero-sub');
-      const tag = hero.querySelector('.hero-tag');
-      const date = hero.querySelector('.hero-date');
-      if (h1) h1.style.transform = `translate3d(${x*0.8}px,${y*0.8}px,40px)`;
-      if (sub) sub.style.transform = `translate3d(${x*0.4}px,${y*0.4}px,20px)`;
-      if (tag) tag.style.transform = `translate3d(${x*0.2}px,${y*0.2}px,10px)`;
-      if (date) date.style.transform = `translate3d(${x*0.6}px,${y*0.6}px,30px)`;
-    }
-  });
-
-  // ─── PHOTO PUZZLE GAME ───
-  const PUZZLE_IMAGE = 'RAAHII7.png'; // Beautiful couple photo in black outfits
-  let puzzleSize = 3;
-  let puzzleTiles = [];
-  let emptyIndex = 0;
-  let puzzleMoves = 0;
-  let puzzleSeconds = 0;
-  let puzzleTimerInterval = null;
-  let puzzleSolved = false;
-
-  window.startPuzzle = function(size) {
-    puzzleSize = size;
-    puzzleMoves = 0;
-    puzzleSeconds = 0;
-    puzzleSolved = false;
-    document.getElementById('puzzleMoves').textContent = '0';
-    document.getElementById('puzzleTimer').textContent = '0:00';
-    document.getElementById('puzzleStart').style.display = 'none';
-    document.getElementById('puzzleWin').style.display = 'none';
-    document.getElementById('puzzleBoard').style.display = 'block';
-
-    const n = size * size;
-    puzzleTiles = Array.from({length: n}, (_, i) => i);
-    emptyIndex = n - 1;
-    puzzleTiles[emptyIndex] = n - 1; // last tile is empty
-
-    shufflePuzzle();
-    renderPuzzle();
-    clearInterval(puzzleTimerInterval);
-    puzzleTimerInterval = setInterval(() => {
-      puzzleSeconds++;
-      const m = Math.floor(puzzleSeconds / 60);
-      const s = String(puzzleSeconds % 60).padStart(2, '0');
-      document.getElementById('puzzleTimer').textContent = `${m}:${s}`;
-    }, 1000);
-  }
-
-  window.shufflePuzzle = function() {
-    // Shuffle by making random valid moves
-    for (let i = 0; i < 200; i++) {
-      const neighbors = getNeighbors(emptyIndex, puzzleSize);
-      const rand = neighbors[Math.floor(Math.random() * neighbors.length)];
-      [puzzleTiles[emptyIndex], puzzleTiles[rand]] = [puzzleTiles[rand], puzzleTiles[emptyIndex]];
-      emptyIndex = rand;
-    }
-    renderPuzzle();
-  }
-
-  window.resetPuzzle = function() {
-    clearInterval(puzzleTimerInterval);
-    document.getElementById('puzzleBoard').style.display = 'none';
-    document.getElementById('puzzleWin').style.display = 'none';
-    document.getElementById('puzzleStart').style.display = 'block';
-  }
-
-  function getNeighbors(idx, size) {
-    const neighbors = [];
-    const row = Math.floor(idx / size);
-    const col = idx % size;
-    if (row > 0) neighbors.push(idx - size);
-    if (row < size - 1) neighbors.push(idx + size);
-    if (col > 0) neighbors.push(idx - 1);
-    if (col < size - 1) neighbors.push(idx + 1);
-    return neighbors;
-  }
-
-  function renderPuzzle() {
-    const grid = document.getElementById('puzzleGrid');
-    grid.style.gridTemplateColumns = `repeat(${puzzleSize}, 1fr)`;
-    grid.innerHTML = '';
-    const n = puzzleSize * puzzleSize;
-
-    puzzleTiles.forEach((tileVal, pos) => {
-      const tile = document.createElement('div');
-      tile.className = 'puzzle-tile';
-      if (tileVal === n - 1) {
-        tile.classList.add('empty');
-      } else {
-        const tileRow = Math.floor(tileVal / puzzleSize);
-        const tileCol = tileVal % puzzleSize;
-        const pct = 100 / (puzzleSize - 1);
-        tile.style.backgroundImage = `url('${PUZZLE_IMAGE}')`;
-        tile.style.backgroundSize = `${puzzleSize * 100}%`;
-        tile.style.backgroundPosition = `${tileCol * pct}% ${tileRow * pct}%`;
-        if (tileVal === pos) tile.classList.add('correct-pos');
-        tile.onclick = () => moveTile(pos);
-      }
-      grid.appendChild(tile);
-    });
-  }
-
-  function moveTile(pos) {
-    if (puzzleSolved) return;
-    const neighbors = getNeighbors(emptyIndex, puzzleSize);
-    if (!neighbors.includes(pos)) return;
-    [puzzleTiles[emptyIndex], puzzleTiles[pos]] = [puzzleTiles[pos], puzzleTiles[emptyIndex]];
-    emptyIndex = pos;
-    puzzleMoves++;
-    document.getElementById('puzzleMoves').textContent = puzzleMoves;
-    renderPuzzle();
-    checkWin();
-  }
-
-  function checkWin() {
-    const n = puzzleSize * puzzleSize;
-    const solved = puzzleTiles.every((val, idx) => val === idx);
-    if (solved) {
-      puzzleSolved = true;
-      clearInterval(puzzleTimerInterval);
-      const m = Math.floor(puzzleSeconds / 60);
-      const s = String(puzzleSeconds % 60).padStart(2, '0');
-      setTimeout(() => {
-        document.getElementById('puzzleBoard').style.display = 'none';
-        document.getElementById('winMoves').textContent = `${puzzleMoves} moves`;
-        document.getElementById('winTime').textContent = `${m}:${s}`;
-        document.getElementById('puzzleWin').style.display = 'block';
-        startConfetti();
-        setTimeout(() => document.getElementById('anniversaryOverlay').style.display = 'none', 3500);
-      }, 400);
-    }
-  }
-
-  // ─── AUTO SOLVE (animate tiles into correct positions) ───
-  window.autoSolvePuzzle = function() {
-    if (puzzleSolved) return;
-    clearInterval(puzzleTimerInterval);
-    puzzleSolved = true;
-
-    // Show solving animation message
-    const grid = document.getElementById('puzzleGrid');
-    const msg = document.createElement('div');
-    msg.style.cssText = `position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(13,5,8,0.7); backdrop-filter:blur(4px); z-index:10; border-radius:20px; color:white; font-family:'Playfair Display',serif; font-size:1.2rem; gap:8px;`;
-    msg.innerHTML = '✨ Solving for you Rasla...';
-    grid.style.position = 'relative';
-    grid.appendChild(msg);
-
-    setTimeout(() => {
-      msg.remove();
-      // Directly set tiles to solved state
-      const n = puzzleSize * puzzleSize;
-      puzzleTiles = Array.from({length: n}, (_, i) => i);
-      emptyIndex = n - 1;
-      renderPuzzle();
-
-      // Celebrate!
-      setTimeout(() => {
-        const m = Math.floor(puzzleSeconds / 60);
-        const s = String(puzzleSeconds % 60).padStart(2, '0');
-        document.getElementById('puzzleBoard').style.display = 'none';
-        document.getElementById('winMoves').textContent = 'Auto Solved ✨';
-        document.getElementById('winTime').textContent = `${m}:${s}`;
-        document.getElementById('puzzleWin').style.display = 'block';
-        // Change win message for auto solve
-        document.querySelector('#puzzleWin p').textContent = '"Even when things feel too hard — I\'ll always be here to help you through it. Just like this puzzle 💕"';
-        startConfetti();
-        setTimeout(() => document.getElementById('anniversaryOverlay').style.display = 'none', 3500);
-      }, 800);
-    }, 1800);
-  }
-
-  // ─── LOVE LETTER REPLY (Firebase) ───
-  window.sendLetter = function() {
-    const text = document.getElementById('replyText').value.trim();
-    if (!text) return;
-    if (!window._sendLetterToFirebase) {
-      // Store locally if Firebase not ready
-      displayLetter('Rasla 💗', text);
-      document.getElementById('replyText').value = '';
-      showReplyMsg('Your letter has been sent to Hisham 💌🥺');
-      return;
-    }
-    window._sendLetterToFirebase(text);
-    document.getElementById('replyText').value = '';
-    showReplyMsg('Your letter has been sent to Hisham 💌🥺');
-  }
-
-  function showReplyMsg(msg) {
-    const el = document.getElementById('replyMsg');
-    el.textContent = msg;
-    el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 3000);
-  }
-
-  function displayLetter(from, text) {
-    const now = new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
-    const div = document.createElement('div');
-    div.className = 'letter-msg';
-    div.innerHTML = `
-      <div class="letter-msg-header">
-        <span class="letter-msg-from">💌 From ${from}</span>
-        <span class="letter-msg-date">${now}</span>
-      </div>
-      <div class="letter-msg-body">${text}</div>`;
-    document.getElementById('lettersDisplay').prepend(div);
-  }
-
-  // Connect letters to Firebase when available
-  function initLetterFirebase() {
-    const checkReady = setInterval(() => {
-      if (window._firebaseDb && window._firebaseRef && window._firebasePush && window._firebaseOnChildAdded) {
-        clearInterval(checkReady);
-        const { db, ref, push, onChildAdded } = window._firebaseDb;
-        const lettersRef = ref(db, 'loveLetters');
-        window._sendLetterToFirebase = (text) => {
-          push(lettersRef, { from: 'Rasla 💗', text, time: Date.now() });
-        };
-        onChildAdded(lettersRef, (snapshot) => {
-          const l = snapshot.val();
-          displayLetter(l.from, l.text);
-        });
-      }
-    }, 1000);
-  }
-  initLetterFirebase();
-
-  // ─── LOVE QUIZ ───
-  const quizData = [
-    {
-      question: "Where did Hisham and Rasla first meet and fall in love? 🌸",
-      options: ["At a park 🌳", "At school 🏫", "At a wedding 💒", "Online 📱"],
-      correct: 1,
-      correctFeedback: "Yes! It was at school 🏫 — the place where everything began. A new school year, a new class, and a moment that changed everything forever 💕",
-      wrongFeedback: "It was at school 🏫! A new 8th grade year, and the universe brought you two together in the same classroom 🌸"
-    },
-    {
-      question: "What was the very first thing Rasla ever gave Hisham? 🥺",
-      options: ["A letter 💌", "A flower 🌸", "A pen 🖊️", "A photo 📸"],
-      correct: 2,
-      correctFeedback: "Yes! A simple pen 🖊️ — but to Hisham it became the most precious thing in the world. He still remembers that moment like it was yesterday 💙",
-      wrongFeedback: "It was a pen 🖊️! His friend Rishal needed one, and Rasla had it. That one small pen started the greatest love story 💕"
-    },
-    {
-      question: "How much do you love Hisham? 💗",
-      options: ["A little bit 🌱", "So so much 💕", "More than everything in this world 🌍💙", "Just as a friend 😊"],
-      correct: 2,
-      correctFeedback: "More than everything in this world 💙 — and Hisham loves you even more than that, Rasla. Every single day, without fail 🥺✨",
-      wrongFeedback: "The right answer is: More than everything in this world 🌍💙 — at least that's how Hisham loves YOU, forever and always 💕"
-    },
-    {
-      question: "What is the thing Hisham loves most about Rasla? 💛",
-      options: ["Her smile 😊", "Her loyalty 🤍", "Her beauty 🌺", "Her voice 🎵"],
-      correct: 1,
-      correctFeedback: "Her loyalty 🤍 — because you never hurt him, never left him, and never gave him a reason to doubt you. That means more to him than anything 💙",
-      wrongFeedback: "It's your loyalty 🤍! You never hurt him, you stayed true, and that means the world to a boy who came from a dark place 💙"
-    },
-    {
-      question: "Why did Hisham keep the pen Rasla gave him close to his chest? 💙",
-      options: [
-        "Because it was an expensive pen ✒️",
-        "Because his friend asked him to keep it 👦",
-        "Because it was given by the girl he fell in love with at first sight 💙",
-        "Because he lost his own pen 😅"
-      ],
-      correct: 2,
-      correctFeedback: "Because it was given by YOU 💙 — the girl he fell in love with the very first moment he saw you. That pen wasn't just a pen. It was his first connection to you, Rasla 🥺✨",
-      wrongFeedback: "It was because of YOU 💙! The moment he saw you, his heart chose you. That pen was the first thing that connected him to you — so he kept it close to his heart 🥺"
-    }
-  ];
-
-  let quizIndex = 0;
-  let quizScore = 0;
-  let quizAnswered = false;
-
-  window.startQuiz = function() {
-    quizIndex = 0; quizScore = 0;
-    document.getElementById('quizStart').style.display = 'none';
-    document.getElementById('quizResult').style.display = 'none';
-    document.getElementById('quizQuestion').style.display = 'block';
-    showQuestion();
-  }
-
-  function showQuestion() {
-    const q = quizData[quizIndex];
-    quizAnswered = false;
-    document.getElementById('quizFeedback').style.display = 'none';
-    document.getElementById('quizQNum').textContent = `Question ${quizIndex + 1}`;
-    document.getElementById('quizQuestionText').textContent = q.question;
-    document.getElementById('quizProgressText').textContent = `${quizIndex + 1} / ${quizData.length}`;
-    document.getElementById('quizFill').style.width = `${((quizIndex + 1) / quizData.length) * 100}%`;
-
-    const letters = ['A', 'B', 'C', 'D'];
-    const opts = document.getElementById('quizOptions');
-    opts.innerHTML = '';
-    q.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'quiz-option';
-      btn.innerHTML = `<span class="quiz-option-letter">${letters[i]}</span>${opt}`;
-      btn.onclick = () => answerQuestion(i, btn);
-      opts.appendChild(btn);
-    });
-  }
-
-  function answerQuestion(index, btn) {
-    if (quizAnswered) return;
-    quizAnswered = true;
-    const q = quizData[quizIndex];
-    const allBtns = document.querySelectorAll('.quiz-option');
-    allBtns.forEach(b => b.classList.add('disabled'));
-
-    const feedback = document.getElementById('quizFeedback');
-
-    if (index === q.correct) {
-      quizScore++;
-      btn.classList.add('correct');
-      feedback.className = 'quiz-feedback correct-fb';
-      feedback.innerHTML = '✅ ' + q.correctFeedback;
-    } else {
-      btn.classList.add('wrong');
-      allBtns[q.correct].classList.add('correct');
-      feedback.className = 'quiz-feedback wrong-fb';
-      feedback.innerHTML = '💭 ' + q.wrongFeedback;
-    }
-    feedback.style.display = 'block';
-
-    setTimeout(() => {
-      quizIndex++;
-      if (quizIndex < quizData.length) showQuestion();
-      else showResult();
-    }, 2800);
-  }
-
-  function showResult() {
-    document.getElementById('quizQuestion').style.display = 'none';
-    document.getElementById('quizResult').style.display = 'block';
-    document.getElementById('quizScore').textContent = `${quizScore}/${quizData.length}`;
-
-    const hearts = document.getElementById('quizHearts');
-    hearts.innerHTML = Array.from({length: quizData.length}, (_, i) =>
-      `<span>${i < quizScore ? '💗' : '🤍'}</span>`).join('');
-
-    const results = [
-      { emoji:'😢', title:'Keep trying Rasla!', sub:'Don\'t worry — love is about the journey, not the score! Read our story again and try once more 💕' },
-      { emoji:'🥺', title:'You\'re learning!', sub:'You know some of our story! But there\'s so much more to discover about us 💕' },
-      { emoji:'💗', title:'Getting there!', sub:'You know us pretty well! Hisham loves that you\'re paying attention to our beautiful story 🌸' },
-      { emoji:'😍', title:'You know us so well!', sub:'Almost perfect! You know this love story inside and out — just like Hisham knows your heart 💙' },
-      { emoji:'👑', title:'You ARE the love story, Rasla!', sub:'5/5! Of course you knew it all — you\'re the one who made every moment of it magical. Hisham loves you forever 🥺💕' },
-    ];
-
-    const r = results[quizScore];
-    document.getElementById('resultEmoji').textContent = r.emoji;
-    document.getElementById('resultTitle').textContent = r.title;
-    document.getElementById('resultSub').textContent = r.sub;
-
-    if (quizScore === 5) {
-      // Mini confetti for perfect score
-      setTimeout(() => startConfetti(), 300);
-      setTimeout(() => document.getElementById('anniversaryOverlay').style.display = 'none', 3000);
-    }
-  }
-
-  window.restartQuiz = function() {
-    document.getElementById('quizResult').style.display = 'none';
-    document.getElementById('quizStart').style.display = 'block';
-  }
-
-  // ─── ANNIVERSARY SYSTEM ───
-  const ANNIVERSARY_DATE = new Date('2024-07-22T00:00:00');
-  const SPECIAL_DAY = 720;
-  const SPECIAL_DATE = new Date('2026-07-22T00:00:00'); // Day 720
-
-  function checkAnniversary() {
-    const now = new Date();
-    const daysTogether = Math.floor((now - ANNIVERSARY_DATE) / (1000*60*60*24));
-    const daysLeft = SPECIAL_DAY - daysTogether;
-
-    if (daysTogether >= SPECIAL_DAY) {
-      // IT'S THE ANNIVERSARY! 🎉 — Show everything!
-      document.getElementById('preAnniversary').style.display = 'none';
-      document.getElementById('onAnniversary').style.display = 'block';
-      document.body.classList.add('anniversary-mode');
-
-      // Unlock all hidden surprise sections
-      document.getElementById('quiz').style.display = 'block';
-      document.getElementById('puzzle').style.display = 'block';
-      document.getElementById('letterReply').style.display = 'block';
-
-      // Remove nav links hiding
-      document.querySelectorAll('.nav-quiz, .nav-puzzle, .nav-letter').forEach(el => el.style.display = 'list-item');
-
-      // Show overlay after 1 second
-      setTimeout(() => {
-        document.getElementById('anniversaryOverlay').style.display = 'flex';
-        startConfetti();
-      }, 1200);
-    } else {
-      // Countdown
-      document.getElementById('aDays').querySelector('.anniv-num').textContent = daysLeft;
-    }
-  }
-
-  window.openLetter = function() {
-    const env = document.getElementById('letterEnvelope');
-    const content = document.getElementById('letterContent');
-    env.style.display = 'none';
-    content.style.display = 'block';
-  }
-
-  window.openGift = function() {
-    const btn = document.getElementById('giftBoxBtn');
-    const content = document.getElementById('giftContent');
-    btn.style.display = 'none';
-    content.style.display = 'block';
-  }
-
-  // ─── CONFETTI ───
-  function startConfetti() {
-    const canvas = document.getElementById('confettiCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const colors = ['#c9a96e','#e8687a','#f4b8c1','#fff','#ffd700','#ff69b4'];
-    const pieces = Array.from({length:150}, () => ({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height - canvas.height,
-      w: Math.random()*12+4,
-      h: Math.random()*6+2,
-      color: colors[Math.floor(Math.random()*colors.length)],
-      rot: Math.random()*360,
-      rotV: (Math.random()-0.5)*8,
-      vy: Math.random()*4+2,
-      vx: (Math.random()-0.5)*2,
-      alpha: Math.random()*0.8+0.2,
-    }));
-    function drawConfetti() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      pieces.forEach(p => {
-        p.y += p.vy; p.x += p.vx; p.rot += p.rotV;
-        if (p.y > canvas.height) { p.y = -20; p.x = Math.random()*canvas.width; }
-        ctx.save();
-        ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = p.color;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot * Math.PI/180);
-        ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-        ctx.restore();
-      });
-      requestAnimationFrame(drawConfetti);
-    }
-    drawConfetti();
-  }
-
-  checkAnniversary();
-
   // ─── TYPEWRITER ANIMATION ───
   const welcomeText = "Welcome to Our World 💕";
   let twIndex = 0;
@@ -3114,137 +1488,25 @@
   function generateGateStars() {
     const container = document.getElementById('gateStars');
     if (!container) return;
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 60; i++) {
       const s = document.createElement('div');
       s.className = 'gate-star';
       const size = Math.random() * 2.5 + 0.5;
-      s.style.cssText = `
-        width:${size}px; height:${size}px;
-        left:${Math.random()*100}%; top:${Math.random()*100}%;
-        --d:${2+Math.random()*4}s;
-        --delay:${Math.random()*4}s;
-      `;
+      s.style.cssText = `width:${size}px; height:${size}px; left:${Math.random()*100}%; top:${Math.random()*100}%; --d:${2+Math.random()*4}s; --delay:${Math.random()*4}s;`;
       container.appendChild(s);
     }
   }
   generateGateStars();
 
-  // ─── 3D CHAT CANVAS ANIMATION ───
-  function initChatCanvas() {
-    const canvas = document.getElementById('chatCanvas3D');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let W, H, particles = [], animId;
-
-    function resize() {
-      const parent = canvas.parentElement;
-      W = canvas.width = parent.offsetWidth;
-      H = canvas.height = parent.offsetHeight;
-    }
-
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-        this.z = Math.random() * 3 + 0.5;
-        this.vx = (Math.random() - 0.5) * 0.4;
-        this.vy = -Math.random() * 0.6 - 0.2;
-        this.r = Math.random() * 3 + 1;
-        this.alpha = Math.random() * 0.5 + 0.1;
-        this.color = Math.random() > 0.5 ? '232,104,122' : '244,184,193';
-        this.life = 1;
-        this.decay = Math.random() * 0.004 + 0.002;
-      }
-      update() {
-        this.x += this.vx * this.z;
-        this.y += this.vy * this.z;
-        this.life -= this.decay;
-        if (this.life <= 0 || this.y < -10) this.reset();
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha * this.life;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r * this.z * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${this.color},1)`;
-        ctx.shadowColor = `rgba(${this.color},0.8)`;
-        ctx.shadowBlur = 8 * this.z;
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    // Heart particles
-    const hearts = ['💕','❤️','🌸','✨','💗'];
-    let floatingEmojis = [];
-    class EmojiFloat {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * W;
-        this.y = H + 20;
-        this.emoji = hearts[Math.floor(Math.random()*hearts.length)];
-        this.size = Math.random() * 10 + 8;
-        this.vx = (Math.random()-0.5)*0.5;
-        this.vy = -Math.random()*0.8 - 0.3;
-        this.alpha = Math.random()*0.3+0.1;
-        this.rot = Math.random()*Math.PI*2;
-        this.rotV = (Math.random()-0.5)*0.02;
-      }
-      update() {
-        this.x += this.vx; this.y += this.vy;
-        this.rot += this.rotV; this.alpha -= 0.0015;
-        if (this.y < -30 || this.alpha <= 0) this.reset();
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.rot);
-        ctx.font = `${this.size}px serif`;
-        ctx.textAlign = 'center';
-        ctx.fillText(this.emoji, 0, 0);
-        ctx.restore();
-      }
-    }
-
-    function init() {
-      resize();
-      particles = Array.from({length:40}, () => new Particle());
-      floatingEmojis = Array.from({length:8}, () => new EmojiFloat());
-    }
-
-    function loop() {
-      ctx.clearRect(0, 0, W, H);
-      // Dark gradient bg
-      const grad = ctx.createLinearGradient(0, 0, 0, H);
-      grad.addColorStop(0, 'rgba(13,5,8,0.7)');
-      grad.addColorStop(1, 'rgba(26,8,16,0.7)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
-      particles.forEach(p => { p.update(); p.draw(); });
-      floatingEmojis.forEach(e => { e.update(); e.draw(); });
-      animId = requestAnimationFrame(loop);
-    }
-
-    const obs = new ResizeObserver(resize);
-    obs.observe(canvas.parentElement);
-    init(); loop();
-  }
-
-  // Init canvas when chat opens
-  const _origSetUser = window.setUser;
-  window.setUser = function(name) {
-    _origSetUser(name);
-    setTimeout(initChatCanvas, 100);
-  }
-
+  // ─── PASSWORD ───
   const PASSWORD = "RAAHII";
   window.checkPw = function checkPw() {
     const val = document.getElementById('pwInput').value;
     if (val === PASSWORD) {
       document.getElementById('gate').style.display = 'none';
-      startCountdown(); generateHearts();
+      startCountdown();
+      generateHearts();
+      if (plReady) playAudio();
     } else {
       const e = document.getElementById('errMsg');
       e.textContent = "Hmm, that's not right 🙈 Try again!";
@@ -3286,49 +1548,38 @@
     }
   }
 
-  // ─── MOOD PLAYLIST PLAYER ───
-  const playlist = [
-    { title: 'Amsham',               id: 'aqerUe-kfl4', emoji: '🌸' },
-    { title: 'Song 2',               id: 'bP8ATWCvqzw',  emoji: '💕' },
-    { title: 'Song 3',               id: 'WW297yZWdS8',  emoji: '🎵' },
-    { title: 'Song 4',               id: 'gIMCDE0_9Gc',  emoji: '🌙' },
-    { title: 'Song 5',               id: 'aPUvbM8MTLE',  emoji: '❤️' },
-    { title: 'Song 6',               id: 'Zk2r9kdCVAc',  emoji: '💗' },
-    { title: 'Song 7',               id: 'Fkrub0FkvhU',  emoji: '🥺' },
-    { title: 'Song 8',               id: 'NVMa86cxU-k',  emoji: '🌺' },
-    { title: 'Song 9',               id: '-2RAq5o5pwc',  emoji: '✨' },
-    { title: 'Song 10',              id: 'aalJPfJRYaE',  emoji: '😍' },
-    { title: 'Song 11',              id: '8of5w7RgcTc',  emoji: '💫' },
-    { title: 'Song 12',              id: 'fukGbiPuBjU',  emoji: '💞' },
-    { title: 'Song 13',              id: 'z2mDkSDiHuM',  emoji: '🎶' },
-    { title: 'Song 14',              id: 'kzpS-A3QJqE',  emoji: '🌸' },
-    { title: 'Song 15',              id: 'HQp0DwtTP18',  emoji: '💕' },
-    { title: 'Song 16',              id: 'gKD1AhmpOoU',  emoji: '🎵' },
-    { title: 'Song 17',              id: 'ZhhBlQC_5N8',  emoji: '🌙' },
-    { title: 'Song 18',              id: 'wmUJwQNGK3k',  emoji: '❤️' },
-    { title: 'Song 19',              id: 'KgdBrGHviv4',  emoji: '💗' },
-    { title: 'Song 20',              id: 'g44iifQIFyM',  emoji: '🥺' },
-    { title: 'Song 21',              id: 'Suv5QfWKaaw',  emoji: '🌺' },
-    { title: 'Song 22',              id: 'rRKAJ6tLBSw',  emoji: '✨' },
-    { title: 'Song 23',              id: 'IpDKk6XqxZo',  emoji: '😍' },
-    { title: 'Song 24',              id: 'dhY8jRNELUc',  emoji: '💫' },
-  ];
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  // Auto-fetch real song titles from YouTube oEmbed API
-  playlist.forEach((song, i) => {
-    fetch(`https://www.youtube.com/oembed?url=https://youtube.com/watch?v=${song.id}&format=json`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.title) {
-          playlist[i].title = data.title;
-          if (i === plIndex) {
-            document.getElementById('plMiniTitle').textContent = song.emoji + ' ' + data.title;
-            document.getElementById('plNpTitle').textContent = data.title;
-          }
-          buildPlaylist();
-        }
-      }).catch(() => {});
-  });
+  // ─── MOOD PLAYLIST PLAYER (YouTube) ───
+  const playlist = [
+    { title: 'Amsham',  id: 'aqerUe-kfl4', emoji: '🌸' },
+    { title: 'Song 2',  id: 'bP8ATWCvqzw', emoji: '💕' },
+    { title: 'Song 3',  id: 'WW297yZWdS8', emoji: '🎵' },
+    { title: 'Song 4',  id: 'gIMCDE0_9Gc', emoji: '🌙' },
+    { title: 'Song 5',  id: 'aPUvbM8MTLE', emoji: '❤️' },
+    { title: 'Song 6',  id: 'Zk2r9kdCVAc', emoji: '💗' },
+    { title: 'Song 7',  id: 'Fkrub0FkvhU', emoji: '🥺' },
+    { title: 'Song 8',  id: 'NVMa86cxU-k', emoji: '🌺' },
+    { title: 'Song 9',  id: '-2RAq5o5pwc', emoji: '✨' },
+    { title: 'Song 10', id: 'aalJPfJRYaE', emoji: '😍' },
+    { title: 'Song 11', id: '8of5w7RgcTc', emoji: '💫' },
+    { title: 'Song 12', id: 'fukGbiPuBjU', emoji: '💞' },
+    { title: 'Song 13', id: 'z2mDkSDiHuM', emoji: '🎶' },
+    { title: 'Song 14', id: 'kzpS-A3QJqE', emoji: '🌸' },
+    { title: 'Song 15', id: 'HQp0DwtTP18', emoji: '💕' },
+    { title: 'Song 16', id: 'gKD1AhmpOoU', emoji: '🎵' },
+    { title: 'Song 17', id: 'ZhhBlQC_5N8', emoji: '🌙' },
+    { title: 'Song 18', id: 'wmUJwQNGK3k', emoji: '❤️' },
+    { title: 'Song 19', id: 'KgdBrGHviv4', emoji: '💗' },
+    { title: 'Song 20', id: 'g44iifQIFyM', emoji: '🥺' },
+    { title: 'Song 21', id: 'Suv5QfWKaaw', emoji: '🌺' },
+    { title: 'Song 22', id: 'rRKAJ6tLBSw', emoji: '✨' },
+    { title: 'Song 23', id: 'IpDKk6XqxZo', emoji: '😍' },
+    { title: 'Song 24', id: 'dhY8jRNELUc', emoji: '💫' },
+  ];
 
   let ytPl = null;
   let plIndex = 0;
@@ -3337,10 +1588,12 @@
   let plRepeat = false;
   let plPanelOpen = false;
   let plReady = false;
+  let titlesFetched = false;
 
-  // Load YouTube IFrame API
+  // Load YouTube IFrame API (deferred, doesn't block page)
   const ytScript = document.createElement('script');
   ytScript.src = 'https://www.youtube.com/iframe_api';
+  ytScript.async = true;
   document.head.appendChild(ytScript);
 
   window.onYouTubeIframeAPIReady = function() {
@@ -3407,7 +1660,6 @@
     ytPl.loadVideoById(playlist[plIndex].id);
     ytPl.playVideo();
   }
-
   function pauseAudio() {
     if (ytPl) ytPl.pauseVideo();
     plPlaying = false;
@@ -3416,43 +1668,45 @@
     document.getElementById('plDisc').classList.remove('playing');
     document.getElementById('plCover').classList.remove('playing');
   }
-
   window.togglePlay = function() {
     if (!plReady) return;
     if (plPlaying) pauseAudio();
     else { if (ytPl.getPlayerState() === YT.PlayerState.PAUSED) ytPl.playVideo(); else playAudio(); }
   }
-
   window.nextSong = function() {
     plIndex = plShuffle ? Math.floor(Math.random() * playlist.length) : (plIndex + 1) % playlist.length;
     loadSong(); playAudio();
   }
-
   window.prevSong = function() {
     if (ytPl && ytPl.getCurrentTime() > 3) { ytPl.seekTo(0); return; }
     plIndex = (plIndex - 1 + playlist.length) % playlist.length;
     loadSong(); playAudio();
   }
-
-  window.toggleShuffle = function() {
-    plShuffle = !plShuffle;
-    document.getElementById('shuffleBtn').classList.toggle('active', plShuffle);
-  }
-
-  window.toggleRepeat = function() {
-    plRepeat = !plRepeat;
-    document.getElementById('repeatBtn').classList.toggle('active', plRepeat);
-  }
-
-  window.seekSong = function(val) {
-    if (ytPl && ytPl.getDuration) ytPl.seekTo((val / 100) * ytPl.getDuration(), true);
-  }
-
+  window.toggleShuffle = function() { plShuffle = !plShuffle; document.getElementById('shuffleBtn').classList.toggle('active', plShuffle); }
+  window.toggleRepeat = function() { plRepeat = !plRepeat; document.getElementById('repeatBtn').classList.toggle('active', plRepeat); }
+  window.seekSong = function(val) { if (ytPl && ytPl.getDuration) ytPl.seekTo((val / 100) * ytPl.getDuration(), true); }
   window.setVolume = function(val) { if (ytPl) ytPl.setVolume(val); }
-
   window.togglePlaylist = function() {
     plPanelOpen = !plPanelOpen;
     document.getElementById('playlistPanel').style.display = plPanelOpen ? 'block' : 'none';
+    // Only fetch real song titles the first time the panel is opened (saves 24 requests on initial load)
+    if (plPanelOpen && !titlesFetched) {
+      titlesFetched = true;
+      playlist.forEach((song, i) => {
+        fetch(`https://www.youtube.com/oembed?url=https://youtube.com/watch?v=${song.id}&format=json`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.title) {
+              playlist[i].title = data.title;
+              if (i === plIndex) {
+                document.getElementById('plMiniTitle').textContent = song.emoji + ' ' + data.title;
+                document.getElementById('plNpTitle').textContent = data.title;
+              }
+              buildPlaylist();
+            }
+          }).catch(() => {});
+      });
+    }
   }
 
   function buildPlaylist() {
@@ -3461,90 +1715,26 @@
     playlist.forEach((song, i) => {
       const div = document.createElement('div');
       div.className = 'pl-song' + (i === plIndex ? ' active' : '');
-      div.innerHTML = `
-        <span class="pl-song-num">${i === plIndex && plPlaying ? '♪' : i+1}</span>
-        <div class="pl-song-info"><div class="pl-song-title">${song.emoji} ${song.title}</div></div>`;
+      div.innerHTML = `<span class="pl-song-num">${i === plIndex && plPlaying ? '♪' : i+1}</span><div class="pl-song-info"><div class="pl-song-title">${song.emoji} ${song.title}</div></div>`;
       div.onclick = () => { plIndex = i; loadSong(); playAudio(); };
       list.appendChild(div);
     });
   }
 
-  // Autoplay after password
-  const _origStartCountdown2 = window.startCountdown;
-  window.startCountdown = function() {
-    _origStartCountdown2();
-    setTimeout(() => { if (plReady) playAudio(); }, 600);
-  }
-
-  // ─── MP3 MUSIC PLAYER (old - kept for compatibility) ───
-  const audio = new Audio('indila-love-story.mp3');
-  audio.loop = true;
-  audio.volume = 0.7;
-  let isMusicPlaying = false;
-
-  window.toggleMusic = function toggleMusic() {
-    if (isMusicPlaying) {
-      audio.pause();
-      isMusicPlaying = false;
-      document.getElementById('musicBtn').textContent = '▶️';
-      document.querySelectorAll('.bar').forEach(b => b.classList.add('paused'));
-    } else {
-      audio.play();
-      isMusicPlaying = true;
-      document.getElementById('musicBtn').textContent = '⏸️';
-      document.querySelectorAll('.bar').forEach(b => b.classList.remove('paused'));
-    }
-  }
-
-  // patch startCountdown to autoplay music after password
-  const _origStartCountdown = startCountdown;
-  window.startCountdown = function() {
-    _origStartCountdown();
-    setTimeout(() => { audio.play(); isMusicPlaying = true;
-      document.getElementById('musicBtn').textContent = '⏸️';
-      document.querySelectorAll('.bar').forEach(b => b.classList.remove('paused'));
-    }, 400);
-  }
-
-
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-
-  // ─── HIDE MUSIC PLAYER WIDGET WHEN SCROLLED OFF HERO (music keeps playing) ───
+  // ─── HIDE PLAYLIST WIDGET WHEN SCROLLED OFF HERO (music keeps playing) ───
   window.addEventListener('scroll', () => {
     const hero = document.querySelector('.hero');
     const player = document.getElementById('playlistPlayer');
     if (!hero || !player) return;
     const heroBottom = hero.getBoundingClientRect().bottom;
     if (heroBottom > 100) {
-      player.style.opacity = '1';
-      player.style.pointerEvents = 'auto';
-      player.style.transform = 'translateY(0)';
+      player.style.opacity = '1'; player.style.pointerEvents = 'auto'; player.style.transform = 'translateY(0)';
     } else {
-      player.style.opacity = '0';
-      player.style.pointerEvents = 'none';
-      player.style.transform = 'translateY(100%)';
+      player.style.opacity = '0'; player.style.pointerEvents = 'none'; player.style.transform = 'translateY(100%)';
     }
   });
 
-  // ─── SHOW MUSIC PLAYER ONLY ON HERO SECTION ───
-  window.addEventListener('scroll', () => {
-    const hero = document.querySelector('.hero');
-    const player = document.getElementById('musicPlayer');
-    if (!hero || !player) return;
-    const heroBottom = hero.getBoundingClientRect().bottom;
-    if (heroBottom > 100) {
-      player.style.opacity = '1';
-      player.style.pointerEvents = 'auto';
-      player.style.transform = 'translateY(0)';
-    } else {
-      player.style.opacity = '0';
-      player.style.pointerEvents = 'none';
-      player.style.transform = 'translateY(20px)';
-    }
-  });
+  function formatDuration(s) { return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
 
   // ─── SNAPCHAT CAMERA ───
   let camStream = null;
@@ -3556,13 +1746,11 @@
     document.getElementById('cameraOverlay').style.display = 'flex';
     await startCam();
   }
-
   async function startCam() {
     try {
       if (camStream) camStream.getTracks().forEach(t => t.stop());
       camStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
+        video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false
       });
       const video = document.getElementById('camVideo');
       video.srcObject = camStream;
@@ -3572,7 +1760,6 @@
       closeCamera();
     }
   }
-
   window.closeCamera = function() {
     if (camStream) camStream.getTracks().forEach(t => t.stop());
     camStream = null;
@@ -3580,31 +1767,19 @@
     document.getElementById('camPreview').style.display = 'none';
     document.getElementById('stickerLayer').innerHTML = '';
   }
-
-  window.flipCamera = async function() {
-    facingMode = facingMode === 'user' ? 'environment' : 'user';
-    await startCam();
-  }
-
+  window.flipCamera = async function() { facingMode = facingMode === 'user' ? 'environment' : 'user'; await startCam(); }
   window.setFilter = function(filter, el) {
     currentFilter = filter;
     document.querySelectorAll('.filter-thumb').forEach(t => t.classList.remove('active'));
     if (el) el.classList.add('active');
     applyFilter(filter);
-    const labels = {
-      none:'Normal', rose:'Rose 🌸', romantic:'Romantic 💗',
-      cute:'Cute 🍑', comedy:'Comedy 🤡', bw:'B&W 🖤',
-      warm:'Warm 🌅', cool:'Cool ❄️', vintage:'Vintage 📷',
-      dreamy:'Dreamy 🌙', neon:'Neon 🌈', golden:'Golden ✨'
-    };
+    const labels = { none:'Normal', rose:'Rose 🌸', romantic:'Romantic 💗', cute:'Cute 🍑', comedy:'Comedy 🤡', bw:'B&W 🖤', warm:'Warm 🌅', cool:'Cool ❄️', vintage:'Vintage 📷', dreamy:'Dreamy 🌙', neon:'Neon 🌈', golden:'Golden ✨' };
     document.getElementById('filterLabel').textContent = labels[filter] || 'Normal';
   }
-
   function applyFilter(filter) {
     const video = document.getElementById('camVideo');
     video.className = filter === 'none' ? '' : 'filter-' + filter;
   }
-
   window.addSticker = function(emoji) {
     const layer = document.getElementById('stickerLayer');
     const s = document.createElement('div');
@@ -3612,7 +1787,6 @@
     s.textContent = emoji;
     s.style.left = (20 + Math.random() * 60) + '%';
     s.style.top = (20 + Math.random() * 50) + '%';
-    // Make draggable
     let startX, startY, startLeft, startTop;
     s.addEventListener('touchstart', e => {
       const t = e.touches[0];
@@ -3626,59 +1800,39 @@
       s.style.top = (startTop + t.clientY - startY) + 'px';
       e.preventDefault();
     }, { passive: false });
-    // Double tap to remove
     let lastTap = 0;
-    s.addEventListener('touchend', () => {
-      const now = Date.now();
-      if (now - lastTap < 300) s.remove();
-      lastTap = now;
-    });
+    s.addEventListener('touchend', () => { const now = Date.now(); if (now - lastTap < 300) s.remove(); lastTap = now; });
     layer.appendChild(s);
   }
-
   window.capturePhoto = function() {
     const video = document.getElementById('camVideo');
     const canvas = document.getElementById('camCanvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
-
-    // Flip horizontally for front camera
-    if (facingMode === 'user') {
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
-    }
+    if (facingMode === 'user') { ctx.translate(canvas.width, 0); ctx.scale(-1, 1); }
     ctx.drawImage(video, 0, 0);
     if (facingMode === 'user') ctx.setTransform(1,0,0,1,0,0);
-
-    // Apply CSS filter visually via canvas
     const filters = {
-      rose:     'saturate(1.4) hue-rotate(320deg) brightness(1.05)',
+      rose: 'saturate(1.4) hue-rotate(320deg) brightness(1.05)',
       romantic: 'saturate(1.8) hue-rotate(300deg) brightness(1.1) contrast(1.1)',
-      cute:     'saturate(1.3) brightness(1.15) contrast(0.9) sepia(0.15)',
-      comedy:   'saturate(2) hue-rotate(90deg) contrast(1.3) brightness(1.1)',
-      bw:       'grayscale(1) contrast(1.1)',
-      warm:     'sepia(0.4) saturate(1.3) brightness(1.05)',
-      cool:     'hue-rotate(190deg) saturate(1.2) brightness(1.05)',
-      vintage:  'sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8)',
-      dreamy:   'brightness(1.1) saturate(0.8) hue-rotate(270deg)',
-      neon:     'saturate(3) brightness(1.2) contrast(1.4) hue-rotate(120deg)',
-      golden:   'sepia(0.3) saturate(1.8) brightness(1.1) hue-rotate(15deg)'
+      cute: 'saturate(1.3) brightness(1.15) contrast(0.9) sepia(0.15)',
+      comedy: 'saturate(2) hue-rotate(90deg) contrast(1.3) brightness(1.1)',
+      bw: 'grayscale(1) contrast(1.1)',
+      warm: 'sepia(0.4) saturate(1.3) brightness(1.05)',
+      cool: 'hue-rotate(190deg) saturate(1.2) brightness(1.05)',
+      vintage: 'sepia(0.6) contrast(1.1) brightness(0.9) saturate(0.8)',
+      dreamy: 'brightness(1.1) saturate(0.8) hue-rotate(270deg)',
+      neon: 'saturate(3) brightness(1.2) contrast(1.4) hue-rotate(120deg)',
+      golden: 'sepia(0.3) saturate(1.8) brightness(1.1) hue-rotate(15deg)'
     };
     if (filters[currentFilter]) ctx.filter = filters[currentFilter];
     ctx.drawImage(video, 0, 0);
-
     capturedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
-    const preview = document.getElementById('camPreview');
     document.getElementById('previewImg').src = capturedDataUrl;
-    preview.style.display = 'block';
+    document.getElementById('camPreview').style.display = 'block';
   }
-
-  window.retakePhoto = function() {
-    document.getElementById('camPreview').style.display = 'none';
-    capturedDataUrl = null;
-  }
-
+  window.retakePhoto = function() { document.getElementById('camPreview').style.display = 'none'; capturedDataUrl = null; }
   window.sendCameraPhoto = function() {
     if (!capturedDataUrl || !window._sendToFirebase) return;
     window._sendToFirebase(null, null, { data: capturedDataUrl, type: 'image', name: 'camera.jpg' });
@@ -3689,37 +1843,25 @@
   window.sendMedia = function(input) {
     const file = input.files[0];
     if (!file || !window._sendToFirebase) return;
-
-    // Show uploading indicator
     const box = document.getElementById('chatMessages');
     const uploading = document.createElement('div');
     uploading.className = 'media-uploading';
     uploading.textContent = file.type.startsWith('video') ? '📹 Sending video…' : '🖼️ Sending photo…';
     box.appendChild(uploading);
     box.scrollTop = box.scrollHeight;
-
     const reader = new FileReader();
     reader.onloadend = () => {
       uploading.remove();
-      window._sendToFirebase(null, null, {
-        data: reader.result,
-        type: file.type.startsWith('video') ? 'video' : 'image',
-        name: file.name
-      });
+      window._sendToFirebase(null, null, { data: reader.result, type: file.type.startsWith('video') ? 'video' : 'image', name: file.name });
     };
     reader.readAsDataURL(file);
-    input.value = ''; // reset
+    input.value = '';
   }
-
   window.openLightbox = function(src, type) {
     const lb = document.createElement('div');
     lb.className = 'media-lightbox';
-    lb.innerHTML = `
-      <button class="media-lightbox-close" onclick="this.parentElement.remove()">✕</button>
-      ${type === 'video'
-        ? `<video src="${src}" controls autoplay style="max-width:95vw;max-height:90vh;border-radius:12px;"></video>`
-        : `<img src="${src}" style="max-width:95vw;max-height:90vh;border-radius:12px;"/>`
-      }`;
+    lb.innerHTML = `<button class="media-lightbox-close" onclick="this.parentElement.remove()">✕</button>
+      ${type === 'video' ? `<video src="${src}" controls autoplay style="max-width:95vw;max-height:90vh;border-radius:12px;"></video>` : `<img src="${src}" style="max-width:95vw;max-height:90vh;border-radius:12px;"/>`}`;
     lb.onclick = (e) => { if (e.target === lb) lb.remove(); };
     document.body.appendChild(lb);
   }
@@ -3728,7 +1870,6 @@
   const ZEGO_APP_ID = 1702113861;
   const ZEGO_SERVER_SECRET = '9546a3a077bf87cc5c4cee58a1de90fc';
   const CALL_ROOM = 'hisham-rasla-room';
-
   window.startCall = async function(type) {
     if (!currentUser) return;
     const overlay = document.getElementById('callOverlay');
@@ -3737,13 +1878,10 @@
     title.textContent = (type === 'video' ? '📹 Video Call with ' : '📞 Voice Call with ') + other;
     overlay.style.display = 'flex';
     overlay.style.flexDirection = 'column';
-
     try {
       if (!window.ZegoUIKitPrebuilt) throw new Error('SDK not loaded');
       const userId = currentUser.includes('Hisham') ? 'hisham001' : 'rasla001';
-      const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-        ZEGO_APP_ID, ZEGO_SERVER_SECRET, CALL_ROOM, userId, currentUser
-      );
+      const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(ZEGO_APP_ID, ZEGO_SERVER_SECRET, CALL_ROOM, userId, currentUser);
       const zp = ZegoUIKitPrebuilt.create(kitToken);
       window._zegoInstance = zp;
       zp.joinRoom({
@@ -3761,7 +1899,6 @@
       alert('Call failed 😢 Error: ' + e.message);
     }
   }
-
   window.endCall = function() {
     try { if (window._zegoInstance) window._zegoInstance.destroy(); } catch(e){}
     window._zegoInstance = null;
@@ -3775,7 +1912,6 @@
   let isRecording = false;
   let recTimer = null;
   let recSeconds = 0;
-
   window.toggleRecording = async function() {
     if (!isRecording) {
       try {
@@ -3787,20 +1923,14 @@
         mediaRecorder.onstop = async () => {
           const blob = new Blob(audioChunks, { type: 'audio/webm' });
           const reader = new FileReader();
-          reader.onloadend = () => {
-            if (window._sendToFirebase) {
-              window._sendToFirebase(null, { audio: reader.result, duration: recSeconds });
-            }
-          };
+          reader.onloadend = () => { if (window._sendToFirebase) window._sendToFirebase(null, { audio: reader.result, duration: recSeconds }); };
           reader.readAsDataURL(blob);
           stream.getTracks().forEach(t => t.stop());
         };
         mediaRecorder.start();
         isRecording = true;
         const btn = document.getElementById('voiceBtn');
-        btn.classList.add('recording');
-        btn.textContent = '⏹️';
-        btn.title = 'Tap to stop';
+        btn.classList.add('recording'); btn.textContent = '⏹️'; btn.title = 'Tap to stop';
         recTimer = setInterval(() => recSeconds++, 1000);
       } catch(e) {
         alert('Microphone access denied! Please allow mic in browser settings 🎙️');
@@ -3810,36 +1940,21 @@
       isRecording = false;
       clearInterval(recTimer);
       const btn = document.getElementById('voiceBtn');
-      btn.classList.remove('recording');
-      btn.textContent = '🎙️';
-      btn.title = 'Hold to record';
+      btn.classList.remove('recording'); btn.textContent = '🎙️'; btn.title = 'Hold to record';
     }
-  }
-
-  function formatDuration(s) {
-    return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
   }
 
   // ─── NOTIFICATIONS ───
   function requestNotificationPermission() {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
+    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
   }
-
   function showNotification(sender, text) {
-    if (!currentUser || sender === currentUser) return; // only notify for OTHER person's messages
+    if (!currentUser || sender === currentUser) return;
     if (Notification.permission === 'granted') {
-      const n = new Notification(sender + ' sent you a message 💕', {
-        body: text,
-        icon: 'RAAHII4.png',
-        badge: 'RAAHII4.png',
-        vibrate: [200, 100, 200],
-      });
+      const n = new Notification(sender + ' sent you a message 💕', { body: text, icon: 'RAAHII4.png', badge: 'RAAHII4.png' });
       n.onclick = () => { window.focus(); n.close(); };
       setTimeout(() => n.close(), 5000);
     }
-    // Also flash the chat bubble
     const bubble = document.getElementById('chatBubble');
     const notif = document.getElementById('chatNotif');
     if (!chatOpen && bubble && notif) {
@@ -3852,7 +1967,6 @@
   // ─── FIREBASE LIVE CHAT ───
   let currentUser = null;
   let chatOpen = false;
-
   window.toggleChat = function() {
     chatOpen = !chatOpen;
     const fc = document.getElementById('floatingChat');
@@ -3864,7 +1978,6 @@
       fc.style.display = 'none';
     }
   }
-
   window.setUser = function(name) {
     currentUser = name;
     document.getElementById('namePicker').style.display = 'none';
@@ -3874,114 +1987,138 @@
     cb.style.height = '100%';
     document.getElementById('chatUserLabel').textContent = '💬 ' + name;
     requestNotificationPermission();
-    initFirebaseChat();
+    // Firebase connects as soon as the page loads (see initFirebaseChat() call below),
+    // so by the time someone picks a name the message history is usually already in.
+    // Re-render any messages that arrived before a name was picked:
+    flushPendingMessages();
   }
-
   window.switchUser = function() {
     currentUser = null;
     document.getElementById('chatBox').style.display = 'none';
     document.getElementById('namePicker').style.display = 'flex';
   }
 
+  // Buffer messages that arrive before the user has picked their name,
+  // so nothing is lost and the chat still "loads" instantly once they do.
+  let pendingMessages = [];
+  function flushPendingMessages() {
+    if (!pendingMessages.length) return;
+    const box = document.getElementById('chatMessages');
+    box.querySelectorAll('.msg').forEach(el => el.remove()); // avoid dupes on re-render
+    pendingMessages.forEach(({ msg, key }) => renderMessage(msg, key));
+  }
+
+  let firebaseInitStarted = false;
   function initFirebaseChat() {
-    if (window._chatInitialized) return;
-    window._chatInitialized = true;
+    if (firebaseInitStarted) return;
+    firebaseInitStarted = true;
 
-    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js').then(({ initializeApp }) => {
-      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js').then(({ getDatabase, ref, push, onChildAdded, remove, update, onValue, set }) => {
-        const app = initializeApp({
-          apiKey: "AIzaSyAjocvTwFnSeZTpLTYHqBZBc-cy0yQ-lXc",
-          authDomain: "love-chat-75255.firebaseapp.com",
-          databaseURL: "https://love-chat-75255-default-rtdb.firebaseio.com",
-          projectId: "love-chat-75255",
-          storageBucket: "love-chat-75255.firebasestorage.app",
-          messagingSenderId: "200144850266",
-          appId: "1:200144850266:web:8cfb8a7628522995627763"
-        });
+    Promise.all([
+      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js')
+    ]).then(([{ initializeApp }, { getDatabase, ref, push, onChildAdded, remove, update, onValue, set }]) => {
+      const app = initializeApp({
+        apiKey: "AIzaSyAjocvTwFnSeZTpLTYHqBZBc-cy0yQ-lXc",
+        authDomain: "love-chat-75255.firebaseapp.com",
+        databaseURL: "https://love-chat-75255-default-rtdb.firebaseio.com",
+        projectId: "love-chat-75255",
+        storageBucket: "love-chat-75255.firebasestorage.app",
+        messagingSenderId: "200144850266",
+        appId: "1:200144850266:web:8cfb8a7628522995627763"
+      });
 
-        const db = getDatabase(app);
-        // Expose to letter reply system
-        window._firebaseDb = { db, ref, push, onChildAdded };
-        const msgsRef = ref(db, 'messages');
+      const db = getDatabase(app);
+      const msgsRef = ref(db, 'messages');
 
-        window._sendToFirebase = (text, voice = null, media = null) => {
-          if (media) {
-            push(msgsRef, { sender: currentUser, media: media.data, mediaType: media.type, time: Date.now() });
-          } else if (voice) {
-            push(msgsRef, { sender: currentUser, voice: voice.audio, duration: voice.duration, time: Date.now() });
-          } else {
-            push(msgsRef, { sender: currentUser, text: text, time: Date.now() });
-          }
-        };
+      window._sendToFirebase = (text, voice = null, media = null) => {
+        if (!currentUser) return;
+        if (media) push(msgsRef, { sender: currentUser, media: media.data, mediaType: media.type, time: Date.now() });
+        else if (voice) push(msgsRef, { sender: currentUser, voice: voice.audio, duration: voice.duration, time: Date.now() });
+        else push(msgsRef, { sender: currentUser, text: text, time: Date.now() });
+      };
 
-        window._deleteMsg = (key) => {
-          if (confirm('Delete this message? 🗑️')) {
-            remove(ref(db, 'messages/' + key));
-            const el = document.getElementById('msg_' + key);
-            if (el) el.remove();
-          }
-        };
+      window._deleteMsg = (key) => {
+        if (confirm('Delete this message? 🗑️')) {
+          remove(ref(db, 'messages/' + key));
+          const el = document.getElementById('msg_' + key);
+          if (el) el.remove();
+        }
+      };
 
-        window._editMsg = (key, oldText) => {
-          const newText = prompt('Edit your message ✏️', oldText);
-          if (newText && newText.trim() && newText !== oldText) {
-            update(ref(db, 'messages/' + key), { text: newText.trim(), edited: true });
-            const bubble = document.querySelector(`#msg_${key} .msg-bubble`);
-            if (bubble) bubble.innerHTML = newText.trim() + ' <span class="edited-tag">edited</span>';
-          }
-        };
+      window._editMsg = (key, oldText) => {
+        const newText = prompt('Edit your message ✏️', oldText);
+        if (newText && newText.trim() && newText !== oldText) {
+          update(ref(db, 'messages/' + key), { text: newText.trim(), edited: true });
+          const bubble = document.querySelector(`#msg_${key} .msg-bubble`);
+          if (bubble) bubble.innerHTML = newText.trim() + ' <span class="edited-tag">edited</span>';
+        }
+      };
 
-        // ── TYPING INDICATOR ──
-        const typingRef = ref(db, 'typing');
+      // ── TYPING INDICATOR ──
+      document.getElementById('chatInput').addEventListener('input', () => {
+        if (!currentUser) return;
+        set(ref(db, 'typing/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), true);
+        clearTimeout(window._typingTimer);
+        window._typingTimer = setTimeout(() => {
+          set(ref(db, 'typing/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), false);
+        }, 2000);
+      });
+      onValue(ref(db, 'typing'), (snapshot) => {
+        if (!currentUser) return;
+        const data = snapshot.val() || {};
+        const otherKey = currentUser.includes('Hisham') ? 'rasla' : 'hisham';
+        const otherName = currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙';
+        const indicator = document.getElementById('typingIndicator');
+        if (data[otherKey]) {
+          indicator.style.display = 'flex';
+          indicator.querySelector('.typing-name').textContent = otherName + ' is typing';
+        } else {
+          indicator.style.display = 'none';
+        }
+      });
 
-        let typingTimer = null;
-        document.getElementById('chatInput').addEventListener('input', () => {
-          set(ref(db, 'typing/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), true);
-          clearTimeout(typingTimer);
-          typingTimer = setTimeout(() => {
-            set(ref(db, 'typing/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), false);
-          }, 2000);
-        });
-
-        onValue(ref(db, 'typing'), (snapshot) => {
-          const data = snapshot.val() || {};
-          const otherKey = currentUser.includes('Hisham') ? 'rasla' : 'hisham';
-          const otherName = currentUser.includes('Hisham') ? 'Rasla 💗' : 'Hisham 💙';
-          const indicator = document.getElementById('typingIndicator');
-          if (data[otherKey]) {
-            indicator.style.display = 'flex';
-            indicator.querySelector('.typing-name').textContent = otherName + ' is typing';
-          } else {
-            indicator.style.display = 'none';
-          }
-        });
-
-        // ── SEEN STATUS ──
-        const seenRef = ref(db, 'seen');
-        // Mark messages as seen when chat is open
-        const markSeen = () => {
-          set(ref(db, 'seen/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), Date.now());
-        };
-        document.getElementById('chatMessages').addEventListener('scroll', markSeen);
-        markSeen();
-
-        onValue(seenRef, (snapshot) => {
-          const data = snapshot.val() || {};
-          const myKey = currentUser.includes('Hisham') ? 'hisham' : 'rasla';
-          // Update last seen tick on sent messages
-          document.querySelectorAll('.msg.me .seen-status').forEach(el => {
-            el.textContent = data[myKey === 'hisham' ? 'rasla' : 'hisham'] ? '✓✓' : '✓';
-            el.style.color = data[myKey === 'hisham' ? 'rasla' : 'hisham'] ? '#e8687a' : '#aaa';
-          });
-        });
-
-        onChildAdded(msgsRef, (snapshot) => {
-          renderMessage(snapshot.val(), snapshot.key);
-          markSeen();
+      // ── SEEN STATUS ──
+      const markSeen = () => {
+        if (!currentUser) return;
+        set(ref(db, 'seen/' + (currentUser.includes('Hisham') ? 'hisham' : 'rasla')), Date.now());
+      };
+      document.getElementById('chatMessages').addEventListener('scroll', markSeen);
+      onValue(ref(db, 'seen'), (snapshot) => {
+        if (!currentUser) return;
+        const data = snapshot.val() || {};
+        const myKey = currentUser.includes('Hisham') ? 'hisham' : 'rasla';
+        document.querySelectorAll('.msg.me .seen-status').forEach(el => {
+          el.textContent = data[myKey === 'hisham' ? 'rasla' : 'hisham'] ? '✓✓' : '✓';
+          el.style.color = data[myKey === 'hisham' ? 'rasla' : 'hisham'] ? '#e8687a' : '#aaa';
         });
       });
+
+      onChildAdded(msgsRef, (snapshot) => {
+        const msg = snapshot.val(), key = snapshot.key;
+        if (!currentUser) {
+          pendingMessages.push({ msg, key }); // keep for when a name is picked
+        } else {
+          renderMessage(msg, key);
+          markSeen();
+        }
+      });
+    }).catch((err) => {
+      console.error('Chat failed to load:', err);
+      firebaseInitStarted = false; // allow a retry
+      const box = document.getElementById('chatMessages');
+      if (box && !box.querySelector('.chat-error')) {
+        const errEl = document.createElement('div');
+        errEl.className = 'chat-error';
+        errEl.style.cssText = 'text-align:center;color:var(--blush);font-size:0.8rem;padding:12px;font-style:italic;';
+        errEl.textContent = "Couldn't connect to chat 😔 Check your internet and reopen the chat.";
+        box.appendChild(errEl);
+      }
     });
   }
+  // Start connecting to Firebase as soon as the page loads, not just when the chat is opened —
+  // this is the main fix for "chat not loading": previously it only began connecting after
+  // someone picked their name, so the first open always felt slow/broken.
+  initFirebaseChat();
 
   function renderMessage(msg, key) {
     const box = document.getElementById('chatMessages');
@@ -3993,31 +2130,18 @@
     const delBtn = isMe && key ? `<div class="msg-actions"><button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button></div>` : '';
 
     if (msg.media) {
-      // Photo or Video message
       if (msg.mediaType === 'image') {
-        div.innerHTML = `
-          <span class="msg-sender">${msg.sender}</span>
-          <img src="${msg.media}" class="msg-img" onclick="openLightbox('${msg.media}', 'image')" />
-          <span class="msg-time">${time}</span>${delBtn}`;
+        div.innerHTML = `<span class="msg-sender">${msg.sender}</span><img src="${msg.media}" class="msg-img" onclick="openLightbox('${msg.media}', 'image')" /><span class="msg-time">${time}</span>${delBtn}`;
       } else {
-        div.innerHTML = `
-          <span class="msg-sender">${msg.sender}</span>
-          <video src="${msg.media}" class="msg-video" controls onclick="openLightbox('${msg.media}', 'video')"></video>
-          <span class="msg-time">${time}</span>${delBtn}`;
+        div.innerHTML = `<span class="msg-sender">${msg.sender}</span><video src="${msg.media}" class="msg-video" controls onclick="openLightbox('${msg.media}', 'video')"></video><span class="msg-time">${time}</span>${delBtn}`;
       }
       box.appendChild(div);
     } else if (msg.voice) {
       const audio = new Audio(msg.voice);
       const waveSpans = Array(8).fill('<span></span>').join('');
-      div.innerHTML = `
-        <span class="msg-sender">${msg.sender}</span>
-        <div class="voice-msg" id="vm_${msg.time}">
-          <span class="voice-play">▶️</span>
-          <div class="voice-wave">${waveSpans}</div>
-          <span class="voice-duration">${formatDuration(msg.duration || 0)}</span>
-        </div>
-        <span class="msg-time">${time}</span>
-        ${isMe && key ? `<div class="msg-actions"><button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button></div>` : ''}`;
+      div.innerHTML = `<span class="msg-sender">${msg.sender}</span>
+        <div class="voice-msg" id="vm_${msg.time}"><span class="voice-play">▶️</span><div class="voice-wave">${waveSpans}</div><span class="voice-duration">${formatDuration(msg.duration || 0)}</span></div>
+        <span class="msg-time">${time}</span>${isMe && key ? `<div class="msg-actions"><button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button></div>` : ''}`;
       box.appendChild(div);
       div.querySelector('.voice-msg').onclick = (e) => {
         if (e.target.closest('.action-btn')) return;
@@ -4026,22 +2150,13 @@
         audio.onended = () => div.querySelector('.voice-play').textContent = '▶️';
       };
     } else {
-      const actions = isMe && key ? `
-        <div class="msg-actions">
-          <button onclick="window._editMsg('${key}', this.closest('.msg').querySelector('.msg-bubble')?.textContent || '')" class="action-btn">✏️</button>
-          <button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button>
-        </div>` : '';
-      div.innerHTML = `
-        <span class="msg-sender">${msg.sender}</span>
+      const actions = isMe && key ? `<div class="msg-actions"><button onclick="window._editMsg('${key}', this.closest('.msg').querySelector('.msg-bubble')?.textContent || '')" class="action-btn">✏️</button><button onclick="window._deleteMsg('${key}')" class="action-btn">🗑️</button></div>` : '';
+      div.innerHTML = `<span class="msg-sender">${msg.sender}</span>
         <div class="msg-bubble">${msg.text}${msg.edited ? ' <span class="edited-tag">edited</span>' : ''}</div>
-        <div class="msg-meta">
-          <span class="msg-time">${time}</span>
-          ${isMe ? '<span class="seen-status" style="font-size:0.7rem;color:#aaa;">✓</span>' : ''}
-        </div>
+        <div class="msg-meta"><span class="msg-time">${time}</span>${isMe ? '<span class="seen-status" style="font-size:0.7rem;color:#aaa;">✓</span>' : ''}</div>
         ${actions}`;
       box.appendChild(div);
     }
-
     box.scrollTop = box.scrollHeight;
     showNotification(msg.sender, msg.media ? (msg.mediaType === 'video' ? '📹 Sent a video' : '🖼️ Sent a photo') : msg.voice ? '🎙️ Voice message' : msg.text);
   }
@@ -4053,11 +2168,7 @@
     window._sendToFirebase(text);
     input.value = '';
   }
-
-  window.sendEmoji = function(emoji) {
-    if (!window._sendToFirebase) return;
-    window._sendToFirebase(emoji);
-  }
+  window.sendEmoji = function(emoji) { if (window._sendToFirebase) window._sendToFirebase(emoji); }
 </script>
 </body>
 </html>
